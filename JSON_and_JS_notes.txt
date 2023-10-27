@@ -1,0 +1,66 @@
+Test RF data:
+{
+  "series": [
+    "RSSI"
+  ],
+  "data": [
+    [
+      -45,
+      -46,
+      -45,
+      -40
+    ]
+  ],
+  "labels": [
+    "000",
+    "010",
+    "020",
+    "030"
+  ]
+}
+
+
+{
+"series": ["A", "B", "C"],
+  "data": [
+    [{ "x": 1504029632890, "y": 5},
+     { "x": 1504029636001, "y": 4},
+     { "x": 1504029638656, "y": 2}],
+    [{ "x": 1504029633515, "y": 6},
+     { "x": 1504029636622, "y": 7},
+     { "x": 1504029639539, "y": 6}],
+    [{ "x": 1504029634400, "y": 7},
+     { "x": 1504029637959, "y": 7},
+     { "x": 1504029640317, "y": 7}]
+],
+  "labels": ["room1","room2","room3"]  
+}
+
+
+https://stevesnoderedguide.com/working-with-time
+var d=new Date();
+var day=d.getDate()  		//day as a number 1 -31
+var weekday=d.getDay()  	//-weekday as a number  0-6
+var month=d.getMonth() 		// month as a number 0-11
+var year=d.getFullYear() 	//year as a four digit number (yyyy)
+var hours=d.getHours() 		//the hour (0-23)
+var minutes=d.getMinutes() 	//-the minute (0-59)
+var localtimezoneoffsetinminutes=d.getTimezoneOffset();
+
+var d=new Date();
+var start_time=d.getTime()
+//something happens here
+d=new Date();
+var end_time=new Date(timestamp);
+var difference =end_time-start_time;
+
+var snrdata = [{ "x": "010", "y": 50 }, { "x": "020", "y": 20 }];
+var text;
+for (let i = 0; i < 360; i++) {
+    text = "";
+}
+return msg;
+
+RAW canvas drawing:
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin
+
