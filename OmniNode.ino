@@ -17,6 +17,8 @@ MqttClient instMQTTClient(instWiFiClient);                    //
 WiFiUDP instUDP;                                              //
 NTPClient instNTPClient(instUDP, charrMQTTServer, 0, 60000);  // local time offset is -14400; autoresync every 1000 seconds (~16 minutes)
 UnixTime instTimeConvert(0);                                  // time conversion instance with no time zone offset
+// DateTime instDateTime; // experimental class
+// instDateTime.getDateTime();
 
 #define defSoftwareVersion "OmniNodeV0_0_2"               // Used in MQTT config report.
 #define defNodeFunction "mpu6500"                         // compile time definition to enable/disable code segments. Also used in MQTT config report
@@ -339,26 +341,3 @@ void transmitmqttmessage(String strXmitTopic, String strXmitMsg, bool boolRetain
   }                                                                                                                //
 }
 
-unsigned long CurrentEpochTime() {        // return either the current NTP or a fake epoch time
-  if (boolMQTTEmulated) {                 //
-    return 1698339326;                    // 2023-10-26
-  } else {                                //
-    return instNTPClient.getEpochTime();  //
-  }                                       //
-}
-
-String CurrentUTCTime() {                           // function to return human readable UTC time as YYYY-MM-DD HH-MM-SS
-  instTimeConvert.getDateTime(CurrentEpochTime());  //
-  String strDTG = String(instTimeConvert.year);     // initialize string starting with year
-  strDTG += "-";                                    //
-  strDTG += String(instTimeConvert.month);          //
-  strDTG += "-";                                    //
-  strDTG += String(instTimeConvert.day);            //
-  strDTG += " ";                                    //
-  strDTG += String(instTimeConvert.hour);           // TODO: Correct this to local timezone
-  strDTG += ":";                                    //
-  strDTG += String(instTimeConvert.minute);         //
-  strDTG += ":";                                    //
-  strDTG += String(instTimeConvert.second);         //
-  return strDTG;                                    // give it back
-}

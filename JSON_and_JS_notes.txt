@@ -1,3 +1,5 @@
+https://forum.arduino.cc/t/returning-multiple-values-from-a-method/467197/4
+
 Test RF data:
 {
   "series": [
