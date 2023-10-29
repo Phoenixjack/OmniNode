@@ -3,7 +3,6 @@
 
 
 MAJOR TODOs:
-- Split functions off from a single INO file so we can differentiate what commits mean
 - WiFiManager! Stop saving credentials and config in source code
 - Memory / Space management:
   - look at how much space the compiled code takes
@@ -23,6 +22,8 @@ MAJOR TODOs:
   - convert them to return error codes or booleans based on what happened
 
 
+V0_0_3:
+- Split functions off from a single INO file so we can differentiate what commits mean
 
 V0_0_2:
 Migrated from PubSubClient to ArduinoMQTTClient library to enable QoS

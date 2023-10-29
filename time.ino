@@ -1,7 +1,6 @@
 /*
-Major shoutout to Alex Guyver: https://github.com/GyverLibs/UnixTime
-His UnixTime library formed much of the basis for my customized code.
-I used his UTC conversions for my human readable DTG functions
+date and time functions
+TODO: add our own Epoch to DTG conversion function
 */
 
 unsigned long CurrentEpochTime() {        // return either the current NTP or a fake epoch time
