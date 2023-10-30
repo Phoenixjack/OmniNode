@@ -6,25 +6,25 @@ void setup_mqtt() {                                                             
   instMQTTClient.beginWill(charrWillTopic, strWillPayload.length(), boolWillRetain, intWillQoS);  //
   instMQTTClient.print(strWillPayload);                                                           //
   instMQTTClient.endWill();                                                                       //
-  instMQTTClient.connect(charrMQTTServer, intMQTTPort);                                           // initialize MQTT instance
+  instMQTTClient.connect(strMQTTserver, intMQTTPort);                                             // initialize MQTT instance
   instMQTTClient.onMessage(onMqttMessage);                                                        // assign function call for incoming messages
   mqtt_connect();                                                                                 // connect and handle handshake protocol
 }
 
 void mqtt_connect() {                                              // TODO: should we add a section to troubleshoot underlying wifi issues, or is that built into MQTT pubsub?
+  Serial.print("Attempting MQTT connection... ");                  //
   while (!instMQTTClient.connected()) {                            // Loop until we're reconnected
-    Serial.print("Attempting MQTT connection...");                 //
-    if (instMQTTClient.connect(charrMQTTServer, intMQTTPort)) {    // Attempt to connect
-      Serial.println("connected");                                 //
+    if (instMQTTClient.connect(strMQTTserver, intMQTTPort)) {      // Attempt to connect
+      Serial.println("MQTT Connected!");                           //
       transmitmqttmessage("base/announce", strClientID, true, 1);  // simple announcement that will trigger the server to check its database if it's seen this node before
       cmd_areyouthere();                                           // keep it simple and just act like we were asked to checkin via msg
       String strSubscribeTopic = "node/config/" + strClientID;     // assemble unique MQTT topic for this node to listen for.
       Serial.print("Subscribing to: ");                            // TODO: check if we need to subscribe every time we connect. What if we just disconnected from the broker and it's not an initial connection? Is the subscription retained?
       Serial.println(strSubscribeTopic);                           // show the user
       instMQTTClient.setId(strClientID);                           //
-      instMQTTClient.subscribe(strSubscribeTopic.c_str(), 1);      // subscribe to that topic with QoS 1
-    } else {                                                       //
-      Serial.print("failed, rc=");                                 //
+      instMQTTClient.subscribe(strSubscribeTopic.c_str(), 1);      // subscribe to that topic with QoS 1: FOLLOWUP: why are we converting a String to char array for our own function?
+    } else {                                                       // if we're here, we failed to connect
+      Serial.print("MQTT connection failed, rc=");                 //
       Serial.print(instMQTTClient.connectError());                 //
       Serial.println(" try again in 5 seconds");                   //
       delay(5000);                                                 // Wait 5 seconds before retrying

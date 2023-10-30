@@ -3,7 +3,6 @@
 
 
 MAJOR TODOs:
-- WiFiManager! Stop saving credentials and config in source code
 - Memory / Space management:
   - look at how much space the compiled code takes
   - look at how much runtime memory is used
@@ -24,6 +23,8 @@ MAJOR TODOs:
 
 V0_0_3:
 - Split functions off from a single INO file so we can differentiate what commits mean
+- Moving to LittleFS due to FS library depreciation.
+- WiFiManager integration is a work in progress.
 
 V0_0_2:
 Migrated from PubSubClient to ArduinoMQTTClient library to enable QoS
