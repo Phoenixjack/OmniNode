@@ -10,7 +10,7 @@ unsigned long CurrentEpochTime() {        // return either the current NTP or a 
     return instNTPClient.getEpochTime();  //
   }                                       //
 }
-
+/*
 String CurrentUTCTime() {                           // function to return human readable UTC time as YYYY-MM-DD HH-MM-SS
   instTimeConvert.getDateTime(CurrentEpochTime());  //
   String strDTG = String(instTimeConvert.year);     // initialize string starting with year
@@ -26,6 +26,7 @@ String CurrentUTCTime() {                           // function to return human 
   strDTG += String(instTimeConvert.second);         //
   return strDTG;                                    // give it back
 }
+*/
 
 
 // create separate functions to return HH:MM:SS.S vs YYYY-MM-DD_HH_MM_SS.S
