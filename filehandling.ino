@@ -1,12 +1,12 @@
-void cmd_mountfilesystem() {                  // mount filesystem
-  if (!LittleFS.begin()) {                    //
-    Serial.println("LittleFS mount failed");  //
-  }                                           //
+void cmd_mountfilesystem() {                                       // mount filesystem
+  if (!LittleFS.begin()) {                                         //
+    Serial.println("cmd_mountfilesystem: LittleFS mount failed");  //
+  }                                                                //
 }
 
-void listDir(const char *dirname) { // lists all files on internal storage to Serial Monitor only
+void listDir(const char *dirname) {  // lists all files on internal storage to Serial Monitor only
   // usage: listDir("/");
-  Serial.printf("Listing directory: %s\n", dirname);
+  Serial.printf("listDir: Listing directory: %s\n", dirname);
   Dir root = LittleFS.openDir(dirname);
   while (root.next()) {
     File file = root.openFile("r");
@@ -24,23 +24,25 @@ void listDir(const char *dirname) { // lists all files on internal storage to Se
   }
 }
 
-String readFile(const char *path) { // returns file contents or "error" as a String
-  String filereadbuffer;
-  Serial.printf("Reading file: %s\n", path);
+String readFile(const char *path) {  // returns file contents or "error" as a String
+  String strFileReadBuffer;
+  Serial.printf("readFile: Reading file: %s\n", path);
   File file = LittleFS.open(path, "r");
   if (!file) {
-    Serial.println("Failed to open file for reading");
+    Serial.println("readFile: Failed to open file for reading");
     return "error";
   }
-  Serial.print("Read from file: ");
-  while (file.available()) { Serial.write(file.read()); }
+  //Serial.print("readFile: Read from file: ");
+  while (file.available()) {
+    strFileReadBuffer += (char)file.read();
+  }
   file.close();
-  return filereadbuffer;
+  return strFileReadBuffer;
 }
 
 void writeFile(const char *path, const char *filecontents) {
   // usage: writeFile("/hello.txt", "Hello ");
-  Serial.printf("Writing file: %s\n", path);
+  Serial.printf("writeFile: Writing file: %s\n", path);
   File file = LittleFS.open(path, "w");
   if (!file) {
     Serial.println("Failed to open file for writing");
@@ -57,7 +59,7 @@ void writeFile(const char *path, const char *filecontents) {
 
 void appendFile(const char *path, const char *filecontents) {
   // usage: appendFile("/hello.txt", "World!\n");
-  Serial.printf("Appending to file: %s\n", path);
+  Serial.printf("appendFile: Appending to file: %s\n", path);
   File file = LittleFS.open(path, "a");
   if (!file) {
     Serial.println("Failed to open file for appending");
@@ -72,7 +74,7 @@ void appendFile(const char *path, const char *filecontents) {
 }
 
 void renameFile(const char *path1, const char *path2) {
-  Serial.printf("Renaming file %s to %s\n", path1, path2);
+  Serial.printf("renameFile: Renaming file %s to %s\n", path1, path2);
   if (LittleFS.rename(path1, path2)) {
     Serial.println("File renamed");
   } else {
@@ -82,7 +84,7 @@ void renameFile(const char *path1, const char *path2) {
 
 void deleteFile(const char *path) {
   // usage: deleteFile("/hello.txt");
-  Serial.printf("Deleting file: %s\n", path);
+  Serial.printf("deleteFile: Deleting file: %s\n", path);
   if (LittleFS.remove(path)) {
     Serial.println("File deleted");
   } else {
@@ -94,6 +96,6 @@ void cmd_unmountfilesystem() {  // unmount filesystem
   LittleFS.end();               //
 }
 
-void cmd_wipefilesystem() { // format the internal storage
-  LittleFS.format(); //
+void cmd_wipefilesystem() {  // format the internal storage
+  LittleFS.format();         //
 }

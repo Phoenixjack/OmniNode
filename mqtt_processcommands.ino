@@ -62,6 +62,7 @@ void cmd_reboot() {                                                // act on a r
 }
 
 void cmd_ntpresync(int intTimeZoneOffset) {                            // force an NTP sync only if we're not emulating. TODO: implement time zone offset?
+  intTimeZoneOffset = 0;                                               //
   if (!boolMQTTEmulated) { instNTPClient.update(); }                   //
   ul_lastupdate = millis();                                            //
   Serial.print("*NTP update \t");                                      // we're going to try to keep the Serial Monitor to a single line per event for processed messages
@@ -69,7 +70,7 @@ void cmd_ntpresync(int intTimeZoneOffset) {                            // force 
   Serial.print(ul_lastupdate);                                         //
   Serial.print("msec \t");                                             //
   Serial.print("DTG:");                                                //
-  Serial.println(CurrentUTCTime());                                    // just displaying for the humans in the audience; TODO: remove in production code
+  //Serial.println(CurrentUTCTime());                                    // just displaying for the humans in the audience; TODO: remove in production code
   String strXmitMsg = encapsulatemessage(String(CurrentEpochTime()));  // wrap it before sending
   transmitmqttmessage("node/ntpsync", strXmitMsg, true, 1);            // then encapsulate that message and publish to ntpsync topic
 }

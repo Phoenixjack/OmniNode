@@ -16,21 +16,28 @@
 #define defSoftwareVersion "OmniNodeV0_0_3"               // Used in MQTT config report.
 #define defNodeFunction "mpu6500"                         // compile time definition to enable/disable code segments. Also used in MQTT config report
 const String strClientID = String(ESP.getChipId(), HEX);  // global placeholder for my unique MAC ID
+const String strConfigFilename = "/config.json";          // filename for saving our config
 bool boolMQTTEmulated = false;                            // global flag to bypass wifi & mqtt connections in favor of Serial input/output
-bool boolSaveConfig = true;                               // flag for saving WiFiManager data
+bool boolSaveWiFiConfig = false;                          // flag for saving WiFiManager data
 String strMQTTserver = "192.168.0.17";                    // global placeholder for mqtt server address; to be overwritten by data from file or user via the config portal
 int intMQTTPort = 1883;                                   // set default value, but leave subject to change by user
-unsigned long ul_lastupdate = 0;                          // timestamp (in local millis) of last NTP sync. FOLLOWUP: does this need to be global or can we make it local/static?
-unsigned long ul_lastMsg = 0;                             // timestamp (in local millis) of last message sent. FOLLOWUP: does this need to be global or can we make it local/static?
-int intReportInterval = 1500;                             // default minimum time between reports in milliseconds. Leave global and variable
-int intMsgCnt = 0;                                        // for tracking number of outgoing messages. FOLLOWUP: will this be relevant once we go to QoS 1 or 2?
-int intAvgRSSI = 0;                                       // for tracking average WIFI strength. FOLLOWUP: does this need to be global or can we make it local/static?
+char charMQTTServer[40];
+char charMQTTPort[6] = "1883";
+unsigned long ul_lastupdate = 0;  // timestamp (in local millis) of last NTP sync. FOLLOWUP: does this need to be global or can we make it local/static?
+unsigned long ul_lastMsg = 0;     // timestamp (in local millis) of last message sent. FOLLOWUP: does this need to be global or can we make it local/static?
+int intReportInterval = 1500;     // default minimum time between reports in milliseconds. Leave global and variable
+int intMsgCnt = 0;                // for tracking number of outgoing messages. FOLLOWUP: will this be relevant once we go to QoS 1 or 2?
+int intAvgRSSI = 0;               // for tracking average WIFI strength. FOLLOWUP: does this need to be global or can we make it local/static?
+const char broker[] = "192.168.0.17";
+int port = 1883;
 
 WiFiClient instWiFiClient;                                          //
 MqttClient instMQTTClient(instWiFiClient);                          //
 WiFiUDP instUDP;                                                    //
 WiFiManager wifiManager;                                            // global intialization. FOLLOWUP: Does this need to be global or can we move to the portal handling subroutine? Variables it needs can be at a higher scope.
 NTPClient instNTPClient(instUDP, strMQTTserver.c_str(), 0, 60000);  // local time offset is -14400; autoresync every 1000 seconds (~16 minutes)
+WiFiManagerParameter custom_mqtt_server("server", "mqtt server", charMQTTServer, 40);
+WiFiManagerParameter custom_mqtt_port("port", "mqtt port", charMQTTPort, 6);
 
 void setup() {                                                 // initial setup
   Serial.begin(115200);                                        // initialize the Serial Monitor interface for debugging. TODO: Global debug flag to remove all Serial
@@ -42,6 +49,7 @@ void setup() {                                                 // initial setup
     Serial.println("to simulate sending the node a message");  //
     Serial.println("");                                        //
   } else {                                                     // emulation isn't enabled, so we do a normal startup
+    setup_wifi();                                              //
     instNTPClient.begin();                                     // connect to NTP server.
     instNTPClient.update();                                    // force an update. FOLLOWUP: should this be moved to a separate function that's handled after we connect to the broker?
     ul_lastupdate = millis();                                  // mark the time
@@ -50,20 +58,19 @@ void setup() {                                                 // initial setup
 }
 
 void loop() {
-  if (Serial.available() > 0) { getSerialInput(); }             // regardless of whether we're emulating, allow serial inputs TODO: replace with REST library
-  if (!boolMQTTEmulated) {                                      // only do mqtt stuff if we're not emulating
-    instMQTTClient.connected();
-    if (!instMQTTClient.connect(strMQTTserver, intMQTTPort)) {  // check if we're connected to MQTT broker
-      mqtt_connect();                                           // if not, reestablish
-    }                                                           //
-    instMQTTClient.poll();                                      // listens for MQTT messages AND sends keepalive messages to avoid disconnects; required for both purposes.}
-  }                                                             //
-  if (millis() - ul_lastMsg > intReportInterval) {              // old if statement for sending regular reports. FOLLOWUP: what if we have multiple datapoints we want to send at different intervals? Could we convert to ArduinoTicker library?
-    ul_lastMsg = millis();                                      // set timestamp to now. Placeholder for message packaging is below.
+  if (Serial.available() > 0) { getSerialInput(); }                     // regardless of whether we're emulating, allow serial inputs TODO: replace with REST library
+  if (!boolMQTTEmulated) {                                              // only do mqtt stuff if we're not emulating
+    if (!instMQTTClient.connect(strMQTTserver.c_str(), intMQTTPort)) {  // check if we're connected to MQTT broker
+      mqtt_connect();                                                   // if not, reestablish
+    }                                                                   //
+    instMQTTClient.poll();                                              // listens for MQTT messages AND sends keepalive messages to avoid disconnects; required for both purposes.}
+  }                                                                     //
+  if (millis() - ul_lastMsg > intReportInterval) {                      // old if statement for sending regular reports. FOLLOWUP: what if we have multiple datapoints we want to send at different intervals? Could we convert to ArduinoTicker library?
+    ul_lastMsg = millis();                                              // set timestamp to now. Placeholder for message packaging is below.
     //Serial.print(CurrentUTCTime());                             //
     //Serial.print(" ");                                          //
-    Serial.print(boolMQTTEmulated);                             //
-    Serial.print(" ");                                          //
-    Serial.println(intReportInterval);                          //
-  }                                                             //
+    Serial.print(boolMQTTEmulated);     //
+    Serial.print(" ");                  //
+    Serial.println(intReportInterval);  //
+  }                                     //
 }
