@@ -24,7 +24,9 @@ MAJOR TODOs:
 V0_0_3:
 - Split functions off from a single INO file so we can differentiate what commits mean
 - Moving to LittleFS due to FS library depreciation.
-- WiFiManager integration is a work in progress.
+- WiFiManager integration implemented.
+- Added commands: reportdiagnostics, resetdiagnostics, wifiportal
+- reportcommands function still incomplete.
 
 V0_0_2:
 Migrated from PubSubClient to ArduinoMQTTClient library to enable QoS

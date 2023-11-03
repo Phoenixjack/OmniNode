@@ -8,6 +8,7 @@ void processreceivedcommand(String strRcvdCmd, String strRcvdValue) {           
   if (strRcvdCmd == "reportconfig") { cmd_reportconfig(); }                     //
   if (strRcvdCmd == "reportdiagnostics") { cmd_reportdiagnostics(); }           //
   if (strRcvdCmd == "resetdiagnostics") { cmd_resetdiagnostics(); }             //
+  if (strRcvdCmd == "wifiportal") { cmd_launchwifiportal(); }                   //
 }
 
 void cmd_areyouthere() {                                                         // simple response routine to respond to MQTT checkin messages.
@@ -61,15 +62,22 @@ void cmd_reboot() {                                                // act on a r
   ESP.restart();
 }
 
-void cmd_ntpresync(int intTimeZoneOffset) {                            // force an NTP sync only if we're not emulating. TODO: implement time zone offset?
-  intTimeZoneOffset = 0;                                               //
-  if (!boolMQTTEmulated) { instNTPClient.update(); }                   //
-  ul_lastupdate = millis();                                            //
-  Serial.print("*NTP update \t");                                      // we're going to try to keep the Serial Monitor to a single line per event for processed messages
-  Serial.print("My uptime:");                                          //
-  Serial.print(ul_lastupdate);                                         //
-  Serial.print("msec \t");                                             //
-  Serial.print("DTG:");                                                //
+void cmd_launchwifiportal() {                                            // launch the WiFiManager configuration portal
+  Serial.println("------LAUNCHING WIFI MANAGER PORTAL------");           // should we mqtt out a going offline message? adieu! farewell! Off wierder Shane! goodbye!
+  String strXmitMsg = singleJSONobject(strClientID, "LAUNCHINGPORTAL");  //
+  transmitmqttmessage("node/status", strXmitMsg, true, 1);               //
+  wifiManager.startConfigPortal();                                       //
+}
+
+void cmd_ntpresync(int intTimeZoneOffset) {           // force an NTP sync only if we're not emulating. TODO: implement time zone offset?
+  intTimeZoneOffset = 0;                              //
+  if (!boolMQTTEmulated) { instNTPClient.update(); }  //
+  ul_lastupdate = millis();                           //
+  Serial.print("*NTP update \t");                     // we're going to try to keep the Serial Monitor to a single line per event for processed messages
+  Serial.print("My uptime:");                         //
+  Serial.print(ul_lastupdate);                        //
+  Serial.print("msec \t");                            //
+  Serial.print("DTG:");                               //
   //Serial.println(CurrentUTCTime());                                    // just displaying for the humans in the audience; TODO: remove in production code
   String strXmitMsg = encapsulatemessage(String(CurrentEpochTime()));  // wrap it before sending
   transmitmqttmessage("node/ntpsync", strXmitMsg, true, 1);            // then encapsulate that message and publish to ntpsync topic

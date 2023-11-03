@@ -60,9 +60,6 @@ void setup() {                                                 // initial setup
 void loop() {
   if (Serial.available() > 0) { getSerialInput(); }                     // regardless of whether we're emulating, allow serial inputs TODO: replace with REST library
   if (!boolMQTTEmulated) {                                              // only do mqtt stuff if we're not emulating
-    if (!instMQTTClient.connect(strMQTTserver.c_str(), intMQTTPort)) {  // check if we're connected to MQTT broker
-      mqtt_connect();                                                   // if not, reestablish
-    }                                                                   //
     instMQTTClient.poll();                                              // listens for MQTT messages AND sends keepalive messages to avoid disconnects; required for both purposes.}
   }                                                                     //
   if (millis() - ul_lastMsg > intReportInterval) {                      // old if statement for sending regular reports. FOLLOWUP: what if we have multiple datapoints we want to send at different intervals? Could we convert to ArduinoTicker library?
