@@ -1,16 +1,16 @@
-#User Interface
+# User Interface
 
-##Layout
+## Layout
 + [Collapsible windows](https://stevesnoderedguide.com/using-control-ui-node-flow-example) (except persistent alerts)
   
-##Persistent Test Status Window
+## Persistent Test Status Window
 + Always on top
 + Indicator: Test Not Configured / Test Ready / Test In Progress
 + Runtime indicator
 + Number of correlated datapoints
 + Autosave indicator
 
-##Workspace Configuration
+## Workspace Configuration
 + List and edit saved reference points
 + List and edit node functions
 + Edit global software parameters
@@ -22,7 +22,7 @@
   - Force set NTP server date/time
   - Reset node statistics / diagnostics
 
-##Node Control
+## Node Control
 + List detected nodes
 + Select node:
   - List current statistics / diagnosics
@@ -44,12 +44,12 @@
     + Change sensor parameter (BMP280 SLP, AS5600 direction, MPU6050 G-scale, etc)
     + Check user input against availablecommands validation parameters before sending
 
-##Node Status
+## Node Status
 Abbreviated status of all detected nodes
 + Red/Yellow/Green indicator for OFFLINE, missed report in window/packet counter mismatch/etc, ONLINE and reporting data on schedule
 + Brief alert: "Dropped Packets Count: 21" "No data received" "Device rebooted" "Below average WiFi strength"
 
-##User Workflow
+## User Workflow
 + Choose test setup:
   - Create new
   - Select saved test setup
