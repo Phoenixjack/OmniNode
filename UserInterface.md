@@ -21,6 +21,7 @@
   - Manual Stop Test: confirm or immediate stop
   - Force set NTP server date/time
   - Reset node statistics / diagnostics
+  - Test Data buffer autosave enable / interval
 
 ## Node Control
 + List detected nodes
@@ -67,7 +68,9 @@ Abbreviated status of all detected nodes
     + PARSING: collate data on specified data point (ie each RF Receive Monitor report), timed (most recent data from all nodes every X seconds), or raw (uncollated) feed with timestamps
   - _OPTIONAL_: Bird's Eye Visualizer with Ref Point and Node placement
 + Start test
+  - **CONFIRMATION**: Prompt to save data buffer if not already exported
   - _FOLLOWUP_: Periodic or manual autosave in case of server power outage
+  - _FOLLOWUP_: Pause test
 + Live Data Visualizer
   - RF Propagation Chart:
     + Round to X degrees
