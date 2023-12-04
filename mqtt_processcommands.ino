@@ -24,6 +24,7 @@ void cmd_reportconfig() {                                        // save on netw
   objJSONdoc["ID"] = strClientID;                                // explicitly define my ID as my MAC
   objJSONdoc["function"] = defNodeFunction;                      // declare my assigned sensor function
   objJSONdoc["softwareversion"] = defSoftwareVersion;            // report this software version
+  objJSONdoc["compiled"] = __DATE__;                             // report date compiled
   objJSONdoc["IP"] = WiFi.localIP();                             // not really necessary with MQTT, but for the detail loving humans
   objJSONdoc["CurrReportInterval"] = String(intReportInterval);  // repeatback for the record. Should be used server side in the watchdog function.
   objJSONdoc["commandtopic"] = "node/config/" + strClientID;     // store this node's unique command topic in the server database

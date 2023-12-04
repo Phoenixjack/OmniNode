@@ -16,9 +16,11 @@ void setup_wifi() {
   wifiManager.setSaveConfigCallback(saveConfigCallback);
   bool res = wifiManager.autoConnect();  // auto generated AP name from chipid
   if (!res) {
-    Serial.println("Setup: Failed to connect");
+    Serial.printf("%s : %s : Failed to connect\n", __FILE__, __func__);
+    // Serial.println("Setup: Failed to connect");
   } else {
-    Serial.println("Setup: WiFi connected!");  //if you get here you have connected to the WiFi
+    Serial.printf("%s : %s : WiFi connected!\n", __FILE__, __func__);  // if you get here you have connected to the WiFi
+    // Serial.println("Setup: WiFi connected!");
     serialprintwificonfig();
   }
 }
