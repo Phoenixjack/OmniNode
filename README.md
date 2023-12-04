@@ -1,10 +1,15 @@
-OmniNode
+#OmniNode
+##An adaptable expandable and flexible IoT sensor system leveraging NodeRed and ESP8266 nodes
+###TODO:
+- [ ] Create Overview md
+- [ ] Create MQTT topic stucture md
+- [ ] Create Node hardware variations md
+- [ ] Create user interface md
+- [ ] 
 
-***TODO: separate this into multiple files for OVERVIEW, MQTT TOPIC STRUCTURE, NODE HARDWARE VARIATIONS, USER INTERFACE, etc***
 
 
-
-OMNI NodeRed System for WEMOS and ESP32 systems
+OMNI 
 
 MQTT Quality of Service
 <http://www.steves-internet-guide.com/mqtt-which-qos-to-use/>
