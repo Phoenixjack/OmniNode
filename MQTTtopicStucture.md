@@ -29,4 +29,4 @@
 
 ##References
 
-[Reference]([https://pages.github.com/](https://github.com/node-red/node-red/wiki/Node-msg-Conventions))
+[NodeRed Topic Best Practices](https://github.com/node-red/node-red/wiki/Node-msg-Conventions)
