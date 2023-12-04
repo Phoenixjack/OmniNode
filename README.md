@@ -48,3 +48,4 @@
 
 ## REFERENCES
 [JSON Editor](https://jsoneditoronline.org/#right=local.codope)
+[Markdown How To](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/quickstart-for-writing-on-github)
