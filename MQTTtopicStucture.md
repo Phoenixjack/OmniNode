@@ -7,12 +7,14 @@
 ##BASE
 
 | level0   | level1      | level2        | FORMAT        | Description |
+| -------  | -------     | -------       | -------       | -------     |
 | 'base/'  | '___'       | '___'         | 'N/A'         | Base topic for nodes to report in to OR for the server to publish general info           |
 | 'base/'  | 'announce'  | 'N/A'         | 'QoS2/RETAIN' | Receive remote unit IDs. Uses second half of MAC ID. Used to track unique nodes in setup |
 
  
 ##NODE
 | level0   | level1        | level2        | FORMAT        | Description |
+| -------  | -------       | -------       | -------       | -------     |
 | 'node/'  | _MAC-ID_      | '___'         | 'N/A'         | Base topic for anything unique to that node           |
 | 'node/'  | _MAC-ID_      | 'errors'      | 'QoS2/RETAIN' | Receive error reports from nodes. Not fully implemented; currently only for message deserialization failures. |
 | 'node/'  | _MAC-ID_      | 'lastcheckin' | 'QoS1/RETAIN' | UTC Timestamp of last time the node checked in. Performed when MQTT connection is initially established OR when told to check in by the server. |
