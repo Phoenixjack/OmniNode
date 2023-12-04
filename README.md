@@ -20,14 +20,14 @@
 	[ ] and releases after >10 seconds, wipe EEPROM and launch config portal      
         [ ] Leverage interrupt!
 [ ] Use RGB LED to indicate status                                                              
-	 - WHITE = WiFi                                                                             
-	 - CYAN = WiFiMan portal active                                                               
-	 - MAGENTA (purple) = MQTT                                                                    
-	 - GREEN = Normal Operation
-	 - BLUE = Outgoing data
-	 - YELLOW = Received valid command 
-	 - RED = Fault
-	 - Blink settings??? Long / slow; Leverage Ticker library for "multithreading"
+	- WHITE = WiFi                                                                             
+	- CYAN = WiFiMan portal active                                                               
+	- MAGENTA (purple) = MQTT                                                                    
+	- GREEN = Normal Operation
+	- BLUE = Outgoing data
+	- YELLOW = Received valid command 
+	- RED = Fault
+	- Blink settings??? Long / slow; Leverage Ticker library for "multithreading"
 [ ] NodeRed server handshake protocol:
 	[x] This unit announces on base/announce topic.
 	[ ] NodeRed server checks database of current nodes. 
