@@ -7,23 +7,18 @@
 ##BASE
 
 | level0   | level1      | level2        | FORMAT        | Description |
-| -------- | ----------- | ------------- | ------------- | ------------- |
 | 'base/'  | '___'       | '___'         | 'N/A'         | Base topic for nodes to report in to OR for the server to publish general info           |
 | 'base/'  | 'announce'  | 'N/A'         | 'QoS2/RETAIN' | Receive remote unit IDs. Uses second half of MAC ID. Used to track unique nodes in setup |
 
  
 ##NODE
 | level0   | level1        | level2        | FORMAT        | Description |
-| -------- | -----------   | ------------- | ------------- | ------------- |
 | 'node/'  | _MAC-ID_      | '___'         | 'N/A'         | Base topic for anything unique to that node           |
 | 'node/'  | _MAC-ID_      | 'errors'      | 'QoS2/RETAIN' | Receive error reports from nodes. Not fully implemented; currently only for message deserialization failures. |
 | 'node/'  | _MAC-ID_      | 'lastcheckin' | 'QoS1/RETAIN' | UTC Timestamp of last time the node checked in. Performed when MQTT connection is initially established OR when told to check in by the server. |
 | 'node/'  | _MAC-ID_      | 'status'      | 'QoS2/RETAIN' | Text with status ('ONLINE'/'REBOOTING'/'OFFLINE') of the unit. 'ONLINE' and 'REBOOTING' will be provided by the node. 'OFFLINE' by LastWill |
 | 'node/'  | _MAC-ID_      | 'ntpsync'     | 'QoS2/RETAIN' | For tracking last NTP sync time from attached nodes |
-| 'node/'  | _MAC-ID_      | 'config'      | 'QoS1/RETAIN' | JSON object with MAC_ID, assigned function, software version, IP, current report interval... Example: 
-                                                             '''
-                                                             {"ID":"565F0F","function":"mpu6050","softwareversion":"OMNIv1.0.0","IP":"192.168.0.10","CurrReportInterval":"1500","commandtopic":"node/config/565F0F"}
-                                                             ''' |
+| 'node/'  | _MAC-ID_      | 'config'      | 'QoS1/RETAIN' | JSON object with MAC_ID, assigned function, software version, IP, current report interval... Example: '''{"ID":"565F0F","function":"mpu6050","softwareversion":"OMNIv1.0.0","IP":"192.168.0.10","CurrReportInterval":"1500","commandtopic":"node/config/565F0F"}''' |
 | 'node/'  | _MAC-ID_      | 'diagnostics' | 'QoS1/RETAIN' | JSON object with current diagnostic info. Example: 
                                                              '''
                                                              {"ID":"565F0F","WiFiStr_Curr":"-47","WiFiStr_Avg":"-45","MsgSentToDate":"125","UpTime":"58234"}
@@ -68,12 +63,5 @@
 
 
 ##References
+
 [Reference]([https://pages.github.com/](https://github.com/node-red/node-red/wiki/Node-msg-Conventions))
-
-
-
-
-node/					
-    /config/<MAC_ID>	QoS2/RETAIN	Topic for server to broadcast commands unique to that node. Commands will follow the reportcommands format provided by the node.
-
-					
