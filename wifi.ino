@@ -1,4 +1,5 @@
 void setup_wifi() {
+  led.brightness(RGBLed::GREEN, 50);                         //
   String strFileContents = readFile(strConfigFilename.c_str());
   Serial.print("Setup: Read from file: ");
   Serial.println(strFileContents);
@@ -16,11 +17,14 @@ void setup_wifi() {
   wifiManager.setSaveConfigCallback(saveConfigCallback);
   bool res = wifiManager.autoConnect();  // auto generated AP name from chipid
   if (!res) {
+    led.brightness(RGBLed::RED, 100);                        // fault indicator
+    led.brightness(RGBLed::GREEN, 50);                       //
     Serial.printf("%s : %s : Failed to connect\n", __FILE__, __func__);
     // Serial.println("Setup: Failed to connect");
   } else {
     Serial.printf("%s : %s : WiFi connected!\n", __FILE__, __func__);  // if you get here you have connected to the WiFi
     // Serial.println("Setup: WiFi connected!");
+    led.brightness(RGBLed::GREEN, 100);                        // bright green to indicate WiFi is connected
     serialprintwificonfig();
   }
 }

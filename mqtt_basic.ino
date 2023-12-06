@@ -10,6 +10,7 @@ void setup_mqtt() {                                                             
 }
 
 void mqtt_connect() {                                                  // TODO: should we add a section to troubleshoot underlying wifi issues, or is that built into MQTT?
+  led.brightness(RGBLed::MAGENTA, 50);                                 // dim magenta/purple to indicate we're starting MQTT connection
   Serial.print("Attempting MQTT connection... ");                      //
   while (!instMQTTClient.connected()) {                                // Loop until we're reconnected
     if (instMQTTClient.connect(strMQTTserver.c_str(), intMQTTPort)) {  // Attempt to connect
@@ -23,12 +24,16 @@ void mqtt_connect() {                                                  // TODO: 
       instMQTTClient.setId(strClientID);                               //
       instMQTTClient.subscribe(strSubscribeTopic.c_str(), 1);          // subscribe to that topic with QoS 1: FOLLOWUP: why are we converting a String to char array for our own function?
     } else {                                                           // if we're here, we failed to connect
+      led.brightness(RGBLed::RED, 100);                                // bright red fault indicator
       Serial.print("MQTT connection failed, rc=");                     //
       Serial.print(instMQTTClient.connectError());                     //
       Serial.println(" try again in 5 seconds");                       //
-      delay(5000);                                                     // Wait 5 seconds before retrying
-    }
-  }
+      delay(defBlinkShort);                                               //
+      led.brightness(RGBLed::MAGENTA, 50);                             // dim purple for incomplete/failed MQTT connection attempt
+      delay(defBlinkShort);                                               //
+    }                                                                  //
+  }                                                                    //
+  led.brightness(RGBLed::MAGENTA, 100);                                // full brightness magenta for successful MQTT connection
 }
 
 void onMqttMessage(int intMessageSize) {                                         // Routine for handling incoming messages

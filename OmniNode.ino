@@ -1,16 +1,16 @@
 // See Version History page for full details
-
 #define defSoftwareVersion "OmniNodeV0_0_4"  // Used in MQTT config report.
-#define defFuncPacketFwd 0                   // defNodeFunction bit 1 (1) (LSB)
-#define defFuncINA3221 0                     // defNodeFunction bit 2 (2)
-#define defFuncNEO6_7 1                      // defNodeFunction bit 3 (4)
-#define defFuncHMC5883 1                     // defNodeFunction bit 4 (8)
-#define defFuncBMP280 0                      // defNodeFunction bit 5 (16)
-#define defFuncBMP680 0                      // defNodeFunction bit 6 (32)
-#define defFuncMPU6050 0                     // defNodeFunction bit 7 (64)
-#define defFuncADXL345 0                     // defNodeFunction bit 8 (128)
-#define defFuncAS6500 0                      // defNodeFunction bit 9 (256)
-#define defNodeFunction 12                   // compile time definition to enable/disable code segments.
+#define defFuncPacketFwd false               // defNodeFunction bit 1 (1) (LSB)
+#define defFuncINA3221 false                 // defNodeFunction bit 2 (2)
+#define defFuncNEO6_7 false                  // defNodeFunction bit 3 (4)
+#define defFuncHMC5883 true                  // defNodeFunction bit 4 (8)
+#define defFuncBMP280 false                  // defNodeFunction bit 5 (16)
+#define defFuncBMP680 false                  // defNodeFunction bit 6 (32)
+#define defFuncMPU6050 false                 // defNodeFunction bit 7 (64)
+#define defFuncADXL345 false                 // defNodeFunction bit 8 (128)
+#define defFuncAS6500 false                  // defNodeFunction bit 9 (256)
+// now for brevity, we assemble the flags using bitshifts into a single value
+#define defNodeFunction ((defFuncAS6500 << 8) + (defFuncADXL345 << 7) + (defFuncMPU6050 << 6) + (defFuncBMP680 << 5) + (defFuncBMP280 << 4) + (defFuncHMC5883 << 3) + (defFuncNEO6_7 << 2) + (defFuncINA3221 << 1) + defFuncPacketFwd)
 
 #include <FS.h>                 // SPIFFS outdated, but apparently used as a basis for LittleFS
 #include <LittleFS.h>           // https://github.com/esp8266/Arduino/tree/master/libraries/LittleFS
@@ -24,6 +24,51 @@
 #include <WiFiUdp.h>            // required for NTPClient. This code does not include any calls directly to it.
 #include <ArduinoJson.h>        // https://arduinojson.org/?utm_source=meta&utm_medium=library.properties
 #include <Adafruit_Sensor.h>    // https://github.com/adafruit/Adafruit_Sensor
+#include <RGBLed.h>             // https://github.com/wilmouths/RGBLed
+
+#define RED_PIN 13                                                 //
+#define GREEN_PIN 14                                               //
+#define BLUE_PIN 12                                                //
+#define defBlinkShort 500                                          // time in ms
+#define defBlinkLong 500                                           // time in ms
+RGBLed led(RED_PIN, GREEN_PIN, BLUE_PIN, RGBLed::COMMON_CATHODE);  // led instance. Red 13, Green 12, Blue 14, common ground LED / GPIOs are active high
+
+#if (defFuncPacketFwd)
+#include <SoftwareSerial.h>     // https://docs.arduino.cc/learn/built-in-libraries/software-serial
+SoftwareSerial mySerial(2, 0);  // RX, TX  (D4 connected to logger out); GPIO 0, 2 => D4, D3
+#endif
+#if (defFuncINA3221)
+#include <INA3221.h>                  // https://github.com/Tinyu-Zhao/INA3221
+INA3221 ina3221(INA3221_ADDR40_GND);  //
+#endif
+#if (defFuncNEO6_7)
+#include <Adafruit_GPS.h>      // https://github.com/adafruit/Adafruit_GPS
+#define GPSECHO false          //
+#define GPSSerial Serial1      //
+Adafruit_GPS GPS(&GPSSerial);  //
+#endif
+#if (defFuncHMC5883)
+#include <DFRobot_QMC5883.h>                                    // https://github.com/DFRobot/DFRobot_QMC5883
+DFRobot_QMC5883 compass(&Wire, /*I2C addr*/ VCM5883L_ADDRESS);  //
+#endif
+#if (defFuncBMP280)
+
+#endif
+#if (defFuncBMP680)
+
+#endif
+#if (defFuncMPU6050)
+#include <Adafruit_MPU6050.h>  // https://github.com/adafruit/Adafruit_MPU6050
+Adafruit_MPU6050 mpu;          //
+#endif
+#if (defFuncADXL345)
+
+#endif
+#if (defFuncAS6500)
+#include "AS5600.h"  // https://github.com/RobTillaart/AS5600
+AS5600 as5600;
+#endif
+
 
 const String strClientID = String(ESP.getChipId(), HEX);  // global placeholder for my unique MAC ID
 const String strConfigFilename = "/config.json";          // filename for saving our config
@@ -31,15 +76,13 @@ bool boolMQTTEmulated = false;                            // global flag to bypa
 bool boolSaveWiFiConfig = false;                          // flag for saving WiFiManager data
 String strMQTTserver = "192.168.0.17";                    // global placeholder for mqtt server address; to be overwritten by data from file or user via the config portal
 int intMQTTPort = 1883;                                   // set default value, but leave subject to change by user
-char charMQTTServer[40];
-char charMQTTPort[6] = "1883";
-unsigned long ul_lastupdate = 0;       // timestamp (in local millis) of last NTP sync. FOLLOWUP: does this need to be global or can we make it local/static?
-unsigned long ul_lastMsg = 0;          // timestamp (in local millis) of last message sent. FOLLOWUP: does this need to be global or can we make it local/static?
-int intReportInterval = 1500;          // default minimum time between reports in milliseconds. Leave global and variable
-int intMsgCnt = 0;                     // for tracking number of outgoing messages. FOLLOWUP: will this be relevant once we go to QoS 1 or 2?
-int intAvgRSSI = 0;                    // for tracking average WIFI strength. FOLLOWUP: does this need to be global or can we make it local/static?
-const char broker[] = "192.168.0.17";  //
-int port = 1883;                       //
+char charMQTTServer[40];                                  //
+char charMQTTPort[6] = "1883";                            //
+unsigned long ul_lastupdate = 0;                          // timestamp (in local millis) of last NTP sync. FOLLOWUP: does this need to be global or can we make it local/static?
+unsigned long ul_lastMsg = 0;                             // timestamp (in local millis) of last message sent. FOLLOWUP: does this need to be global or can we make it local/static?
+int intReportInterval = 1500;                             // default minimum time between reports in milliseconds. Leave global and variable
+int intMsgCnt = 0;                                        // for tracking number of outgoing messages. FOLLOWUP: will this be relevant once we go to QoS 1 or 2?
+int intAvgRSSI = 0;                                       // for tracking average WIFI strength. FOLLOWUP: does this need to be global or can we make it local/static?
 
 WiFiClient instWiFiClient;                                                             //
 MqttClient instMQTTClient(instWiFiClient);                                             //
@@ -52,6 +95,7 @@ WiFiManagerParameter custom_mqtt_port("port", "mqtt port", charMQTTPort, 6);    
 
 void setup() {                                                                           // initial setup
   Serial.begin(115200);                                                                  // initialize the Serial Monitor interface for debugging. TODO: Global debug flag to remove all Serial
+  led.brightness(RGBLed::WHITE, 50);                                                     // boot with fault state indicator until we get things working
   delay(1000);                                                                           // delay for a while to give Serial Monitor time to catch up with board reset. TODO: remove for production code
   cmd_mountfilesystem();                                                                 // mount file system. will format it if mounting fails
   setup_sensors();                                                                       // function to initialize whatever sensor we're using
@@ -70,13 +114,13 @@ void setup() {                                                                  
 }
 
 void loop() {
-  if (Serial.available() > 0) { getSerialInput(); }                      // regardless of whether we're emulating, allow serial inputs TODO: replace with REST library
-  if (!boolMQTTEmulated) {                                               // only do mqtt stuff if we're not emulating
-    instMQTTClient.poll();                                               // listens for MQTT messages AND sends keepalive messages to avoid disconnects; required for both purposes.}
-  }                                                                      //
-  if (millis() - ul_lastMsg > intReportInterval) {                       // old if statement for sending regular reports. FOLLOWUP: what if we have multiple datapoints we want to send at different intervals? Could we convert to ArduinoTicker library?
-    ul_lastMsg = millis();                                               // set timestamp to now. Placeholder for message packaging is below.
-    Serial.printf("%d \n", intReportInterval);  // Serial monitor readout of report interval
+  if (Serial.available() > 0) { getSerialInput(); }  // regardless of whether we're emulating, allow serial inputs TODO: replace with REST library
+  if (!boolMQTTEmulated) {                           // only do mqtt stuff if we're not emulating
+    instMQTTClient.poll();                           // listens for MQTT messages AND sends keepalive messages to avoid disconnects; required for both purposes.}
+  }                                                  //
+  if (millis() - ul_lastMsg > intReportInterval) {   // old if statement for sending regular reports. FOLLOWUP: what if we have multiple datapoints we want to send at different intervals? Could we convert to ArduinoTicker library?
+    ul_lastMsg = millis();                           // set timestamp to now. Placeholder for message packaging is below.
+    Serial.printf("%d \n", intReportInterval);       // Serial monitor readout of report interval
     cmd_getsensordata();
-  }                                                                      //
+  }  //
 }

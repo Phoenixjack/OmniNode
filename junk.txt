@@ -1,94 +1,4 @@
-const char nodefunctions[] = {
-  // an array of char arrays used for looking up node function
-  (char *)"packetfwd",  // array index 0
-  (char *)"ina3221",    // array index 1
-  (char *)"neo6_7",     // array index 2
-  (char *)"hmc5883",    // array index 3
-  (char *)"bmp280",     // array index 4
-  (char *)"bme680",     // array index 5
-  (char *)"mpu6050",    // array index 6
-  (char *)"adxl345",    // array index 7
-  (char *)"as5600"      // array index 8
-};                      // example: node with neo6 or neo7 gps AND hmc5883 compass would have defNodeFunction of (0b0000 0100 & 0b0000 1000) = 0b0000 1100 = 12
-const int intNumNodeFunctions(sizeof(nodefunctions) / sizeof(char *))
-
-
-#if (defNodeFunction & 1)        // Packet FWD; applying a mask of binary 0000 0000 0000 0001 to our defNodeFunction. Example: 0000 0000 0000 1100 results in 0000 0000 0000 0000 which is false
-#include <SoftwareSerial.h>      // https://docs.arduino.cc/learn/built-in-libraries/software-serial
-#endif                           //
-#if (defFuncINA3221)             // INA3221; applying a mask of binary 0000 0000 0000 0010 to our defNodeFunction. Example: 0000 0000 0000 1100 results in 0000 0000 0000 0000 which is false
-#include <INA3221.h>             // https://github.com/Tinyu-Zhao/INA3221
-#endif                           //
-#if (defNodeFunction & 4)        // GPS; applying a mask of binary 0000 0000 0000 0100 to our defNodeFunction. Example: 0000 0000 0000 1100 results in 0000 0000 0000 1000 which is not false, ie true
-#include <Adafruit_GPS.h>        //
-#define GPSECHO false            //
-#endif                           //
-#if (defNodeFunction & 8)        // HMC5883
-#include <Adafruit_HMC5883_U.h>  // https://github.com/adafruit/Adafruit_HMC5883_Unified
-#endif                           //
-#if (defNodeFunction & 16)       // BMP280
-#endif                           //
-#if (defNodeFunction & 32)       // BME680
-#endif                           //
-#if (defNodeFunction & 64)       // MPU6050
-#endif                           //
-#if (defNodeFunction & 128)      // ADXL345
-#endif                           //
-#if (defNodeFunction & 256)      // AS5600
-#include "AS5600.h"              //
-#endif                           //
-#if (defNodeFunction & 512)      //
-#endif                           //
-
-#if (defNodeFunction & 1)                                        // Packet FWD \
-                                                                 //
-#endif                                                           //
-#if (defFuncINA3221)                                             // INA3221;
-INA3221 ina3221(INA3221_ADDR40_GND);                             //
-#endif                                                           //
-#if (defNodeFunction & 4)                                        // GPS
-#define GPSSerial Serial1                                        //
-Adafruit_GPS GPS(&GPSSerial);                                    //
-#endif                                                           //
-#if (defNodeFunction & 8)                                        // HMC5883
-Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);  // adafruit library requires a unique sensor id, so insert randomness
-float fltMagneticDeviation = (-10 - (39 / 60)) * PI / 180;       // https://www.magnetic-declination.com/   mag dev for Dahlgren: -10deg39min  field strength: 50272.5nT
-#endif                                                           //
-#if (defNodeFunction & 16)                                       // BMP280
-#endif                                                           //
-#if (defNodeFunction & 32)                                       // BME680
-#endif                                                           //
-#if (defNodeFunction & 64)                                       // MPU6050
-#endif                                                           //
-#if (defNodeFunction & 128)                                      // ADXL345
-#endif                                                           //
-#if (defNodeFunction & 256)                                      // AS5600
-#include "AS5600.h"                                              //
-#endif                                                           //
-#if (defNodeFunction & 512)                                      //
-#endif                                                           //
-
-
-String getFunctionName() {  // assembles a human readable string based on defNodeFunction
-  return "getfunctionname";
-}
-
-#if (defNodeFunction & 1)  // Packet FWD
-#endif                     //
-#if (defNodeFunction & 2)  // INA3221
-  ina3221.begin();
-  ina3221.reset();
-  ina3221.setShuntRes(10, 10, 10);   // Set shunt resistors to 10 mOhm for all channels
-  ina3221.setFilterRes(10, 10, 10);  // Set series filter resistors to 10 Ohm for all channels. They introduce error to the current measurement, but error can be estimated and corrected.
-#endif                               //
-#if (defNodeFunction & 4)            // GPS
-  GPS.begin(4800);
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);  // 1 Hz update rate
-  GPS.sendCommand(PGCMD_ANTENNA);
-  delay(1000);
-  GPSSerial.println(PMTK_Q_RELEASE);
-#endif                     //
+                  //
 #if (defNodeFunction & 8)  // HMC5883
   if (!mag.begin()) {      // There was a problem detecting the HMC5883 ... check your connections
     Serial.println("Ooops, no HMC5883 detected ... Check your wiring!");
@@ -116,25 +26,12 @@ String getFunctionName() {  // assembles a human readable string based on defNod
   Serial.println(fltMagneticDeviation);
   Serial.println("------------------------------------");
   Serial.println("");
-
-#endif                       //
-#if (defNodeFunction & 16)   // BMP280
-#endif                       //
-#if (defNodeFunction & 32)   // BME680
-#endif                       //
-#if (defNodeFunction & 64)   // MPU6050
-#endif                       //
-#if (defNodeFunction & 128)  // ADXL345
-#endif                       //
-#if (defNodeFunction & 256)  // AS5600
-#endif                       //
-#if (defNodeFunction & 512)  //
 #endif                       //
 
 
 
-#if (defNodeFunction & 1)   // Packet FWD
-#endif                      //
+
+                  //
 #if (defNodeFunction & 2)   // INA3221
   cmd_getina3221data();     //
 #endif                      //
@@ -153,21 +50,7 @@ String getFunctionName() {  // assembles a human readable string based on defNod
       return;                        // we can fail to parse a sentence in which case we should just wait for another
   }
 #endif                       //
-#if (defNodeFunction & 8)    // HMC5883
-  cmd_gethmc5883data();      //
-#endif                       //
-#if (defNodeFunction & 16)   // BMP280
-#endif                       //
-#if (defNodeFunction & 32)   // BME680
-#endif                       //
-#if (defNodeFunction & 64)   // MPU6050
-#endif                       //
-#if (defNodeFunction & 128)  // ADXL345
-#endif                       //
-#if (defNodeFunction & 256)  // AS5600
-#endif                       //
-#if (defNodeFunction & 512)  //
-#endif                       //
+
 
 
 void cmd_gethmc5883data() {
