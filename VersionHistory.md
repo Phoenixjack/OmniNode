@@ -1,14 +1,4 @@
 # MAJOR TODOs:
-## Memory / Space management:
-  [ ] look at how much space the compiled code takes
-  [ ] look at how much runtime memory is used
-  [ ] evaluate if we need to minimize usage of JSON library and strings
-## Compile-time stuff:
-  [ ] DEBUG level(s) to disable all or some Serial.print statements? -> even if only for reducing processor time for production code
-  [ ] modify defNodeFunction to point to a global array of functions
-    [ ] with defNodeFunction containing bit flags
-    [ ] allow more than one function per node
-    [ ] example: defNodeFunction = 12 = b0000 0000 0000 1010 with bit 2 = compass & bit 4 = gps
 ## Variable handling:
   [ ] enum array for commands, parameters, etc
   [ ] implement pointers for subroutines with multiple returns; REDUCE GLOBAL VARIABLES! bad programmer! BAD! no cookie.
@@ -19,26 +9,44 @@
       - Position 3: 'i' integer, 'd' double, 'l' long, 'c' char, 's' string, 'b' boolean, etc
       - Position 4: 's' signed for numbers, 'u' unsigned for numbers, 'a' for char arrays, 's' for single char
       - EXAMPLE: int gvis_MQTTPort = 1883, static int lsiu_XmitPacketCnt++, gcs_ClientID = String(ESP.getChipId(), HEX)
-## User Visual Indicators: integrate RGB library
 ## Functions and Subroutines: 
   [ ] make sure their names still make sense as the code has evolved
-  [ ] possibly mirror the naming convention of what they return (boolean, int, string, etc)
+  [ ] mirror the naming convention of what they return (boolean, int, string, etc)
   [ ] convert them to return error codes or booleans based on what happened
+## Memory / Space management:
+  [ ] look at how much space the compiled code takes
+  [ ] look at how much runtime memory is used
+  [ ] evaluate if we need to minimize usage of JSON library and strings
+
+. Variables and constants in RAM (global, static), used 34540 / 80192 bytes (43%)
+║   SEGMENT  BYTES    DESCRIPTION
+╠══ DATA     1612     initialized variables
+╠══ RODATA   5384     constants       
+╚══ BSS      27544    zeroed variables
+. Instruction RAM (IRAM_ATTR, ICACHE_RAM_ATTR), used 62039 / 65536 bytes (94%)
+║   SEGMENT  BYTES    DESCRIPTION
+╠══ ICACHE   32768    reserved space for flash instruction cache
+╚══ IRAM     29271    code in IRAM    
+. Code in flash (default, ICACHE_FLASH_ATTR), used 377024 / 1048576 bytes (35%)
+║   SEGMENT  BYTES    DESCRIPTION
+╚══ IROM     377024   code in flash   
 
 ## V0_0_4:
+_BEWARE_: Switching defNodeFunction flags may cause unexpected errors. This is strictly an Arduino IDE issue where it tries to include & compile code that won't be called.
+***BROKE***: cmd_reportconfig:fetch local IP address now fails. Cause unknown at this time.
 [x] Implemented C++ macro to save compile timestamp
 [x] Implemented basic compile-time definitions to reduce unneeded code
 [x] defNodeFunction that aggregates multiple functions
 [x] Initial implementation of RGB library for user notification **USES GPIO 12,13,14** __Avoid these pins for future hardware__
-[ ] Cleanup / reduce Serial print calls
-[ ] Debug level defines for Serial prints
-[ ] Implement Serial printf calls indicating what filename and function generated the action
-[ ] Initial sensor integration **NOT full integration; sensor initialization and basic data pulls only**
+[x] Cleanup / reduce Serial print calls
+[x] Debug level defines for Serial prints
+[x] Implement Serial printf calls indicating what filename and function generated the action
+[x] Initial sensor integration **NOT full integration; sensor initialization and basic data pulls only**
   [x] Packet Forwarding via second serial port
   [x] INA3221 
-  [x] HMC5883
+  [x] HMC5883/QMC5883
   [x] MPU6050
-  [ ] NEO6/7
+  [x] NEO6/7
   [x] AS5600
 
 ## V0_0_3:

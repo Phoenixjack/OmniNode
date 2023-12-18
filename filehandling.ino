@@ -1,38 +1,52 @@
-void cmd_mountfilesystem() {                                       // mount filesystem
-  if (!LittleFS.begin()) {                                         //
-    Serial.println("cmd_mountfilesystem: LittleFS mount failed");  //
-  }                                                                //
+void cmd_mountfilesystem() {                 // mount filesystem
+  if (!LittleFS.begin()) {                   //
+    debugprefix();                           //
+    debugoutput("LittleFS mount failed\n");  //
+  }                                          //
 }
 
-void listDir(const char *dirname) {  // lists all files on internal storage to Serial Monitor only
+void listDir(const char *dirname) {  // lists all files on internal storage to Serial Monitor only [for now]
+#if (defDebugFull)
   // usage: listDir("/");
-  Serial.printf("listDir: Listing directory: %s\n", dirname);
+  debugprefix();  //
+  debugoutput("Listing directory: ");
+  debugoutputln(dirname);
   Dir root = LittleFS.openDir(dirname);
   while (root.next()) {
     File file = root.openFile("r");
-    Serial.print("  FILE: ");
-    Serial.print(root.fileName());
-    Serial.print("  SIZE: ");
-    Serial.print(file.size());
+    debugoutput("  FILE: ");
+    debugoutput(root.fileName());
+    debugoutput("  SIZE: ");
+    debugoutput(file.size());
     time_t cr = file.getCreationTime();
     time_t lw = file.getLastWrite();
     file.close();
     struct tm *tmstruct = localtime(&cr);
-    Serial.printf("    CREATION: %d-%02d-%02d %02d:%02d:%02d\n", (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday, tmstruct->tm_hour, tmstruct->tm_min, tmstruct->tm_sec);
+    // debugoutput("    CREATION: %d-%02d-%02d %02d:%02d:%02d\n", (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday, tmstruct->tm_hour, tmstruct->tm_min, tmstruct->tm_sec);
+    debugoutput("    CREATION: ");
+    debugoutput((tmstruct->tm_year) + 1900);
+    debugoutput((tmstruct->tm_mon) + 1);
+    debugoutput(tmstruct->tm_mday);
+    debugoutput(tmstruct->tm_hour);
+    debugoutput(tmstruct->tm_min);
+    debugoutput(tmstruct->tm_sec);
     tmstruct = localtime(&lw);
-    Serial.printf("  LAST WRITE: %d-%02d-%02d %02d:%02d:%02d\n", (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday, tmstruct->tm_hour, tmstruct->tm_min, tmstruct->tm_sec);
+    //debugoutput("  LAST WRITE: %d-%02d-%02d %02d:%02d:%02d\n", (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday, tmstruct->tm_hour, tmstruct->tm_min, tmstruct->tm_sec);
   }
+#endif
 }
 
 String readFile(const char *path) {  // returns file contents or "error" as a String
   String strFileReadBuffer;
-  Serial.printf("readFile: Reading file: %s\n", path);
+  debugprefix();  //
+  debugoutput("Reading file: ");
+  debugoutputln(path);
   File file = LittleFS.open(path, "r");
   if (!file) {
-    Serial.println("readFile: Failed to open file for reading");
+    debugoutput("Failed to open file for reading\n");
     return "error";
   }
-  //Serial.print("readFile: Read from file: ");
+  //debugoutput("Read from file: ");
   while (file.available()) {
     strFileReadBuffer += (char)file.read();
   }
@@ -42,16 +56,18 @@ String readFile(const char *path) {  // returns file contents or "error" as a St
 
 void writeFile(const char *path, const char *filecontents) {
   // usage: writeFile("/hello.txt", "Hello ");
-  Serial.printf("writeFile: Writing file: %s\n", path);
+  debugprefix();  //
+  debugoutput("writeFile: Writing file: ");
+  debugoutputln(path);
   File file = LittleFS.open(path, "w");
   if (!file) {
-    Serial.println("Failed to open file for writing");
+    debugoutput("Failed to open file for writing\n");
     return;
   }
   if (file.print(filecontents)) {
-    Serial.println("File written");
+    debugoutput("File written\n");
   } else {
-    Serial.println("Write failed");
+    debugoutput("Write failed\n");
   }
   delay(2000);  // Make sure the CREATE and LASTWRITE times are different
   file.close();
@@ -59,36 +75,44 @@ void writeFile(const char *path, const char *filecontents) {
 
 void appendFile(const char *path, const char *filecontents) {
   // usage: appendFile("/hello.txt", "World!\n");
-  Serial.printf("appendFile: Appending to file: %s\n", path);
+  debugprefix();  //
+  debugoutput("Appending to file: ");
+  debugoutputln(path);
   File file = LittleFS.open(path, "a");
   if (!file) {
-    Serial.println("Failed to open file for appending");
+    debugoutput("Failed to open file for appending\n");
     return;
   }
   if (file.print(filecontents)) {
-    Serial.println("Content appended");
+    debugoutput("Content appended\n");
   } else {
-    Serial.println("Append failed");
+    debugoutput("Append failed\n");
   }
   file.close();
 }
 
 void renameFile(const char *path1, const char *path2) {
-  Serial.printf("renameFile: Renaming file %s to %s\n", path1, path2);
+  debugprefix();  //
+  debugoutput("Renaming file: ");
+  debugoutput(path1);
+  debugoutput(" to ");
+  debugoutputln(path2);
   if (LittleFS.rename(path1, path2)) {
-    Serial.println("File renamed");
+    debugoutput("File renamed\n");
   } else {
-    Serial.println("Rename failed");
+    debugoutput("Rename failed\n");
   }
 }
 
 void deleteFile(const char *path) {
   // usage: deleteFile("/hello.txt");
-  Serial.printf("deleteFile: Deleting file: %s\n", path);
+  debugprefix();  //
+  debugoutput("Deleting file: ");
+  debugoutputln(path);
   if (LittleFS.remove(path)) {
-    Serial.println("File deleted");
+    debugoutput("File deleted\n");
   } else {
-    Serial.println("Delete failed");
+    debugoutput("Delete failed\n");
   }
 }
 

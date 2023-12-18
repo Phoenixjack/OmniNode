@@ -1,4 +1,6 @@
 // See Version History page for full details
+#define defDebugFull true                    // flag to turn on/off serial print statements for troubleshooting
+#define defDebugFileFunction true            // flag to turn on/off serial printing of what file and function produced the output
 #define defSoftwareVersion "OmniNodeV0_0_4"  // Used in MQTT config report.
 #define defFuncPacketFwd false               // defNodeFunction bit 1 (1) (LSB)
 #define defFuncINA3221 false                 // defNodeFunction bit 2 (2)
@@ -11,7 +13,18 @@
 #define defFuncAS6500 false                  // defNodeFunction bit 9 (256)
 // now for brevity, we assemble the flags using bitshifts into a single value
 #define defNodeFunction ((defFuncAS6500 << 8) + (defFuncADXL345 << 7) + (defFuncMPU6050 << 6) + (defFuncBMP680 << 5) + (defFuncBMP280 << 4) + (defFuncHMC5883 << 3) + (defFuncNEO6_7 << 2) + (defFuncINA3221 << 1) + defFuncPacketFwd)
-
+#if (defDebugFull)
+#define debugoutput(x) Serial.print(x)
+#define debugoutputln(x) Serial.println(x)
+#else
+#define debugoutput(x)
+#define debugoutputln(x)
+#endif
+#if (defDebugFileFunction)
+#define debugprefix() Serial.printf("%s: %s: \n", __FILE__, __func__)
+#else
+#define debugprefix()
+#endif
 #include <FS.h>                 // SPIFFS outdated, but apparently used as a basis for LittleFS
 #include <LittleFS.h>           // https://github.com/esp8266/Arduino/tree/master/libraries/LittleFS
 #include <Wire.h>               // https://www.arduino.cc/en/Reference/wire
@@ -43,16 +56,17 @@ INA3221 ina3221(INA3221_ADDR40_GND);  //
 #endif
 #if (defFuncNEO6_7)
 #include <Adafruit_GPS.h>      // https://github.com/adafruit/Adafruit_GPS
-#define GPSECHO false          //
+#define GPSECHO false          // Set to 'true' if you want to debug and listen to the raw GPS sentences
 #define GPSSerial Serial1      //
 Adafruit_GPS GPS(&GPSSerial);  //
 #endif
 #if (defFuncHMC5883)
-#include <DFRobot_QMC5883.h>                                    // https://github.com/DFRobot/DFRobot_QMC5883
-DFRobot_QMC5883 compass(&Wire, /*I2C addr*/ VCM5883L_ADDRESS);  //
+#include <DFRobot_QMC5883.h>           // https://github.com/DFRobot/DFRobot_QMC5883  This library covers the QMC5883, HMC5883, and VMC5993
+DFRobot_QMC5883 compass(&Wire, 0x0D);  // I manually defined the I2C address because the first batch of 5883s received were QMCs masquerading as HMCs
 #endif
 #if (defFuncBMP280)
-
+#include <Adafruit_BMP280.h>  // https://www.ndbc.noaa.gov/station_page.php?station=COVM2  Cove Point, MD      https://www.ndbc.noaa.gov/station_page.php?station=SLIM2 Solomons Island, MD
+Adafruit_BMP280 bmp;          // https://www.ndbc.noaa.gov/station_page.php?station=NCDV2  Dahlgren            https://www.ndbc.noaa.gov/station_page.php?station=LWTV2 Lewisetta, VA
 #endif
 #if (defFuncBMP680)
 
@@ -78,6 +92,7 @@ String strMQTTserver = "192.168.0.17";                    // global placeholder 
 int intMQTTPort = 1883;                                   // set default value, but leave subject to change by user
 char charMQTTServer[40];                                  //
 char charMQTTPort[6] = "1883";                            //
+int intSeaLevelPressPa = 101325;                          // standard sea level pressure = 101,325 Pa; can update via mqtt subscribe later
 unsigned long ul_lastupdate = 0;                          // timestamp (in local millis) of last NTP sync. FOLLOWUP: does this need to be global or can we make it local/static?
 unsigned long ul_lastMsg = 0;                             // timestamp (in local millis) of last message sent. FOLLOWUP: does this need to be global or can we make it local/static?
 int intReportInterval = 1500;                             // default minimum time between reports in milliseconds. Leave global and variable
@@ -93,23 +108,26 @@ WiFiManagerParameter custom_mqtt_server("server", "mqtt server", charMQTTServer,
 WiFiManagerParameter custom_mqtt_port("port", "mqtt port", charMQTTPort, 6);           // has to be declared globally
 
 
-void setup() {                                                                           // initial setup
-  Serial.begin(115200);                                                                  // initialize the Serial Monitor interface for debugging. TODO: Global debug flag to remove all Serial
-  led.brightness(RGBLed::WHITE, 50);                                                     // boot with fault state indicator until we get things working
-  delay(1000);                                                                           // delay for a while to give Serial Monitor time to catch up with board reset. TODO: remove for production code
-  cmd_mountfilesystem();                                                                 // mount file system. will format it if mounting fails
-  setup_sensors();                                                                       // function to initialize whatever sensor we're using
-  if (boolMQTTEmulated) {                                                                // is emulation enabled?
-    Serial.printf("%s : %s : WiFi and MQTT functions emulated.\n", __FILE__, __func__);  //
-    Serial.print("Enter compact JSON in Serial Monitor ");                               // and tell them how to interact with us
-    Serial.println("to simulate sending the node a message");                            //
-    Serial.println("");                                                                  //
-  } else {                                                                               // emulation isn't enabled, so we do a normal startup
-    setup_wifi();                                                                        //
-    instNTPClient.begin();                                                               // connect to NTP server.
-    instNTPClient.update();                                                              // force an update. FOLLOWUP: should this be moved to a separate function that's handled after we connect to the broker?
-    ul_lastupdate = millis();                                                            // mark the time
-    setup_mqtt();                                                                        // start up MQTT
+void setup() {           // initial setup
+  Serial.begin(115200);  // initialize the Serial Monitor interface for debugging
+#if (defDebugFull)
+  while (!Serial) delay(100);  // wait for Serial Monitor. TODO: Add debug statement to disable waiting for serial readiness
+#endif
+  led.brightness(RGBLed::WHITE, 50);                          // boot with fault state indicator until we get things working
+  delay(1000);                                                // delay for a while to give Serial Monitor time to catch up with board reset. TODO: remove for production code
+  cmd_mountfilesystem();                                      // mount file system. will format it if mounting fails
+  setup_sensors();                                            // function to initialize whatever sensor we're using
+  if (boolMQTTEmulated) {                                     // is emulation enabled?
+    debugprefix();                                            // and tell them how to interact with us
+    debugoutput("WiFi and MQTT functions emulated\n");        //
+    debugoutput("Enter compact JSON in Serial Monitor ");     //
+    debugoutput("to simulate sending the node a message\n");  //
+  } else {                                                    // emulation isn't enabled, so we do a normal startup
+    setup_wifi();                                             //
+    instNTPClient.begin();                                    // connect to NTP server.
+    instNTPClient.update();                                   // force an update. FOLLOWUP: should this be moved to a separate function that's handled after we connect to the broker?
+    ul_lastupdate = millis();                                 // mark the time
+    setup_mqtt();                                             // start up MQTT
   }
 }
 
@@ -120,7 +138,8 @@ void loop() {
   }                                                  //
   if (millis() - ul_lastMsg > intReportInterval) {   // old if statement for sending regular reports. FOLLOWUP: what if we have multiple datapoints we want to send at different intervals? Could we convert to ArduinoTicker library?
     ul_lastMsg = millis();                           // set timestamp to now. Placeholder for message packaging is below.
-    Serial.printf("%d \n", intReportInterval);       // Serial monitor readout of report interval
-    cmd_getsensordata();
-  }  //
+    debugoutput("interval: ");                       // Serial monitor readout of report interval
+    debugoutput(intReportInterval);                  //
+    cmd_getsensordata();                             //
+  }                                                  //
 }

@@ -6,7 +6,7 @@
    - TBD...
  + RGB Indicator 
    - Uses GPIO 12,13,14. 
-   - Common Cathode/ground
+   - Common Cathode/ground: Could use GPIO15 or GPIO16; 16 (D0) goes HIGH at boot, but otherwise good; 15 (D8) boot will fail if pulled HIGH during startup
    - General guidance:
      + Colors
        o RED - fault
@@ -38,5 +38,10 @@
    o bidirectional voltage/current sensor
    o high/low side compatible
    o RANGE??? - 5mA max on input pins. 100mohm standard shunt resistors. 163.8mV max shunt voltage
- + 
+ + HMC5883
+   o 12-bit ADC 
+   o 1° to 2° compass heading accuracy
+   o Measures milli-gauss to 8 gauss
+   o 5 milli-gauss resolution
+   o 0.75 up to 75 Hz continuous output rate
 
