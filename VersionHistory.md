@@ -31,6 +31,31 @@
 ║   SEGMENT  BYTES    DESCRIPTION
 ╚══ IROM     377024   code in flash   
 
+## V0_0_6:
+[ ] goal:
+ o save broker, report interval, and any other config changes to local file and retrieve on boot *before* WiFiManager
+ o update use of ArduionJSON to reflect updates. StaticJSON and DynamicJSON are depreciated.
+ o provide server with method for validating data
+ o provide server with method for providing valid commands
+ o execute valid commands
+ o recursively compile report and command formats into JSON package
+ o structure or array of variable types, min/max values, units, etc
+[X] remove infinite loop for WiFi and MQTT. Added Serial Monitor input feature
+[X] debug levels:
+    + initial setup
+    + file system
+    + WiFi notices
+    + MQTT notices (terse & verbose)
+    + Sensor readings
+    + JSON handling
+    + time functions
+
+## V0_0_5:
+[X] further testing of compile time switches. identified bugs in compass configuration/data reporting
+[X] better handling of variable scopes
+[X] revamp handling of MQTT commands and report formats
+[x] reviewed/fixed various variable & object names that didn't meet naming convention
+
 ## V0_0_4:
 _BEWARE_: Switching defNodeFunction flags may cause unexpected errors. This is strictly an Arduino IDE issue where it tries to include & compile code that won't be called.
 ***BROKE***: cmd_reportconfig:fetch local IP address now fails. Cause unknown at this time.

@@ -1,5 +1,6 @@
 String strGetSerialData() {     // reads incoming data from the secondary Serial port for packet forwarding
   String strSerialPacket = "";  //
+  debugPrefix(defDebugFull);    //
 #if (defFuncPacketFwd)
   unsigned long ulLastMsg, ulNow;          //
   while (mySerial.available()) {           // loop through while data is available
@@ -10,7 +11,8 @@ String strGetSerialData() {     // reads incoming data from the secondary Serial
     }                                      //
   }                                        //
 #endif
-  return strSerialPacket;  //
+  debugoutputln(strSerialPacket);  //
+  return strSerialPacket;          //
 }
 
 void getSerialInput() {                                                          // reads raw JSON from Serial input. WARNING: NO INPUT VALIDATION!
@@ -18,10 +20,10 @@ void getSerialInput() {                                                         
   StaticJsonDocument<200> objJSONdoc;                                            //
   DeserializationError boolJSONError = deserializeJson(objJSONdoc, strPayload);  //
   if (boolJSONError) {                                                           //
-    debugprefix();                                                               //
-    debugoutput("deserializeJson() failed: ");                                   //
-    debugoutput(boolJSONError.f_str());                                          //
-    debugoutput("\n");                                                           //
+    debugPrefix(defDebugJSON);    //
+    debugJSON("deserializeJson() failed: ");                                     //
+    debugJSON(boolJSONError.f_str());                                            //
+    debugJSON("\n");                                                             //
     String strXmitMsg = strStandardMsg("error", "deserialization error");        // assemble short message reporting a problem. TODO: is there a way to feedback a message identifier so the server even knows which message we're talking about?
     strXmitMsg = strJSONwrap(strXmitMsg);                                        //
     transmitmqttmessage("node/errors", strXmitMsg, true, 1);                     // send it to the error reporting topic

@@ -1,5 +1,5 @@
 void setup_sensors() {                 // TODO: report sensor failure via MQTT and/or Serial Debug for ALL SENSOR TYPES
-  debugprefix();                       //
+  debugPrefix(defDebugSensor);         //
   led.brightness(RGBLed::YELLOW, 50);  // indicator that we're starting up whichever sensors are enabled
 #if (defFuncPacketFwd)
   mySerial.begin(115200);  // opening the second serial port for receiving data.
@@ -20,37 +20,38 @@ void setup_sensors() {                 // TODO: report sensor failure via MQTT a
 #endif
 #if (defFuncHMC5883)
   while (!compass.begin()) {
-    debugoutput("Could not find a valid 5883 sensor, check wiring!\n");
+    debugSensor("Could not find a valid 5883 sensor, check wiring!\n");
     delay(500);
-  }                                                // HMC5883L_RANGE_0_88GA  HMC5883L_RANGE_1_3GA
-  compass.setRange(QMC5883_RANGE_2GA);             // At 1.3GA range and heading 000, X:303 Y:12 Z:-1177. At 0.88GA range and heading 000, X:596 Y:-25 Z:-1275
-  debugoutput("compass range is:");                //
-  debugoutput(compass.getRange());                 //
-  compass.setMeasurementMode(HMC5883L_CONTINOUS);  // Set/get measurement mode
-  debugoutput("\ncompass measurement mode is:");
-  debugoutput(compass.getMeasurementMode());
+  }                                               //
+  compass.setRange(QMC5883_RANGE_2GA);            //
+  debugSensor("compass range is:");               //
+  debugSensor(compass.getRange());                //
+  compass.setMeasurementMode(QMC5883_CONTINOUS);  // Set/get measurement mode
+  debugSensor("\ncompass measurement mode is:");
+  debugSensor(compass.getMeasurementMode());
   compass.setDataRate(QMC5883_DATARATE_10HZ);  // Set/get the data collection frequency of the sensor
-  debugoutput("\ncompass data rate is:");
-  debugoutput(compass.getDataRate());
+  debugSensor("\ncompass data rate is:");
+  debugSensor(compass.getDataRate());
   compass.setSamples(QMC5883_SAMPLES_1);  //Get/get sensor status
-  debugoutput("\ncompass samples is:");
-  debugoutput(compass.getSamples());
+  debugSensor("\ncompass samples is:");
+  debugSensor(compass.getSamples());
   float fltMagneticDeviation = (-10 - (39 / 60)) * PI / 180;
-  debugoutput("\nMagnetic Deviation: ");
-  debugoutputln(fltMagneticDeviation);
+  debugSensor("\nMagnetic Deviation: ");
+  debugSensor(fltMagneticDeviation);
+  debugSensor("\n");
   compass.setDeclinationAngle(fltMagneticDeviation);  // https://www.magnetic-declination.com/   mag dev for Dahlgren: -10deg39min  field strength: 50272.5nT, 50.53uT, or 0.505 gauss
 #endif
 #if (defFuncBMP280)
   unsigned status;
   status = bmp.begin(BMP280_ADDRESS_ALT, BMP280_CHIPID);
   if (!status) {
-    debugoutput("Could not find a valid BMP280 sensor, check wiring or try a different address!");
-    debugoutput("SensorID was: 0x");
-    debugoutput(String(bmp.sensorID(), HEX));
-    debugoutput("\n        ID of 0xFF probably means a bad address, a BMP 180 or BMP 085\n");
-    debugoutput("   ID of 0x56-0x58 represents a BMP 280,\n");
-    debugoutput("        ID of 0x60 represents a BME 280.\n");
-    debugoutput("        ID of 0x61 represents a BME 680.\n");
+    debugSensor("Could not find a valid BMP280 sensor, check wiring or try a different address!");
+    debugSensor("SensorID was: 0x");
+    debugSensor(String(bmp.sensorID(), HEX));
+    debugSensor("\n        ID of 0xFF probably means a bad address, a BMP 180 or BMP 085\n");
+    debugSensor("   ID of 0x56-0x58 represents a BMP 280,\n");
+    debugSensor("        ID of 0x60 represents a BME 280.\n");
+    debugSensor("        ID of 0x61 represents a BME 680.\n");
     while (1) delay(10);                           // TODO: modify this for RGB indicator
     bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,  /* Operating Mode. */
                     Adafruit_BMP280::SAMPLING_X2,  /* Temp. oversampling */
@@ -64,7 +65,7 @@ void setup_sensors() {                 // TODO: report sensor failure via MQTT a
 #endif
 #if (defFuncMPU6050)
   if (!mpu.begin()) {                              //
-    debugoutput("Failed to find MPU6050 chip\n");  //
+    debugSensor("Failed to find MPU6050 chip\n");  //
     while (!mpu.begin()) {                         //
       led.brightness(RGBLed::RED, 100);            //
       delay(defBlinkShort);                        //
@@ -72,7 +73,7 @@ void setup_sensors() {                 // TODO: report sensor failure via MQTT a
       delay(defBlinkShort);                        //
     }                                              //
   }                                                //
-  debugoutput("MPU6050 Found!\n");                 //
+  debugSensor("MPU6050 Found!\n");                 //
   mpu.setAccelerometerRange(MPU6050_RANGE_2_G);    //
   mpu.setGyroRange(MPU6050_RANGE_250_DEG);         //
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);      //
@@ -92,7 +93,7 @@ void setup_sensors() {                 // TODO: report sensor failure via MQTT a
 
 void cmd_getsensordata() {           // generic 'read the sensor' function. keeps the main loop and calling functions clean by containing ifdef statements here
   led.brightness(RGBLed::BLUE, 50);  // dim blue to indicate processing data
-  debugprefix();                     //
+  debugPrefix(defDebugSensor);       //
   String strConfigSubStr = "";       // for compiling sub payloads
   String strXmitMsg = "";            // for compiling all relevant payloads
 #if (defFuncPacketFwd)
@@ -118,8 +119,11 @@ void cmd_getsensordata() {           // generic 'read the sensor' function. keep
 
 #endif
 #if (defFuncHMC5883)
-  sVector_t mag = compass.readRaw();                                            //
-  compass.getHeadingDegrees();                                                  //
+  sVector_t mag = compass.readRaw();  //
+  compass.getHeadingDegrees();        //
+  debugSensor("heading: ");
+  debugSensor(mag.HeadingDegress);
+  debugSensor("\n");
   strConfigSubStr = strKeyValuePair("heading", String(mag.HeadingDegress, 1));  //
   strConfigSubStr = strJSONwrap(strConfigSubStr);                               //
   strXmitMsg += strKeyValuePair("xMC5883", strConfigSubStr);                    //
@@ -190,7 +194,7 @@ void cmd_GetSensorConfig() {
   strConfigSubStr += strKeyValuePair("datarate", String(compass.getDataRate())) + ",";            //
   strConfigSubStr += strKeyValuePair("samples", String(compass.getSamples()));                    //
   strConfigSubStr = strJSONwrap(strConfigSubStr);                                                 //
-  strXmitMsg += strKeyValuePair("HMC5883", strConfigSubStr);                                      //
+  strXmitMsg += strKeyValuePair("xMC5883", strConfigSubStr);                                      //
 #endif
 #if (defFuncBMP280)
   strConfigSubStr = strKeyValuePair("Setting1", String("settinglookup")) + ",";   //
