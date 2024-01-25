@@ -71,9 +71,14 @@ void onMqttMessage(int intMessageSize) {                                        
   processreceivedcommand(strRcvdCmd, strRcvdValue);                              // process what we received
 }
 
-String strKeyValuePair(String strKey, String strValue) {                  // simple function for a single key/value pair
-  String strAssembledString = "\"" + strKey + "\":\"" + strValue + "\"";  // "key":"value"
-  return strAssembledString;                                              // give it back
+String strKeyValuePair(String strKey, String strValue) {  // simple function for a single key/value pair
+  String strAssembledString;
+  if (strValue.startsWith("{")) {
+    strAssembledString = "\"" + strKey + "\":" + strValue;  // "key":{"key":"value"} Don't enclose JSON objects in quotes, even when they're values
+  } else {
+    strAssembledString = "\"" + strKey + "\":\"" + strValue + "\"";  // "key":"value"
+  }
+  return strAssembledString;  // give it back
 }
 
 String strJSONwrap(String value) {              // simple function to wrap an object

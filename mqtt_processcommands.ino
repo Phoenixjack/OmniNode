@@ -1,4 +1,5 @@
 void processreceivedcommand(String strRcvdCmd, String strRcvdValue) {           // process incoming messages. This has been separated from OnMQTTMessage so we can manually invoke on Serial inputs
+  // {"command":"setmqtt","value":"192.168.1.68"}
   int intRcvdValue = strRcvdValue.toInt();                                      // convert to integer
   if (strRcvdCmd == "reboot") { cmd_reboot(); }                                 //
   if (strRcvdCmd == "reportin") { cmd_areyouthere(); }                          //

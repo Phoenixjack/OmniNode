@@ -1,11 +1,13 @@
 // See Version History page for full details
-#define defDebugFull true   // flag to turn on/off serial print statements for troubleshooting. TODO: PHASE THIS OUT
-#define defDebugSetup true  // Initial Setup debugging
+#define defRestServerEnable false  // enables command input via WiFi REST API on port 81
+#define defDebugFull true          // flag to turn on/off serial print statements for troubleshooting. TODO: PHASE THIS OUT
+#define defDebugSetup true         // Initial Setup debugging
 #define debugPrefix(x) (x) ? Serial.printf("%s, %s\n", __FILE__, __FUNCTION__) \
                            : Serial.print("");  // defined macro to conditionally print file and function produced the output; accepts boolean flags (defDebug___)
 #define defDebugFileSys false                   // filesystem debugging
 #define defDebugJSON false                      // JSON
 #define defDebugWiFi true                       // WiFi actions
+#define defDebugServer true                     // debugging of REST API
 #define defDebugMQTTTerse true                  // MQTT critical actions
 #define defDebugMQTTVerbose true                // MQTT non-critical actions
 #define defDebugSensor false                    // Sensor config and reading
@@ -66,6 +68,11 @@ ADC_MODE(ADC_VCC);  // required to use built in ADC to measure onboard voltage.
 #define debugWiFi(x) Serial.print(x)
 #else
 #define debugWiFi(x)
+#endif
+#if (defDebugServer && defRestServerEnable)
+#define debugServer(x) Serial.print(x)
+#else
+#define debugServer(x)
 #endif
 #if (defDebugMQTTTerse)
 #define debugMQTTTerse(x) Serial.print(x)
@@ -132,7 +139,7 @@ Adafruit_MPU6050 mpu;          //
 AS5600 as5600;
 #endif
 
-
+const int intOnBoardLED = LED_BUILTIN;
 const String strClientID = String(ESP.getChipId(), HEX);  // global placeholder for my unique MAC ID
 const String strConfigFilename = "/config.json";          // filename for saving our config
 bool boolMQTTEmulated = false;                            // global flag to bypass wifi & mqtt connections in favor of Serial input/output
@@ -155,7 +162,9 @@ WiFiManager wifiManager;                                                        
 NTPClient instNTPClient(instUDP, strMQTTserver.c_str(), 0, 600000);                    // local time offset is -14400 (if used); autoresync every 600,000 msec (10 min)
 WiFiManagerParameter custom_mqtt_server("server", "mqtt server", charMQTTServer, 40);  // has to be declared globally; FOLLOWUP: IF we want to display the previously saved data, we'll need to load the file and parse before this point
 WiFiManagerParameter custom_mqtt_port("port", "mqtt port", charMQTTPort, 6);           // has to be declared globally
-
+#if (defRestServerEnable)
+ESP8266WebServer objRestServer(81);
+#endif
 
 void setup() {           // initial setup
   Serial.begin(115200);  // initialize the Serial Monitor interface for debugging
@@ -184,10 +193,21 @@ void setup() {           // initial setup
     instNTPClient.update();                                                        // force an update. FOLLOWUP: should this be moved to a separate function that's handled after we connect to the broker?
     ul_lastupdate = millis();                                                      // mark the time
     setup_mqtt();                                                                  // start up MQTT
+#if (defRestServerEnable)
+    objRestServer.on("/", handleRoot);
+    objRestServer.on("/postplain/", handlePlain);
+    objRestServer.on("/postform/", handleForm);
+    objRestServer.onNotFound(handleNotFound);
+    objRestServer.begin();
+    objRestServer.println("HTTP server started");
+#endif
   }
 }
 
 void loop() {
+#if (defRestServerEnable)
+  objRestServer.handleClient();
+#endif
   if (Serial.available() > 0) { getSerialInput(); }  // regardless of whether we're emulating, allow serial inputs TODO: replace with REST library
   if (!boolMQTTEmulated) {                           // only do mqtt stuff if we're not emulating
     instMQTTClient.poll();                           // listens for MQTT messages AND sends keepalive messages to avoid disconnects; required for both purposes.}
