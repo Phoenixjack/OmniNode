@@ -56,6 +56,7 @@ void onMqttMessage(int intMessageSize) {                                        
   while (instMQTTClient.available()) {                                           // read mqtt buffer into a string
     strPayload += (char)instMQTTClient.read();                                   // make sure to use the character represented, NOT the raw ASCII code
   }                                                                              //
+  debugMQTTTerse(strPayload);                                                    //
   DeserializationError boolJSONError = deserializeJson(objJSONdoc, strPayload);  //
   if (boolJSONError) {                                                           //
     debugMQTTTerse("deserializeJson() failed: ");                                //

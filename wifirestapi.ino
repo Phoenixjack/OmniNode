@@ -1,3 +1,4 @@
+/*
 #if (defRestServerEnable)
 const String postForms = "<html>\
   <head>\
@@ -67,3 +68,4 @@ void handleNotFound() {
   objRestServer.send(404, "text/plain", message);
   digitalWrite(led, 0);
 }
+*/

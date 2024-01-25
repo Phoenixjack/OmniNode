@@ -4,24 +4,30 @@
 #define defDebugSetup true         // Initial Setup debugging
 #define debugPrefix(x) (x) ? Serial.printf("%s, %s\n", __FILE__, __FUNCTION__) \
                            : Serial.print("");  // defined macro to conditionally print file and function produced the output; accepts boolean flags (defDebug___)
-#define defDebugFileSys false                   // filesystem debugging
-#define defDebugJSON false                      // JSON
-#define defDebugWiFi true                       // WiFi actions
-#define defDebugServer true                     // debugging of REST API
-#define defDebugMQTTTerse true                  // MQTT critical actions
-#define defDebugMQTTVerbose true                // MQTT non-critical actions
-#define defDebugSensor false                    // Sensor config and reading
-#define defDebugTime false                      // time functions
-#define defSoftwareVersion "OmniNodeV0_0_5"     // Used in MQTT config report.
-#define defFuncPacketFwd false                  // defNodeFunction bit 1 (1) (LSB)
-#define defFuncINA3221 false                    // defNodeFunction bit 2 (2)
-#define defFuncNEO6_7 false                     // defNodeFunction bit 3 (4)
-#define defFuncHMC5883 true                     // defNodeFunction bit 4 (8)
-#define defFuncBMP280 false                     // defNodeFunction bit 5 (16)
-#define defFuncBMP680 false                     // defNodeFunction bit 6 (32)
-#define defFuncMPU6050 false                    // defNodeFunction bit 7 (64)
-#define defFuncADXL345 false                    // defNodeFunction bit 8 (128)
-#define defFuncAS6500 false                     // defNodeFunction bit 9 (256)
+#define debugPrint(x, y) (x) ? Serial.print(y) \
+                             : Serial.print("");  // defined macro to conditionally print file and function produced the output; accepts boolean flags (defDebug___)
+#define debugPrintln(x, y) (x) ? Serial.println(y) \
+                               : Serial.println("");  // defined macro to conditionally print file and function produced the output; accepts boolean flags (defDebug___)
+#define defDebugFileSys false                         // filesystem debugging
+#define defDebugJSON false                            // JSON
+#define defDebugWiFi false                             // WiFi actions
+#define defDebugServer false                           // debugging of REST API
+#define defDebugMQTTTerse true                        // MQTT critical actions
+#define defDebugMQTTVerbose true                      // MQTT non-critical actions
+#define defDebugMQTTTransmit true                     //
+#define defDebugMQTTReceive true                      //
+#define defDebugSensor false                          // Sensor config and reading
+#define defDebugTime false                            // time functions
+#define defSoftwareVersion "OmniNodeV0_0_6"           // Used in MQTT config report.
+#define defFuncPacketFwd false                        // defNodeFunction bit 1 (1) (LSB)
+#define defFuncINA3221 false                          // defNodeFunction bit 2 (2)
+#define defFuncNEO6_7 false                           // defNodeFunction bit 3 (4)
+#define defFuncHMC5883 true                           // defNodeFunction bit 4 (8)
+#define defFuncBMP280 false                           // defNodeFunction bit 5 (16)
+#define defFuncBMP680 false                           // defNodeFunction bit 6 (32)
+#define defFuncMPU6050 false                          // defNodeFunction bit 7 (64)
+#define defFuncADXL345 false                          // defNodeFunction bit 8 (128)
+#define defFuncAS6500 false                           // defNodeFunction bit 9 (256)
 // now for brevity, we assemble the flags using bitshifts into a single value
 #define defNodeFunction ((defFuncAS6500 << 8) + (defFuncADXL345 << 7) + (defFuncMPU6050 << 6) + (defFuncBMP680 << 5) + (defFuncBMP280 << 4) + (defFuncHMC5883 << 3) + (defFuncNEO6_7 << 2) + (defFuncINA3221 << 1) + defFuncPacketFwd)
 
@@ -144,7 +150,7 @@ const String strClientID = String(ESP.getChipId(), HEX);  // global placeholder 
 const String strConfigFilename = "/config.json";          // filename for saving our config
 bool boolMQTTEmulated = false;                            // global flag to bypass wifi & mqtt connections in favor of Serial input/output
 bool boolSaveWiFiConfig = false;                          // flag for saving WiFiManager data
-String strMQTTserver = "192.168.1.9";                     // global placeholder for mqtt server address; to be overwritten by data from file or user via the config portal
+String strMQTTserver = "192.168.1.68";                    // global placeholder for mqtt server address; to be overwritten by data from file or user via the config portal
 int intMQTTPort = 1883;                                   // set default value, but leave subject to change by user
 char charMQTTServer[40];                                  //
 char charMQTTPort[6] = "1883";                            //
