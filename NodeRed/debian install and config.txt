@@ -1,0 +1,44 @@
+sudo raspi-config
+>> enable ssh, I2C, SPI, and set any other options
+sudo apt update && sudo apt upgrade -y
+sudo apt autoremove -y
+apt-get install nodered npm
+sudo systemctl enable nodered.service
+node-red-start
+>> http://<hostname>:1880
+sudo apt install -y mosquitto mosquitto-clients
+sudo systemctl enable mosquitto.service
+sudo systemctl status mosquitto
+sudo nano /etc/mosquitto/mosquitto.conf
+>> persistence false
+>> listener 1883
+>> allow_anonymous true
+sudo systemctl restart mosquitto
+sudo apt install chrony -y
+sudo systemctl enable chrony
+sudo systemctl start chrony
+sudo systemctl status chrony
+chronyc activity
+sudo nano /etc/chrony/chrony.conf
+>> server 0.pool.ntp.org iburst
+>> server 1.pool.ntp.org iburst
+>> server 2.pool.ntp.org iburst
+>> server 3.pool.ntp.org iburst
+>> local stratum 8 orphan
+>> allow all
+>> manual
+>> smoothtime 400 0.01
+sudo systemctl restart chrony
+chronyc tracking
+chronyc sources -v
+chronyc sourcestats -v
+## temporarily disables ipv6, which does not play nice with npm
+sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+cd ~/.node-red
+npm i --unsafe-perm node-red-node-sqlite
+npm i node-red-dashboard
+npm install @flowfuse/node-red-dashboard
+npm install node-red-contrib-queue-gate
+npm i dashboard-evi
+npm i node-red-contrib-ui-digital-display
