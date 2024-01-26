@@ -5,7 +5,7 @@ TODO: add our own Epoch to DTG conversion function
 
 unsigned long CurrentEpochTime() {        // return either the current NTP or a fake epoch time
   if (boolMQTTEmulated) {                 //
-    return 1698339326;                    // 2023-10-26
+    return 1698339326 + millis();         // 2023-10-26 + uptime
   } else {                                //
     return instNTPClient.getEpochTime();  //
   }                                       //
