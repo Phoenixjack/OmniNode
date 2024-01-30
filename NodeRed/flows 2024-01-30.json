@@ -1,0 +1,2747 @@
+[
+    {
+        "id": "1adadc614d57da99",
+        "type": "tab",
+        "label": "Sensor IO",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "eb746c4729c4813b",
+        "type": "tab",
+        "label": "Master Display",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f0b4407fe9f47f93",
+        "type": "tab",
+        "label": "Data Recording",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3410615f3b6dc27b",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "2fce7cb011bd49b7",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "0b0ef72495ea76b7",
+        "type": "ui_tab",
+        "name": "Sensors",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "4788da44ae885d26",
+        "type": "ui_group",
+        "name": "Compass Control",
+        "tab": "0b0ef72495ea76b7",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "cd57f6c083b36098",
+        "type": "ui_group",
+        "name": "Compass Data",
+        "tab": "0b0ef72495ea76b7",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "11e3eb0c2dee2914",
+        "type": "ui_group",
+        "name": "MASTER DISPLAY",
+        "tab": "0b0ef72495ea76b7",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dc3b3657261041d5",
+        "type": "ui_group",
+        "name": "HIDE ME",
+        "tab": "12b3789c44f775b6",
+        "order": 4,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f5da5c033e78ef22",
+        "type": "ui_spacer",
+        "z": "eb746c4729c4813b",
+        "name": "spacer",
+        "group": "dc3b3657261041d5",
+        "order": 2,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "83dc9d56fc492371",
+        "type": "ui_spacer",
+        "z": "eb746c4729c4813b",
+        "name": "spacer",
+        "group": "dc3b3657261041d5",
+        "order": 4,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "93aa25c4e2c43e6a",
+        "type": "ui_spacer",
+        "z": "eb746c4729c4813b",
+        "name": "spacer",
+        "group": "dc3b3657261041d5",
+        "order": 6,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "b7a68ba52d89cce6",
+        "type": "ui_group",
+        "name": "File I/O",
+        "tab": "0b0ef72495ea76b7",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "12b3789c44f775b6",
+        "type": "ui_tab",
+        "name": "hideme",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "232b646febe07774",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "node/# JSON",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.sender",
+        "statusType": "msg",
+        "x": 460,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "b76374f9970ba886",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "node/# RAW",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "_topic",
+        "statusType": "msg",
+        "x": 290,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "0c5563b603dfae5d",
+        "type": "ui_gauge",
+        "z": "1adadc614d57da99",
+        "name": "heading",
+        "group": "cd57f6c083b36098",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "compass",
+        "title": "gauge",
+        "label": "degrees",
+        "format": "{{payload.payload.xMC5883.heading}}",
+        "min": 0,
+        "max": "360",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 700,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "23466d38f080a2ea",
+        "type": "ui_text",
+        "z": "1adadc614d57da99",
+        "group": "4788da44ae885d26",
+        "order": 6,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "Reported Time",
+        "format": "{{payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 960,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b190760e5ea219f4",
+        "type": "comment",
+        "z": "1adadc614d57da99",
+        "name": "JSONATA to check for keys",
+        "info": "[{\"id\":\"dd3930f9.05cc6\",\"type\":\"change\",\"z\":\"7760f563.ea0324\",\"name\":\"\",\"rules\":[{\"t\":\"set\",\"p\":\"payload\",\"pt\":\"msg\",\"to\":\"$each(\\t   payload,\\t   function($v, $i) {$v = \\\"\\\" ? {$i: false} : {$i: $v}}\\t)\",\"tot\":\"jsonata\"}],\"action\":\"\",\"property\":\"\",\"from\":\"\",\"to\":\"\",\"reg\":false,\"x\":510,\"y\":1320,\"wires\":[[\"d6d6a27b.5b5538\"]]},{\"id\":\"3c8ce754.fda3e\",\"type\":\"inject\",\"z\":\"7760f563.ea0324\",\"name\":\"\",\"props\":[{\"p\":\"payload\"},{\"p\":\"topic\",\"vt\":\"str\"}],\"repeat\":\"\",\"crontab\":\"\",\"once\":false,\"onceDelay\":0.1,\"topic\":\"\",\"payload\":\"{\\\"1\\\": true, \\\"2\\\": \\\"\\\", \\\"3\\\": false}\",\"payloadType\":\"json\",\"x\":320,\"y\":1320,\"wires\":[[\"dd3930f9.05cc6\"]]},{\"id\":\"d6d6a27b.5b5538\",\"type\":\"debug\",\"z\":\"7760f563.ea0324\",\"name\":\"\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"true\",\"targetType\":\"full\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":1320,\"wires\":[]}]",
+        "x": 140,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "fe362dc5f3c61117",
+        "type": "comment",
+        "z": "1adadc614d57da99",
+        "name": "template node",
+        "info": "[{\"id\":\"d5cc6037.6bc238\",\"type\":\"change\",\"z\":\"7760f563.ea0324\",\"name\":\"\",\"rules\":[{\"t\":\"set\",\"p\":\"payload\",\"pt\":\"msg\",\"to\":\"$count(\\t   $filter(\\t       $split(payload, \\\"\\\\n\\\"),\\t       function($v){$count($split($v,\\\"=\\\")) <= 1}\\t)\\t) < 2 ? payload : false \",\"tot\":\"jsonata\"}],\"action\":\"\",\"property\":\"\",\"from\":\"\",\"to\":\"\",\"reg\":false,\"x\":720,\"y\":1640,\"wires\":[[\"d6d6a27b.5b5538\"]]},{\"id\":\"e56da466.e65728\",\"type\":\"inject\",\"z\":\"7760f563.ea0324\",\"name\":\"\",\"props\":[{\"p\":\"payload\"},{\"p\":\"topic\",\"vt\":\"str\"}],\"repeat\":\"\",\"crontab\":\"\",\"once\":false,\"onceDelay\":0.1,\"topic\":\"\",\"payload\":\"[\\\"0x1\\\",\\\"0x67\\\",\\\"0x33\\\",\\\"0x1\\\",\\\"0x2\\\",\\\"0x68\\\",\\\"0x6e\\\"]\",\"payloadType\":\"json\",\"x\":310,\"y\":1640,\"wires\":[[\"4e82f442.bde2e4\"]]},{\"id\":\"4e82f442.bde2e4\",\"type\":\"template\",\"z\":\"7760f563.ea0324\",\"name\":\"\",\"field\":\"payload\",\"fieldType\":\"msg\",\"format\":\"handlebars\",\"syntax\":\"mustache\",\"template\":\"[Session]\\nkey1=value1\\nkey2\\nkey3=\\nkey4=value4[EOF]\",\"output\":\"str\",\"x\":470,\"y\":1640,\"wires\":[[\"d5cc6037.6bc238\"]]},{\"id\":\"d6d6a27b.5b5538\",\"type\":\"debug\",\"z\":\"7760f563.ea0324\",\"name\":\"\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"true\",\"targetType\":\"full\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":1320,\"wires\":[]}]",
+        "x": 90,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "01b1a13b9a764a19",
+        "type": "function",
+        "z": "1adadc614d57da99",
+        "name": "Date Time to ISO8601",
+        "func": "let unix_timestamp = msg.payload.time;\nvar date = new Date(unix_timestamp * 1000);\nvar year = date.getFullYear();\nvar month = date.getMonth()+1;\nvar day = date.getDate();\nvar hours = date.getHours();\nvar minutes = \"0\" + date.getMinutes();\nvar seconds = \"0\" + date.getSeconds();\nvar formattedTime = year+\"-\"+month+\"-\"+day+\" \" +hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);\nnode.status({fill:\"green\",text:formattedTime});\nmsg.payload = formattedTime;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 400,
+        "wires": [
+            [
+                "23466d38f080a2ea"
+            ]
+        ]
+    },
+    {
+        "id": "d81c3c2491c0be20",
+        "type": "mqtt out",
+        "z": "1adadc614d57da99",
+        "name": "557c87",
+        "topic": "node/557c87",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2fce7cb011bd49b7",
+        "x": 1020,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "5c7e3451dc2f1d60",
+        "type": "trigger",
+        "z": "1adadc614d57da99",
+        "name": "5sec lockout",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "5",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 850,
+        "y": 260,
+        "wires": [
+            [
+                "d81c3c2491c0be20"
+            ]
+        ]
+    },
+    {
+        "id": "327c062c9e29b361",
+        "type": "mqtt in",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "topic": "node/#",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "2fce7cb011bd49b7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 260,
+        "wires": [
+            [
+                "807b5778fcd0456c",
+                "b76374f9970ba886"
+            ]
+        ]
+    },
+    {
+        "id": "81dee1f066a19c4b",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "nondata packet",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "807b5778fcd0456c",
+        "type": "json",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "232b646febe07774",
+                "86d40a5236d321de",
+                "58f14496d3d0af78"
+            ]
+        ]
+    },
+    {
+        "id": "d264fca12369cd67",
+        "type": "mqtt out",
+        "z": "1adadc614d57da99",
+        "name": "557c87",
+        "topic": "node/557c87",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2fce7cb011bd49b7",
+        "x": 1300,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "566d870183c6c4b0",
+        "type": "ui_button",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "group": "4788da44ae885d26",
+        "order": 8,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "NTP",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":\"ntpresync\",\"value\":\"true\"}",
+        "payloadType": "str",
+        "topic": "node/557c87",
+        "topicType": "str",
+        "x": 710,
+        "y": 740,
+        "wires": [
+            [
+                "d99b5b0c61d5cb46"
+            ]
+        ]
+    },
+    {
+        "id": "90bc419c5c54171f",
+        "type": "ui_button",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "group": "4788da44ae885d26",
+        "order": 9,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Reboot",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":\"reboot\",\"value\":\"true\"}",
+        "payloadType": "json",
+        "topic": "node/557c87",
+        "topicType": "str",
+        "x": 700,
+        "y": 700,
+        "wires": [
+            [
+                "8484bddc0d414807"
+            ]
+        ]
+    },
+    {
+        "id": "05b64e46e64e0ac1",
+        "type": "function",
+        "z": "1adadc614d57da99",
+        "name": "Format JSON",
+        "func": "var reportint = msg.payload;\nvar currtime = global.get(\"g_currenttime\");\nvar sender = \"557c87\"; // msg.payload.sender\nvar assembledpayload;\nnode.status({fill:\"green\",text:reportint});\nif (reportint >= 500 && reportint < 259200000) {\n  var topic = \"node/\" + sender;\n  msg.topic = topic;\n  assembledpayload = '{\"command\":\"reportinterval\",\"value\":\"';\n  assembledpayload += reportint;\n  assembledpayload += '\",\"sender\":\"';\n  assembledpayload+= 'nodered\",\"time\":\"' + currtime + '\"}';\n  msg.payload = assembledpayload;\n  return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 620,
+        "wires": [
+            [
+                "80143ff6b1cfde9b",
+                "281ac4770d23f1d7"
+            ]
+        ]
+    },
+    {
+        "id": "86d40a5236d321de",
+        "type": "switch",
+        "z": "1adadc614d57da99",
+        "name": "Sort by topic",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "node/data",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 450,
+        "y": 360,
+        "wires": [
+            [
+                "0c5563b603dfae5d",
+                "01b1a13b9a764a19",
+                "46d2827f060ddbe9"
+            ],
+            [
+                "81dee1f066a19c4b",
+                "c16ee270ffac39e1"
+            ]
+        ],
+        "inputLabels": [
+            "all JSON"
+        ],
+        "outputLabels": [
+            "data",
+            "all others"
+        ]
+    },
+    {
+        "id": "66a6f90a05add99f",
+        "type": "ui_button",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "group": "4788da44ae885d26",
+        "order": 1,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Node Config",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":\"reportconfig\",\"value\":\"true\"}",
+        "payloadType": "json",
+        "topic": "node/557c87",
+        "topicType": "str",
+        "x": 690,
+        "y": 780,
+        "wires": [
+            [
+                "d99b5b0c61d5cb46"
+            ]
+        ]
+    },
+    {
+        "id": "82ef84eb1cfabae8",
+        "type": "ui_button",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "group": "4788da44ae885d26",
+        "order": 2,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Sensor Config",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":\"sensorconfig\",\"value\":\"true\"}",
+        "payloadType": "json",
+        "topic": "node/557c87",
+        "topicType": "str",
+        "x": 680,
+        "y": 820,
+        "wires": [
+            [
+                "d99b5b0c61d5cb46"
+            ]
+        ]
+    },
+    {
+        "id": "9699c03d4419abbf",
+        "type": "ui_button",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "group": "4788da44ae885d26",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Stats",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":\"reportdiagnostics\",\"value\":\"true\"}",
+        "payloadType": "json",
+        "topic": "node/557c87",
+        "topicType": "str",
+        "x": 710,
+        "y": 860,
+        "wires": [
+            [
+                "d99b5b0c61d5cb46"
+            ]
+        ]
+    },
+    {
+        "id": "b9d1914775ff7992",
+        "type": "ui_button",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "group": "4788da44ae885d26",
+        "order": 5,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Reset Stats",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":\"resetdiagnostics\",\"value\":\"true\"}",
+        "payloadType": "json",
+        "topic": "node/557c87",
+        "topicType": "str",
+        "x": 690,
+        "y": 900,
+        "wires": [
+            [
+                "a2138c7abf750430"
+            ]
+        ]
+    },
+    {
+        "id": "d99b5b0c61d5cb46",
+        "type": "change",
+        "z": "1adadc614d57da99",
+        "name": "net tie",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1130,
+        "y": 800,
+        "wires": [
+            [
+                "d264fca12369cd67"
+            ]
+        ]
+    },
+    {
+        "id": "6e78c309d620edd2",
+        "type": "ui_text_input",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "label": "Interval (msec)",
+        "tooltip": "",
+        "group": "4788da44ae885d26",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "mode": "number",
+        "delay": "0",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 680,
+        "y": 620,
+        "wires": [
+            [
+                "05b64e46e64e0ac1"
+            ]
+        ]
+    },
+    {
+        "id": "58f14496d3d0af78",
+        "type": "function",
+        "z": "1adadc614d57da99",
+        "name": "Offset",
+        "func": "var nodetime = msg.payload.time;\nvar currtime = global.get(\"g_currenttime\")/1000;\ncurrtime = Math.floor(currtime);\nvar timediff = currtime-nodetime;\nmsg.payload.timediff = timediff;\nnode.status({text:timediff});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "a5f3f94b2a5e847f",
+                "d270953cc05b27aa"
+            ]
+        ]
+    },
+    {
+        "id": "a5f3f94b2a5e847f",
+        "type": "function",
+        "z": "1adadc614d57da99",
+        "name": "Force NTP Resync?",
+        "func": "var currtime = global.get(\"g_currenttime\")/1000;\ncurrtime = Math.floor(currtime);\nvar timediff = msg.payload.timediff;\nvar sender = msg.payload.sender;\nvar assembledpayload;\nvar maxtimelag = 120;\nif (timediff < -5 || timediff > maxtimelag) {\n  var topic = \"node/\" + sender;\n  msg.topic = topic;\n  assembledpayload = '{\"command\":\"ntpresync\",\"value\":\"true\",\"sender\":\"';\n  assembledpayload+= 'nodered\",\"time\":\"' + currtime + '\"}';\n  msg.payload = assembledpayload;\n  node.status({fill:\"red\",text:timediff});\nreturn msg;\n} else {\n  assembledpayload = sender + \" no more than \" + maxtimelag+\"secs behind\";\n  node.status({fill:\"green\",text:assembledpayload});\n  // and don't return a message so nothing gets transmitted\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 260,
+        "wires": [
+            [
+                "5c7e3451dc2f1d60"
+            ]
+        ]
+    },
+    {
+        "id": "d270953cc05b27aa",
+        "type": "ui_text",
+        "z": "1adadc614d57da99",
+        "group": "4788da44ae885d26",
+        "order": 7,
+        "width": 2,
+        "height": 1,
+        "name": "",
+        "label": "Time Error (secs)",
+        "format": "{{payload.timediff}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 630,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "c16ee270ffac39e1",
+        "type": "ui_text",
+        "z": "1adadc614d57da99",
+        "group": "4788da44ae885d26",
+        "order": 10,
+        "width": 6,
+        "height": 5,
+        "name": "",
+        "label": "Readout",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 700,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "8484bddc0d414807",
+        "type": "ui_are_you_sure",
+        "z": "1adadc614d57da99",
+        "name": "stopprompt",
+        "group": "dc3b3657261041d5",
+        "iconColor": "#ffcc00",
+        "textColor": "#ffffff",
+        "backgroundColor": "#000000",
+        "icon": "fa fa-exclamation-triangle",
+        "title": "REBOOT NODE?",
+        "description": "Are you sure you want to stop reboot the node?",
+        "timeoutSec": "60",
+        "x": 870,
+        "y": 700,
+        "wires": [
+            [
+                "d99b5b0c61d5cb46"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "a2138c7abf750430",
+        "type": "ui_are_you_sure",
+        "z": "1adadc614d57da99",
+        "name": "stopprompt",
+        "group": "dc3b3657261041d5",
+        "iconColor": "#ffcc00",
+        "textColor": "#ffffff",
+        "backgroundColor": "#000000",
+        "icon": "fa fa-exclamation-triangle",
+        "title": "RESET STATISTICS",
+        "description": "Are you sure you want to reset statistics?",
+        "timeoutSec": "60",
+        "x": 870,
+        "y": 900,
+        "wires": [
+            [
+                "d99b5b0c61d5cb46"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "46d2827f060ddbe9",
+        "type": "change",
+        "z": "1adadc614d57da99",
+        "name": "cleanupdata",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload.description",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.heading",
+                "pt": "msg",
+                "to": "payload.payload.xMC5883.heading",
+                "tot": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.payload",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.title",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 710,
+        "y": 360,
+        "wires": [
+            [
+                "8ad8c31535af02fa",
+                "06b7e3f65355f2d5"
+            ]
+        ]
+    },
+    {
+        "id": "8ad8c31535af02fa",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "80143ff6b1cfde9b",
+        "type": "mqtt out",
+        "z": "1adadc614d57da99",
+        "name": "557c87",
+        "topic": "node/557c87",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2fce7cb011bd49b7",
+        "x": 1080,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "281ac4770d23f1d7",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "reportint",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "952c1402c3a650b8",
+        "type": "function",
+        "z": "1adadc614d57da99",
+        "name": "sortinghat",
+        "func": "//return [ null, msg ];\n// payload.title\nvar nodefunction = msg.payload.title;\nvar nodefunctext = \"\";\nvar msgarray= [];\nnodefunction = Number(nodefunction);\n//node.status({fill:\"green\",text:(nodefunction & 8)});\nif ((nodefunction & 1) ) {\n    msgarray [0] = msg.payload;\n    nodefunctext += \"packet\";\n} else {\n    msgarray [0] = null;\n}\nif ((nodefunction & 2) == 2) {\n    msgarray [1] = msg.payload;\n    nodefunctext += \"ina\";\n} else {\n    msgarray [1] = null;\n}\nif ((nodefunction & 4) ) {\n    msgarray [2] = msg.payload;\n    nodefunctext += \"neo\";\n} else {\n    msgarray [2] = null;\n}\nif ((nodefunction & 8) == 8) {\n    msgarray [3] = msg.payload;\n    nodefunctext += \"compass\";\n} else {\n    msgarray [3] = null;\n}\nnode.status({fill:\"green\",text:nodefunction+\":\"+nodefunctext});\nmsg = msgarray;\nreturn msg;\n//return [ null, null, null, msg, null, null, null, null, null ];",
+        "outputs": 9,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1340,
+        "wires": [
+            [
+                "e0fc8596fd30eba3"
+            ],
+            [
+                "128224524d46f1c5"
+            ],
+            [
+                "a96c5a47a5a68d77"
+            ],
+            [
+                "7fbf556973cc3c78"
+            ],
+            [
+                "092ef2ce7951a19d"
+            ],
+            [
+                "5753ca10ccb031e0"
+            ],
+            [
+                "4c1d051259ddf93e"
+            ],
+            [
+                "2f8428c70c5082ae"
+            ],
+            [
+                "74868f3a6635b807"
+            ]
+        ],
+        "outputLabels": [
+            "PacketFwd",
+            "INA3221",
+            "NEO6_7",
+            "xMC5883",
+            "BMP280",
+            "BMP680",
+            "MPU6050",
+            "ADXL345",
+            "AS5600"
+        ],
+        "info": "#define defFuncPacketFwd false                        // defNodeFunction bit 1 (1) (LSB)\r\n#define defFuncINA3221 false                          // defNodeFunction bit 2 (2)\r\n#define defFuncNEO6_7 false                           // defNodeFunction bit 3 (4)\r\n#define defFuncHMC5883 true                           // defNodeFunction bit 4 (8)\r\n#define defFuncBMP280 false                           // defNodeFunction bit 5 (16)\r\n#define defFuncBMP680 false                           // defNodeFunction bit 6 (32)\r\n#define defFuncMPU6050 false                          // defNodeFunction bit 7 (64)\r\n#define defFuncADXL345 false                          // defNodeFunction bit 8 (128)\r\n#define defFuncAS6500 false                           // defNodeFunction bit 9 (256)"
+    },
+    {
+        "id": "f23c0fec41b1a89a",
+        "type": "inject",
+        "z": "1adadc614d57da99",
+        "name": "8",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"title\":\"8\",\"sender\":\"557c87\",\"description\":\"data\",\"time\":\"1706544854\",\"payload\":{\"xMC5883\":{\"heading\":\"27.6\"}}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 1380,
+        "wires": [
+            [
+                "0e4743376517e6aa"
+            ]
+        ]
+    },
+    {
+        "id": "84d994f98c16bd6a",
+        "type": "inject",
+        "z": "1adadc614d57da99",
+        "name": "9",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"title\":\"9\",\"sender\":\"557c87\",\"description\":\"data\",\"time\":\"1706544854\",\"payload\":{\"xMC5883\":{\"heading\":\"27.6\"}}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 1420,
+        "wires": [
+            [
+                "0e4743376517e6aa"
+            ]
+        ]
+    },
+    {
+        "id": "4f5fb91dd2d3c239",
+        "type": "inject",
+        "z": "1adadc614d57da99",
+        "name": "3",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"title\":\"3\",\"sender\":\"557c87\",\"description\":\"data\",\"time\":\"1706544854\",\"payload\":{\"xMC5883\":{\"heading\":\"27.6\"}}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 1280,
+        "wires": [
+            [
+                "0e4743376517e6aa"
+            ]
+        ]
+    },
+    {
+        "id": "18f9e0c8bf99db7a",
+        "type": "inject",
+        "z": "1adadc614d57da99",
+        "name": "5",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"title\":\"5\",\"sender\":\"557c87\",\"description\":\"data\",\"time\":\"1706544854\",\"payload\":{\"xMC5883\":{\"heading\":\"27.6\"}}}",
+        "payloadType": "json",
+        "x": 130,
+        "y": 1320,
+        "wires": [
+            [
+                "0e4743376517e6aa"
+            ]
+        ]
+    },
+    {
+        "id": "7fbf556973cc3c78",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "compass",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "74868f3a6635b807",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "as5600",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 1500,
+        "wires": []
+    },
+    {
+        "id": "e0fc8596fd30eba3",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "packetfwd",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "128224524d46f1c5",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "ina3221",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "092ef2ce7951a19d",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "bmp280",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "a96c5a47a5a68d77",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "neo",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "2f8428c70c5082ae",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "adxl",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 1460,
+        "wires": []
+    },
+    {
+        "id": "4c1d051259ddf93e",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "mpu",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "5753ca10ccb031e0",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "bmp680",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "74a8738b386d083f",
+        "type": "debug",
+        "z": "1adadc614d57da99",
+        "name": "payloadtitle",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.title",
+        "statusType": "msg",
+        "x": 530,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "0e4743376517e6aa",
+        "type": "function",
+        "z": "1adadc614d57da99",
+        "name": "join",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 1340,
+        "wires": [
+            [
+                "952c1402c3a650b8",
+                "74a8738b386d083f"
+            ]
+        ]
+    },
+    {
+        "id": "06b7e3f65355f2d5",
+        "type": "link out",
+        "z": "1adadc614d57da99",
+        "name": "datafeed",
+        "mode": "link",
+        "links": [
+            "509551df3408bd1a",
+            "5c539b602b0c4198"
+        ],
+        "x": 845,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "9064f9f5fd97fa2d",
+        "type": "link in",
+        "z": "1adadc614d57da99",
+        "name": "startdisable",
+        "links": [
+            "ddf6d3136f083bd6"
+        ],
+        "x": 555,
+        "y": 600,
+        "wires": [
+            [
+                "6e78c309d620edd2"
+            ]
+        ]
+    },
+    {
+        "id": "40a51ade16f746f3",
+        "type": "link in",
+        "z": "1adadc614d57da99",
+        "name": "stopenable",
+        "links": [
+            "99e055f8f7359f07"
+        ],
+        "x": 555,
+        "y": 920,
+        "wires": [
+            [
+                "b9d1914775ff7992"
+            ]
+        ]
+    },
+    {
+        "id": "42f081ca34838bca",
+        "type": "link in",
+        "z": "1adadc614d57da99",
+        "name": "stopenable",
+        "links": [
+            "99e055f8f7359f07"
+        ],
+        "x": 555,
+        "y": 640,
+        "wires": [
+            [
+                "6e78c309d620edd2"
+            ]
+        ]
+    },
+    {
+        "id": "4109827b3f0ce150",
+        "type": "link in",
+        "z": "1adadc614d57da99",
+        "name": "stopenable",
+        "links": [
+            "99e055f8f7359f07"
+        ],
+        "x": 555,
+        "y": 720,
+        "wires": [
+            [
+                "90bc419c5c54171f"
+            ]
+        ]
+    },
+    {
+        "id": "2d47d40f016f1df8",
+        "type": "link in",
+        "z": "1adadc614d57da99",
+        "name": "startdisable",
+        "links": [
+            "ddf6d3136f083bd6"
+        ],
+        "x": 555,
+        "y": 880,
+        "wires": [
+            [
+                "b9d1914775ff7992"
+            ]
+        ]
+    },
+    {
+        "id": "b2f998c820f5777a",
+        "type": "link in",
+        "z": "1adadc614d57da99",
+        "name": "startdisable",
+        "links": [
+            "ddf6d3136f083bd6"
+        ],
+        "x": 555,
+        "y": 680,
+        "wires": [
+            [
+                "90bc419c5c54171f"
+            ]
+        ]
+    },
+    {
+        "id": "9929f23055e4c553",
+        "type": "inject",
+        "z": "eb746c4729c4813b",
+        "name": "current time",
+        "props": [
+            {
+                "p": "msg.payload.time",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 550,
+        "y": 180,
+        "wires": [
+            [
+                "c082419fb0d99cd0",
+                "4942e9cba25b7cd9"
+            ]
+        ]
+    },
+    {
+        "id": "c082419fb0d99cd0",
+        "type": "function",
+        "z": "eb746c4729c4813b",
+        "name": "Date Time to ISO8601",
+        "func": "let unix_timestamp = msg.payload.time;\nglobal.set(\"g_currenttime\",unix_timestamp);\n// Create a new JavaScript Date object based on the timestamp\n// multiplied by 1000 so that the argument is in milliseconds, not seconds\nvar date = new Date(unix_timestamp);\n\nvar year = date.getFullYear();\nvar month = date.getMonth()+1;\nvar day = date.getDate();\nvar hours = date.getHours();\nvar minutes = \"0\" + date.getMinutes();\nvar seconds = \"0\" + date.getSeconds();\n\nvar formattedTime = year + '-';\nformattedTime += (month<10)?'0':'';\nformattedTime += month + '-';\nformattedTime += (day<10)?'0':'';\nformattedTime += day + ' ';\nformattedTime += (hours<10)?'0':'';\nformattedTime += hours + ':';\nformattedTime += (minutes.substr(-2)<10)?'0':'';\nformattedTime += minutes.substr(-2) + ':' ;\nformattedTime += (seconds.substr(-2)<10)?'0':'';\nformattedTime += seconds.substr(-2);\n\nnode.status({fill:\"green\",text:formattedTime});\nmsg.payload = formattedTime;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 140,
+        "wires": [
+            [
+                "6c68d31e537c6e34"
+            ]
+        ]
+    },
+    {
+        "id": "6c68d31e537c6e34",
+        "type": "ui_text",
+        "z": "eb746c4729c4813b",
+        "group": "11e3eb0c2dee2914",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "Current Time",
+        "format": "{{payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1150,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6dc7aca57cf35c2d",
+        "type": "ui_text",
+        "z": "eb746c4729c4813b",
+        "group": "11e3eb0c2dee2914",
+        "order": 5,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "STATUS",
+        "format": "{{payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1140,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "5890b780fa8bd654",
+        "type": "ui_button",
+        "z": "eb746c4729c4813b",
+        "name": "",
+        "group": "11e3eb0c2dee2914",
+        "order": 2,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "START",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "START",
+        "payloadType": "str",
+        "topic": "recordingcontrol",
+        "topicType": "str",
+        "x": 260,
+        "y": 180,
+        "wires": [
+            [
+                "828f769dd1270337",
+                "19316da193c048de",
+                "399a6fa491842b79"
+            ]
+        ]
+    },
+    {
+        "id": "daf3606b52adbb7e",
+        "type": "ui_button",
+        "z": "eb746c4729c4813b",
+        "name": "",
+        "group": "11e3eb0c2dee2914",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "STOP",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "STOP",
+        "payloadType": "str",
+        "topic": "recordingcontrol",
+        "topicType": "str",
+        "x": 250,
+        "y": 340,
+        "wires": [
+            [
+                "4342d6f1ab1a84cd"
+            ]
+        ]
+    },
+    {
+        "id": "37b45fb8e4ca6325",
+        "type": "ui_button",
+        "z": "eb746c4729c4813b",
+        "name": "",
+        "group": "11e3eb0c2dee2914",
+        "order": 4,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "RESET",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "RESET",
+        "payloadType": "str",
+        "topic": "recordingcontrol",
+        "topicType": "str",
+        "x": 260,
+        "y": 260,
+        "wires": [
+            [
+                "828f769dd1270337"
+            ]
+        ]
+    },
+    {
+        "id": "e502cac41022dfa2",
+        "type": "function",
+        "z": "eb746c4729c4813b",
+        "name": "Runtime",
+        "func": "var starttime = flow.get(\"teststarttime\");\nvar currtime = msg.payload.time;\nvar runtime = (currtime - starttime) / 1000;\nvar remainder = 0;\nvar days = Math.floor(runtime / (60 * 60 * 24));\nif (days == 0) {\n    remainder = runtime;\n} else {\n    remainder = runtime % days;\n}\nvar hours = Math.floor(remainder / (60 * 60));\nif (hours == 0) {\n    remainder = runtime;\n} else {\n    remainder = runtime % hours;\n}\nvar minutes = Math.floor(remainder / (60));\nif (minutes == 0) {\n    remainder = runtime;\n} else {\n    remainder = runtime % minutes;\n}\nvar seconds = Math.floor(remainder);\nvar formattedTime = days+\"d \"+hours+\"h \"+minutes+\"m \"+seconds+\"s\";\nmsg.payload = formattedTime;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 220,
+        "wires": [
+            [
+                "d9142d717aa8e096"
+            ]
+        ]
+    },
+    {
+        "id": "d9142d717aa8e096",
+        "type": "ui_text",
+        "z": "eb746c4729c4813b",
+        "group": "11e3eb0c2dee2914",
+        "order": 6,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "ELAPSED",
+        "format": "{{payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1150,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "4942e9cba25b7cd9",
+        "type": "q-gate",
+        "z": "eb746c4729c4813b",
+        "name": "recording gate",
+        "controlTopic": "recordingcontrol",
+        "defaultState": "closed",
+        "openCmd": "START",
+        "closeCmd": "STOP",
+        "toggleCmd": "toggle",
+        "queueCmd": "queue",
+        "defaultCmd": "default",
+        "triggerCmd": "trigger",
+        "flushCmd": "flush",
+        "resetCmd": "reset",
+        "peekCmd": "peek",
+        "dropCmd": "drop",
+        "statusCmd": "status",
+        "maxQueueLength": "1",
+        "keepNewest": false,
+        "qToggle": false,
+        "persist": false,
+        "storeName": "memory",
+        "x": 780,
+        "y": 220,
+        "wires": [
+            [
+                "e502cac41022dfa2"
+            ]
+        ]
+    },
+    {
+        "id": "2dbafed285a8c1a1",
+        "type": "function",
+        "z": "eb746c4729c4813b",
+        "name": "Set Start Time",
+        "func": "let msginput = msg.payload;\nvar currtime = global.get(\"g_currenttime\") || 0;\nnode.status({text:msginput});\nif (msginput === \"START\") {\n  flow.set(\"teststarttime\",currtime);\n}\nmsg.payload = msginput;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "4942e9cba25b7cd9",
+                "6dc7aca57cf35c2d",
+                "b94354ab5f5a67f9"
+            ]
+        ]
+    },
+    {
+        "id": "b94354ab5f5a67f9",
+        "type": "switch",
+        "z": "eb746c4729c4813b",
+        "name": "RESET",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "RESET",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 980,
+        "y": 300,
+        "wires": [
+            [
+                "d9142d717aa8e096"
+            ]
+        ]
+    },
+    {
+        "id": "4342d6f1ab1a84cd",
+        "type": "ui_are_you_sure",
+        "z": "eb746c4729c4813b",
+        "name": "stopprompt",
+        "group": "dc3b3657261041d5",
+        "iconColor": "#ffcc00",
+        "textColor": "#ffffff",
+        "backgroundColor": "#000000",
+        "icon": "fa fa-exclamation-triangle",
+        "title": "STOP RECORDING",
+        "description": "Are you sure you want to stop recording data?",
+        "timeoutSec": "60",
+        "x": 390,
+        "y": 340,
+        "wires": [
+            [
+                "828f769dd1270337",
+                "5f8379490588856f",
+                "d473a018d0be0b7c"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "828f769dd1270337",
+        "type": "function",
+        "z": "eb746c4729c4813b",
+        "name": "join",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 260,
+        "wires": [
+            [
+                "2dbafed285a8c1a1",
+                "f60ecc23e744d99b"
+            ]
+        ],
+        "icon": "node-red/join.svg"
+    },
+    {
+        "id": "f60ecc23e744d99b",
+        "type": "link out",
+        "z": "eb746c4729c4813b",
+        "name": "teststatus",
+        "mode": "link",
+        "links": [
+            "509551df3408bd1a",
+            "1adef04a61d395d9"
+        ],
+        "x": 545,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "19316da193c048de",
+        "type": "change",
+        "z": "eb746c4729c4813b",
+        "name": "disable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 80,
+        "wires": [
+            [
+                "ddf6d3136f083bd6"
+            ]
+        ]
+    },
+    {
+        "id": "399a6fa491842b79",
+        "type": "change",
+        "z": "eb746c4729c4813b",
+        "name": "enable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 450,
+        "y": 120,
+        "wires": [
+            [
+                "d451d7b7a848f358"
+            ]
+        ]
+    },
+    {
+        "id": "5f8379490588856f",
+        "type": "change",
+        "z": "eb746c4729c4813b",
+        "name": "disable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 360,
+        "wires": [
+            [
+                "cee535f3a5468122"
+            ]
+        ]
+    },
+    {
+        "id": "d473a018d0be0b7c",
+        "type": "change",
+        "z": "eb746c4729c4813b",
+        "name": "enable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 610,
+        "y": 400,
+        "wires": [
+            [
+                "99e055f8f7359f07"
+            ]
+        ]
+    },
+    {
+        "id": "ddf6d3136f083bd6",
+        "type": "link out",
+        "z": "eb746c4729c4813b",
+        "name": "startdisablesignal",
+        "mode": "link",
+        "links": [
+            "b0c9df281f380983",
+            "ce0a480d8214a8af",
+            "9064f9f5fd97fa2d",
+            "f170f5985199868a",
+            "2d47d40f016f1df8",
+            "b2f998c820f5777a",
+            "2244b160ccf0839d",
+            "db8ba2b5aa4029e9"
+        ],
+        "x": 565,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "cee535f3a5468122",
+        "type": "link out",
+        "z": "eb746c4729c4813b",
+        "name": "stopdisablesignal",
+        "mode": "link",
+        "links": [
+            "c8540407d1e6ac98",
+            "d981950f36c0eb1f"
+        ],
+        "x": 725,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "99e055f8f7359f07",
+        "type": "link out",
+        "z": "eb746c4729c4813b",
+        "name": "stopenablesignal",
+        "mode": "link",
+        "links": [
+            "cdeaf50ebb459a53",
+            "9804c14155814e0a",
+            "40a51ade16f746f3",
+            "2890af46c222f42c",
+            "42f081ca34838bca",
+            "4109827b3f0ce150",
+            "f34421ef94daf75e",
+            "42ca4707d4a229cd"
+        ],
+        "x": 725,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "d451d7b7a848f358",
+        "type": "link out",
+        "z": "eb746c4729c4813b",
+        "name": "startenablesignal",
+        "mode": "link",
+        "links": [
+            "5d813b1f0b6aa4de",
+            "25267f3a1c9ca0ec"
+        ],
+        "x": 565,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "b0c9df281f380983",
+        "type": "link in",
+        "z": "eb746c4729c4813b",
+        "name": "startdisable",
+        "links": [
+            "ddf6d3136f083bd6"
+        ],
+        "x": 155,
+        "y": 160,
+        "wires": [
+            [
+                "5890b780fa8bd654"
+            ]
+        ]
+    },
+    {
+        "id": "c8540407d1e6ac98",
+        "type": "link in",
+        "z": "eb746c4729c4813b",
+        "name": "stopdisable",
+        "links": [
+            "cee535f3a5468122"
+        ],
+        "x": 155,
+        "y": 360,
+        "wires": [
+            [
+                "daf3606b52adbb7e"
+            ]
+        ]
+    },
+    {
+        "id": "5d813b1f0b6aa4de",
+        "type": "link in",
+        "z": "eb746c4729c4813b",
+        "name": "startenable",
+        "links": [
+            "d451d7b7a848f358"
+        ],
+        "x": 155,
+        "y": 320,
+        "wires": [
+            [
+                "daf3606b52adbb7e"
+            ]
+        ]
+    },
+    {
+        "id": "cdeaf50ebb459a53",
+        "type": "link in",
+        "z": "eb746c4729c4813b",
+        "name": "stopenable",
+        "links": [
+            "99e055f8f7359f07"
+        ],
+        "x": 155,
+        "y": 200,
+        "wires": [
+            [
+                "5890b780fa8bd654"
+            ]
+        ]
+    },
+    {
+        "id": "ce0a480d8214a8af",
+        "type": "link in",
+        "z": "eb746c4729c4813b",
+        "name": "startdisable",
+        "links": [
+            "ddf6d3136f083bd6"
+        ],
+        "x": 155,
+        "y": 240,
+        "wires": [
+            [
+                "37b45fb8e4ca6325"
+            ]
+        ]
+    },
+    {
+        "id": "9804c14155814e0a",
+        "type": "link in",
+        "z": "eb746c4729c4813b",
+        "name": "stopenable",
+        "links": [
+            "99e055f8f7359f07"
+        ],
+        "x": 155,
+        "y": 280,
+        "wires": [
+            [
+                "37b45fb8e4ca6325"
+            ]
+        ]
+    },
+    {
+        "id": "509551df3408bd1a",
+        "type": "link in",
+        "z": "f0b4407fe9f47f93",
+        "name": "Recording",
+        "links": [
+            "06b7e3f65355f2d5",
+            "f60ecc23e744d99b"
+        ],
+        "x": 755,
+        "y": 700,
+        "wires": [
+            [
+                "8e20f4a9068a8681"
+            ]
+        ]
+    },
+    {
+        "id": "8e20f4a9068a8681",
+        "type": "q-gate",
+        "z": "f0b4407fe9f47f93",
+        "name": "recording gate",
+        "controlTopic": "recordingcontrol",
+        "defaultState": "closed",
+        "openCmd": "START",
+        "closeCmd": "STOP",
+        "toggleCmd": "toggle",
+        "queueCmd": "queue",
+        "defaultCmd": "default",
+        "triggerCmd": "trigger",
+        "flushCmd": "flush",
+        "resetCmd": "reset",
+        "peekCmd": "peek",
+        "dropCmd": "drop",
+        "statusCmd": "status",
+        "maxQueueLength": "1",
+        "keepNewest": false,
+        "qToggle": false,
+        "persist": false,
+        "storeName": "memory",
+        "x": 920,
+        "y": 700,
+        "wires": [
+            [
+                "f35fecfe6b386302"
+            ]
+        ]
+    },
+    {
+        "id": "f35fecfe6b386302",
+        "type": "debug",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "8b9b103f98654155",
+        "type": "csv",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 1150,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ac9391847a8e9bf2",
+        "type": "file",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "filename": "",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1300,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "87a5d7b15e84ecc6",
+        "type": "function",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "84222b92.d65d18",
+        "type": "inject",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Hello, World!",
+        "payloadType": "str",
+        "x": 380,
+        "y": 840,
+        "wires": [
+            [
+                "b4b9f603.739598"
+            ]
+        ]
+    },
+    {
+        "id": "7b014430.dfd94c",
+        "type": "comment",
+        "z": "f0b4407fe9f47f93",
+        "name": "Write string to a file, then read from the file",
+        "info": "Write file node can write string from a file.",
+        "x": 410,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "b4b9f603.739598",
+        "type": "file",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "filename": "/tmp/hello.txt",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 570,
+        "y": 840,
+        "wires": [
+            [
+                "6dc01cac.5c4bf4"
+            ]
+        ]
+    },
+    {
+        "id": "2587adb9.7e60f2",
+        "type": "debug",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "6dc01cac.5c4bf4",
+        "type": "file in",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "filename": "/tmp/hello.txt",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 770,
+        "y": 840,
+        "wires": [
+            [
+                "2587adb9.7e60f2"
+            ]
+        ]
+    },
+    {
+        "id": "f4b4309a.3b78a",
+        "type": "comment",
+        "z": "f0b4407fe9f47f93",
+        "name": "↑read result from file",
+        "info": "",
+        "x": 780,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "672d3693.3cabd8",
+        "type": "comment",
+        "z": "f0b4407fe9f47f93",
+        "name": "↓write to /tmp/hello.txt",
+        "info": "",
+        "x": 590,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "79740ba48dd06672",
+        "type": "ui_text_input",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "label": "Short Desc",
+        "tooltip": "Short title description of test. This is included in the filename.",
+        "group": "b7a68ba52d89cce6",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "mode": "text",
+        "delay": "0",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 330,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4997aab514b2874d",
+        "type": "ui_text",
+        "z": "f0b4407fe9f47f93",
+        "group": "b7a68ba52d89cce6",
+        "order": 6,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "Filename",
+        "format": "{{payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1300,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "c602c20bfbb2a615",
+        "type": "ui_text_input",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "label": "Long Desc",
+        "tooltip": "[optional] Full description of the test. This is included in the config file. KEEP IT UNCLASS!.",
+        "group": "b7a68ba52d89cce6",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "mode": "text",
+        "delay": "0",
+        "topic": "topic",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 330,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2244b160ccf0839d",
+        "type": "link in",
+        "z": "f0b4407fe9f47f93",
+        "name": "startdisable",
+        "links": [
+            "ddf6d3136f083bd6"
+        ],
+        "x": 205,
+        "y": 160,
+        "wires": [
+            [
+                "79740ba48dd06672"
+            ]
+        ]
+    },
+    {
+        "id": "f34421ef94daf75e",
+        "type": "link in",
+        "z": "f0b4407fe9f47f93",
+        "name": "stopenable",
+        "links": [
+            "99e055f8f7359f07"
+        ],
+        "x": 205,
+        "y": 200,
+        "wires": [
+            [
+                "79740ba48dd06672"
+            ]
+        ]
+    },
+    {
+        "id": "db8ba2b5aa4029e9",
+        "type": "link in",
+        "z": "f0b4407fe9f47f93",
+        "name": "startdisable",
+        "links": [
+            "ddf6d3136f083bd6"
+        ],
+        "x": 205,
+        "y": 260,
+        "wires": [
+            [
+                "c602c20bfbb2a615"
+            ]
+        ]
+    },
+    {
+        "id": "42ca4707d4a229cd",
+        "type": "link in",
+        "z": "f0b4407fe9f47f93",
+        "name": "stopenable",
+        "links": [
+            "99e055f8f7359f07"
+        ],
+        "x": 205,
+        "y": 300,
+        "wires": [
+            [
+                "c602c20bfbb2a615"
+            ]
+        ]
+    },
+    {
+        "id": "7892cde95276ba72",
+        "type": "join",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "mode": "auto",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": "false",
+        "timeout": "",
+        "count": "",
+        "reduceRight": false,
+        "x": 1090,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d695bc2a61570b6b",
+        "type": "ui_are_you_sure",
+        "z": "f0b4407fe9f47f93",
+        "name": "longprompt",
+        "group": "dc3b3657261041d5",
+        "iconColor": "#ffcc00",
+        "textColor": "#ffffff",
+        "backgroundColor": "#000000",
+        "icon": "fa fa-info-circle",
+        "title": "[OPTIONAL] NOTES ENTRY",
+        "description": "Are you sure you want to proceed without notes?",
+        "timeoutSec": "10",
+        "x": 1270,
+        "y": 540,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "449b6ad3c7ecd481",
+        "type": "q-gate",
+        "z": "f0b4407fe9f47f93",
+        "name": "filenameready",
+        "controlTopic": "filename",
+        "defaultState": "closed",
+        "openCmd": "START",
+        "closeCmd": "STOP",
+        "toggleCmd": "toggle",
+        "queueCmd": "queue",
+        "defaultCmd": "default",
+        "triggerCmd": "trigger",
+        "flushCmd": "flush",
+        "resetCmd": "reset",
+        "peekCmd": "peek",
+        "dropCmd": "drop",
+        "statusCmd": "status",
+        "maxQueueLength": "1",
+        "keepNewest": false,
+        "qToggle": false,
+        "persist": false,
+        "storeName": "memory",
+        "x": 1270,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1adef04a61d395d9",
+        "type": "link in",
+        "z": "f0b4407fe9f47f93",
+        "name": "teststartstop",
+        "links": [
+            "f60ecc23e744d99b"
+        ],
+        "x": 1105,
+        "y": 600,
+        "wires": [
+            [
+                "449b6ad3c7ecd481"
+            ]
+        ]
+    },
+    {
+        "id": "6e84cdd534bde304",
+        "type": "ui_button",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "group": "b7a68ba52d89cce6",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "APPLY",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "APPLY",
+        "payloadType": "str",
+        "topic": "filename",
+        "topicType": "str",
+        "x": 840,
+        "y": 80,
+        "wires": [
+            [
+                "cd485c5b28e8bc67"
+            ]
+        ]
+    },
+    {
+        "id": "cd485c5b28e8bc67",
+        "type": "ui_are_you_sure",
+        "z": "f0b4407fe9f47f93",
+        "name": "stopprompt",
+        "group": "dc3b3657261041d5",
+        "iconColor": "#ffcc00",
+        "textColor": "#ffffff",
+        "backgroundColor": "#000000",
+        "icon": "fa fa-exclamation-triangle",
+        "title": "STOP RECORDING",
+        "description": "Are you sure you want to stop recording data?",
+        "timeoutSec": "60",
+        "x": 1010,
+        "y": 80,
+        "wires": [
+            [
+                "f57ee4ee4c970639",
+                "a7f13827b05299c7"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f57ee4ee4c970639",
+        "type": "change",
+        "z": "f0b4407fe9f47f93",
+        "name": "disable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "false",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1200,
+        "y": 40,
+        "wires": [
+            [
+                "fb2c0a3e9a7d0f8a"
+            ]
+        ]
+    },
+    {
+        "id": "a7f13827b05299c7",
+        "type": "change",
+        "z": "f0b4407fe9f47f93",
+        "name": "enable",
+        "rules": [
+            {
+                "t": "set",
+                "p": "enabled",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1210,
+        "y": 80,
+        "wires": [
+            [
+                "af6bfc46ac9a6453"
+            ]
+        ]
+    },
+    {
+        "id": "fb2c0a3e9a7d0f8a",
+        "type": "link out",
+        "z": "f0b4407fe9f47f93",
+        "name": "filenamesetdisablesignal",
+        "mode": "link",
+        "links": [],
+        "x": 1325,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "af6bfc46ac9a6453",
+        "type": "link out",
+        "z": "f0b4407fe9f47f93",
+        "name": "filenamesetenablesignal",
+        "mode": "link",
+        "links": [],
+        "x": 1325,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a68113e0bd3bbf59",
+        "type": "ui_button",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "group": "b7a68ba52d89cce6",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "APPLY",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "APPLY",
+        "payloadType": "str",
+        "topic": "filename",
+        "topicType": "str",
+        "x": 340,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "97e948a441b4ea6a",
+        "type": "ui_are_you_sure",
+        "z": "f0b4407fe9f47f93",
+        "name": "stopprompt",
+        "group": "dc3b3657261041d5",
+        "iconColor": "#ffcc00",
+        "textColor": "#ffffff",
+        "backgroundColor": "#000000",
+        "icon": "fa fa-exclamation-triangle",
+        "title": "STOP RECORDING",
+        "description": "Are you sure you want to stop recording data?",
+        "timeoutSec": "60",
+        "x": 750,
+        "y": 460,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "5c539b602b0c4198",
+        "type": "link in",
+        "z": "f0b4407fe9f47f93",
+        "name": "datafeed",
+        "links": [
+            "06b7e3f65355f2d5"
+        ],
+        "x": 225,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "198d00e7e39efe2d",
+        "type": "function",
+        "z": "f0b4407fe9f47f93",
+        "name": "dataready",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b16a1c03d283d738",
+        "type": "rbe",
+        "z": "f0b4407fe9f47f93",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 350,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    }
+]

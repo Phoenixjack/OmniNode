@@ -1,22 +1,32 @@
 # MAJOR TODOs:
+## User/Server Interface
+  [ ] save broker, report interval, and any other config changes to local file and retrieve on boot *before* WiFiManager
+  [ ] update use of ArduionJSON to reflect updates. StaticJSON and DynamicJSON are deprecated.
+  [ ] provide server with method for validating data
+  [ ] provide server with method for providing valid commands
+  [ ] execute valid commands
+  [ ] recursively compile report and command formats into JSON package
+  [ ] structure or array of variable types, min/max values, units, etc
+  [ ] button - separate vs onboard reset
+    o can we leverage the onboard reset button to identify rapid reboots in a series to spur some action?
 ## Variable handling:
+  [ ] convert some values (led dim/full brightness level, etc) to variables
   [ ] enum array for commands, parameters, etc
   [ ] implement pointers for subroutines with multiple returns; REDUCE GLOBAL VARIABLES! bad programmer! BAD! no cookie.
   [ ] better handling of variable scopes!!! less global/more local! start using 'static' for persistent local variables!
-  [ ] this might be a little excessively OCD, but hear me out... 
-      - Position 1: 'g' global, 'l' local
-      - Position 2: 'v' variable, 's' for static variable, 'c' constant
-      - Position 3: 'i' integer, 'd' double, 'l' long, 'c' char, 's' string, 'b' boolean, etc
-      - Position 4: 's' signed for numbers, 'u' unsigned for numbers, 'a' for char arrays, 's' for single char
-      - EXAMPLE: int gvis_MQTTPort = 1883, static int lsiu_XmitPacketCnt++, gcs_ClientID = String(ESP.getChipId(), HEX)
 ## Functions and Subroutines: 
   [ ] make sure their names still make sense as the code has evolved
+  [ ] implement classes to isolate sections of code, functions, and variables
   [ ] mirror the naming convention of what they return (boolean, int, string, etc)
   [ ] convert them to return error codes or booleans based on what happened
 ## Memory / Space management:
   [ ] look at how much space the compiled code takes
   [ ] look at how much runtime memory is used
   [ ] evaluate if we need to minimize usage of JSON library and strings
+  [ ] flexible on the fly?
+    o does the Wemos 4M have space available to activate all sensor types and be reconfigured without reflashing?
+    o if so, can we include all libraries in compile and remove all the if (defFuncAS5600) statements?
+    o also, could we repurpose the sensor on the fly?
 
 . Variables and constants in RAM (global, static), used 34540 / 80192 bytes (43%)
 ║   SEGMENT  BYTES    DESCRIPTION
@@ -32,14 +42,6 @@
 ╚══ IROM     377024   code in flash   
 
 ## V0_0_6:
-[ ] goal:
- o save broker, report interval, and any other config changes to local file and retrieve on boot *before* WiFiManager
- o update use of ArduionJSON to reflect updates. StaticJSON and DynamicJSON are depreciated.
- o provide server with method for validating data
- o provide server with method for providing valid commands
- o execute valid commands
- o recursively compile report and command formats into JSON package
- o structure or array of variable types, min/max values, units, etc
 [X] remove infinite loop for WiFi and MQTT. Added Serial Monitor input feature
 [X] debug levels:
     + initial setup
@@ -106,3 +108,10 @@ _BEWARE_: Switching defNodeFunction flags may cause unexpected errors. This is s
   [x] reportcommands <INCOMPLETE>
   [x] reportconfig
   [x] reportdiagnostics
+
+# Documentation notes
+## [Semantic Versioning](https://semver.org/)
+Given a version number MAJOR.MINOR.PATCH, increment the:
++ MAJOR version when you make incompatible API changes
++ MINOR version when you add functionality in a backward compatible manner
++ PATCH version when you make backward compatible bug fixes

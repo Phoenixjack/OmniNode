@@ -42,3 +42,4 @@ npm install @flowfuse/node-red-dashboard
 npm install node-red-contrib-queue-gate
 npm i dashboard-evi
 npm i node-red-contrib-ui-digital-display
+npm install node-red-contrib-simpletime
