@@ -1,0 +1,844 @@
+[
+    {
+        "id": "555b7e6ec5d6387b",
+        "type": "tab",
+        "label": "Simulated Inputs",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b05250f2bea9cb84",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "Packet V1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "H,73,8,4,28.6,3.312,-191,-42,-29,-129,0",
+        "payloadType": "str",
+        "x": 180,
+        "y": 420,
+        "wires": [
+            [
+                "c4c4ffe815a9dd5f"
+            ]
+        ]
+    },
+    {
+        "id": "0ce5095a0280410a",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "Packet V2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "H,2FSK,4ED836B2,1F7173A8,RESP,3557,12,7,34.1,3.255,-22,-89,2017,4,24,17,29,23,38.3304,-77.02568",
+        "payloadType": "str",
+        "x": 180,
+        "y": 540,
+        "wires": [
+            [
+                "9a5acf9ea119d901"
+            ]
+        ]
+    },
+    {
+        "id": "63e9764f3b431686",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "PacketV1 Plain Ouput",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "7211b171770f60d8",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "Azimuth",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"millis\":1,\"azimuth\":1,\"turnrate\":1}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "3577fb0aeaa7e1a9"
+            ]
+        ],
+        "info": "Data Payload: CSV\r\nmillis = unsigned long integer\r\nazimuth = nnn.n float\r\ndegrees per sec = nn.n float"
+    },
+    {
+        "id": "5d1bb0e904f80dfb",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "AzimuthDiagostic",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "MAGNET too weak,ff,00,00",
+        "payloadType": "str",
+        "x": 180,
+        "y": 220,
+        "wires": [
+            [
+                "cb6d2a52c96ff667"
+            ]
+        ],
+        "info": "Diagnostic Payload: CSV\r\nmagnet status (string) OR magnet strength (integer)\r\nagc level ff\r\ncurrent hysteresis level 00\r\ncurrent offset value 00\r\n\r\nSample MAC 30AEA4070D64"
+    },
+    {
+        "id": "c4c4ffe815a9dd5f",
+        "type": "csv",
+        "z": "555b7e6ec5d6387b",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "Loc,PacketNum,GroupID,UnitID,TempC,Voltage,RcvNoise,RcvRSSI,LastRSSI,LastNoise,GPS",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": true,
+        "include_null_values": true,
+        "x": 370,
+        "y": 420,
+        "wires": [
+            [
+                "8c5bbdc964181636"
+            ]
+        ]
+    },
+    {
+        "id": "9cf7b2a1ef1e877b",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "Trigger Az Reset",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 180,
+        "y": 100,
+        "wires": [
+            [
+                "dd7a0afcb245446c"
+            ]
+        ]
+    },
+    {
+        "id": "3577fb0aeaa7e1a9",
+        "type": "function",
+        "z": "555b7e6ec5d6387b",
+        "name": "Increment Azimuth Counters",
+        "func": "var azimuthenabled = flow.get('azimuthenabled');\nif (typeof azimuthenabled == \"undefined\")\n    azimuthenabled = 0;  // default to off\nif (azimuthenabled == 1) {\n    var azimuthmillis = flow.get('azimuthmillis');\n    if (typeof azimuthmillis == \"undefined\")\n        azimuthmillis = 0;\n    var azimuthvalue = flow.get('azimuthvalue');\n    if (typeof azimuthvalue == \"undefined\")\n        azimuthvalue = 0;\n    var turnratevalue = flow.get('turnratevalue');\n    if (typeof turnratevalue == \"undefined\")\n        turnratevalue = 3;\n    azimuthmillis += 100;\n    azimuthvalue += 0.5;\n    if (azimuthvalue > 360)\n      azimuthvalue = azimuthvalue-360;\n    msg.payload.millis = azimuthmillis;\n    flow.set('azimuthmillis', azimuthmillis);\n    msg.payload.azimuth = azimuthvalue;\n    flow.set('azimuthvalue', azimuthvalue);\n    msg.payload.turnrate = turnratevalue;\n} else {\n    msg.payload = \"azimuth system disabled\";\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "9eebac9e3aacd5ca"
+            ]
+        ]
+    },
+    {
+        "id": "dd7a0afcb245446c",
+        "type": "function",
+        "z": "555b7e6ec5d6387b",
+        "name": "Reset Azimuth Counters",
+        "func": "flow.set('azimuthmillis',0);\nflow.set('azimuthvalue', 0);\nflow.set('turnratevalue', 3);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "9eebac9e3aacd5ca"
+            ]
+        ]
+    },
+    {
+        "id": "2ab570e5d3fbc545",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "Azimuth Values",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "1d1d8960def21791",
+        "type": "function",
+        "z": "555b7e6ec5d6387b",
+        "name": "Toggle Azimuth System",
+        "func": "var azimuthenabled = flow.get('azimuthenabled');\nif (typeof azimuthenabled == \"undefined\")\n    azimuthenabled = 1;\nif (azimuthenabled == 1) {\n    //  block of code to be executed if the condition is true\n    azimuthenabled = 0;\n} else {\n    //  block of code to be executed if the condition is false\n    azimuthenabled = 1;\n}\nflow.set('azimuthenabled', azimuthenabled);\nmsg.payload = azimuthenabled;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 40,
+        "wires": [
+            [
+                "d08d6b5a13cf53fd"
+            ]
+        ]
+    },
+    {
+        "id": "0985ae0f66cf1efe",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "Toggle Azimuth System",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 200,
+        "y": 40,
+        "wires": [
+            [
+                "1d1d8960def21791"
+            ]
+        ]
+    },
+    {
+        "id": "d08d6b5a13cf53fd",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "Azimuth Enabled?",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "4e7d3a4fbd5712ea",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "Azimuth Diagnostics Output",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "cb6d2a52c96ff667",
+        "type": "function",
+        "z": "555b7e6ec5d6387b",
+        "name": "Broadcast Azimuth Diagnostics",
+        "func": "var azimuthenabled = flow.get('azimuthenabled');\nif (typeof azimuthenabled == \"undefined\")\n    azimuthenabled = 0;  // default to off\nif (azimuthenabled == 1) {\n    // do stuff\n    msg.payload = \"MAGNET too weak,ff,00,00\";\n} else {\n    msg.payload = \"azimuth system disabled\";\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 220,
+        "wires": [
+            [
+                "bc3c3e3a05e4f919"
+            ]
+        ]
+    },
+    {
+        "id": "bc3c3e3a05e4f919",
+        "type": "switch",
+        "z": "555b7e6ec5d6387b",
+        "name": "ENABLED?",
+        "property": "azimuthenabled",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 670,
+        "y": 220,
+        "wires": [
+            [
+                "4e7d3a4fbd5712ea",
+                "5971194c8d81713c"
+            ],
+            []
+        ],
+        "outputLabels": [
+            "ENABLED",
+            "DISABLED"
+        ]
+    },
+    {
+        "id": "9eebac9e3aacd5ca",
+        "type": "switch",
+        "z": "555b7e6ec5d6387b",
+        "name": "ENABLED?",
+        "property": "azimuthenabled",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 650,
+        "y": 140,
+        "wires": [
+            [
+                "2ab570e5d3fbc545",
+                "63a5346d1d76bbe8"
+            ],
+            []
+        ],
+        "outputLabels": [
+            "ENABLED",
+            "DISABLED"
+        ]
+    },
+    {
+        "id": "b73b19af3616f58c",
+        "type": "function",
+        "z": "555b7e6ec5d6387b",
+        "name": "Toggle Beacon",
+        "func": "var beacon1enabled = flow.get('beacon1enabled');\nif (typeof beacon1enabled == \"undefined\")\n    beacon1enabled = 1;\nif (beacon1enabled == 1) {\n    //  block of code to be executed if the condition is true\n    beacon1enabled = 0;\n} else {\n    //  block of code to be executed if the condition is false\n    beacon1enabled = 1;\n    var beacon1packet = flow.get('beacon1packet') || 0;\n    flow.set(\"beacon1packet\", 0);\n}\nflow.set('beacon1enabled', beacon1enabled);\nmsg.payload = beacon1enabled;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 360,
+        "wires": [
+            [
+                "4aed472e26e29cad"
+            ]
+        ]
+    },
+    {
+        "id": "01853f70a4613f8f",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "Toggle Beacon",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "b73b19af3616f58c"
+            ]
+        ]
+    },
+    {
+        "id": "4aed472e26e29cad",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "Beacon Enabled?",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "4d768c4aebc8eb44",
+        "type": "inject",
+        "z": "555b7e6ec5d6387b",
+        "name": "Packet V1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"Loc\":\"H\",\"PacketNum\":73,\"GroupID\":8,\"UnitID\":4,\"TempC\":28.6,\"Voltage\":3.312,\"RcvNoise\":-191,\"RcvRSSI\":-42,\"LastRSSI\":-29,\"LastNoise\":-129,\"GPS\":0}",
+        "payloadType": "json",
+        "x": 200,
+        "y": 480,
+        "wires": [
+            [
+                "8a47fe263e42b087"
+            ]
+        ]
+    },
+    {
+        "id": "8a47fe263e42b087",
+        "type": "function",
+        "z": "555b7e6ec5d6387b",
+        "name": "Update Beacon 1",
+        "func": "var beacon1enabled = flow.get('beacon1enabled') || 0;\nif (beacon1enabled == 1) {\n    // Loc,PacketNum,GroupID,UnitID,TempC,Voltage,\n    // RcvNoise,RcvRSSI,LastRSSI,LastNoise,GPS\n    var beacon1packet = flow.get('beacon1packet') || 0;\n    var temperaturevalue = flow.get('temperaturevalue') || 0;\n    var voltagevalue = flow.get('voltagevalue') || 0;\n    var rcvnoisevalue = flow.get('rcvnoisevalue') || 0;\n    var rcvrssievalue = flow.get('rcvrssievalue') || 0;\n    var lastnoisevalue = flow.get('lastnoisevalue') || 0;\n    var lastrssivalue = flow.get('lastrssivalue') || 0;\n    beacon1packet += 1;\n    temperaturevalue = 20 + (Math.round(Math.random() * 30)) / 10;\n    voltagevalue = 3 + (Math.round(Math.random() * 1000)) / 1000;\n    rcvnoisevalue = -27 - (Math.round(Math.random() * 9));\n    rcvrssievalue = -107 - (Math.round(Math.random() * 16));\n    lastnoisevalue = -30 - (Math.round(Math.random() * 7));\n    lastrssivalue = -118 - (Math.round(Math.random() * 12));\n    msg.payload.Loc = \"H\";\n    msg.payload.PacketNum = beacon1packet;\n    flow.set(\"beacon1packet\", beacon1packet);\n    msg.payload.GroupID = 8;\n    msg.payload.UnitID = 4;\n    msg.payload.TempC = temperaturevalue;\n    flow.set(\"temperaturevalue\", temperaturevalue);\n    msg.payload.Voltage = voltagevalue;\n    flow.set(\"voltagevalue\", voltagevalue);\n    msg.payload.RcvNoise = rcvnoisevalue;\n    flow.set(\"rcvnoisevalue\", rcvnoisevalue);\n    msg.payload.RcvRSSI = rcvrssievalue;\n    flow.set(\"rcvrssievalue\", rcvrssievalue);\n    msg.payload.LastNoise = lastnoisevalue;\n    flow.set(\"lastnoisevalue\", lastnoisevalue);\n    msg.payload.LastRSSI = lastrssivalue;\n    flow.set(\"lastrssivalue\", lastrssivalue);\n    msg.payload.GPS = 0;\n} else {\n    msg.payload = \"beacon 1 system disabled\";\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 480,
+        "wires": [
+            [
+                "3d63aa3301001a6c"
+            ]
+        ]
+    },
+    {
+        "id": "3d63aa3301001a6c",
+        "type": "switch",
+        "z": "555b7e6ec5d6387b",
+        "name": "ENABLED?",
+        "property": "beacon1enabled",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 630,
+        "y": 480,
+        "wires": [
+            [
+                "8d7fce91bf3c97a4",
+                "4e02d4c05ddf29c6"
+            ],
+            []
+        ],
+        "outputLabels": [
+            "ENABLED",
+            "DISABLED"
+        ]
+    },
+    {
+        "id": "4e02d4c05ddf29c6",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "Packet V1 Randomized Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "e0b2deaa7c771218",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "PacketV2 Plain Ouput",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "9a5acf9ea119d901",
+        "type": "csv",
+        "z": "555b7e6ec5d6387b",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "Loc,PacketNum,GroupID,UnitID,TempC,Voltage,RcvNoise,RcvRSSI,LastRSSI,LastNoise,GPS",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": true,
+        "include_null_values": true,
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "b93481bea61e1856"
+            ]
+        ]
+    },
+    {
+        "id": "72d35fc4b13559af",
+        "type": "mqtt out",
+        "z": "555b7e6ec5d6387b",
+        "name": "PacketV1 MQTT",
+        "topic": "sensor/30AEA4070D64/report",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9ad53e0e62e39b88",
+        "x": 1040,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "3e3d151a41a2941b",
+        "type": "mqtt out",
+        "z": "555b7e6ec5d6387b",
+        "name": "PacketV2 MQTT",
+        "topic": "sensor/30AEA4082DC2/report",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9ad53e0e62e39b88",
+        "x": 720,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "5971194c8d81713c",
+        "type": "mqtt out",
+        "z": "555b7e6ec5d6387b",
+        "name": "Azimuth Diag MQTT",
+        "topic": "sensor/30AEA4D18008/diag",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9ad53e0e62e39b88",
+        "x": 880,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "1aed09a0d505ec97",
+        "type": "mqtt out",
+        "z": "555b7e6ec5d6387b",
+        "name": "Azimuth MQTT",
+        "topic": "sensor/30AEA4D18008/report",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9ad53e0e62e39b88",
+        "x": 1020,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "8d7fce91bf3c97a4",
+        "type": "csv",
+        "z": "555b7e6ec5d6387b",
+        "name": "JSONtoCSV",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "Loc,PacketNum,GroupID,UnitID,TempC,Voltage,RcvNoise,RcvRSSI,LastRSSI,LastNoise,GPS",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 810,
+        "y": 440,
+        "wires": [
+            [
+                "72d35fc4b13559af",
+                "2a8b823318ce95a5"
+            ]
+        ]
+    },
+    {
+        "id": "63a5346d1d76bbe8",
+        "type": "csv",
+        "z": "555b7e6ec5d6387b",
+        "name": "JSONtoCSV",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "millis,azimuth,turnrate",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 830,
+        "y": 160,
+        "wires": [
+            [
+                "1aed09a0d505ec97"
+            ]
+        ]
+    },
+    {
+        "id": "2a8b823318ce95a5",
+        "type": "debug",
+        "z": "555b7e6ec5d6387b",
+        "name": "Packet V1 MQTT Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "8c5bbdc964181636",
+        "type": "switch",
+        "z": "555b7e6ec5d6387b",
+        "name": "ENABLED?",
+        "property": "beacon1enabled",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 530,
+        "y": 420,
+        "wires": [
+            [
+                "8d7fce91bf3c97a4",
+                "63e9764f3b431686"
+            ],
+            []
+        ],
+        "outputLabels": [
+            "ENABLED",
+            "DISABLED"
+        ]
+    },
+    {
+        "id": "e40bf808286e602e",
+        "type": "comment",
+        "z": "555b7e6ec5d6387b",
+        "name": "KNOWN BUG",
+        "info": "Known bug in the randomized voltage.\n\nSometimes causes outputs with over \n10 decimal places of output VS x.xxx\n\nSeems to be something with Javascript's \nhandling of the Math.Round function. \n\nDOES NOT have the same problem with the \nother randomized values. So...wtf?",
+        "x": 950,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "b93481bea61e1856",
+        "type": "switch",
+        "z": "555b7e6ec5d6387b",
+        "name": "ENABLED?",
+        "property": "beacon1enabled",
+        "propertyType": "flow",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 510,
+        "y": 560,
+        "wires": [
+            [
+                "e0b2deaa7c771218",
+                "3e3d151a41a2941b"
+            ],
+            []
+        ],
+        "outputLabels": [
+            "ENABLED",
+            "DISABLED"
+        ]
+    },
+    {
+        "id": "9ad53e0e62e39b88",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

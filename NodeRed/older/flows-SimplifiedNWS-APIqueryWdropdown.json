@@ -1,0 +1,176 @@
+[
+    {
+        "id": "51d227b6a549657b",
+        "type": "tab",
+        "label": "Internet Requests",
+        "disabled": false,
+        "info": "Use this flow for internet requests\r\n - not sure if this will double for \r\n   intranet/off grid applications like\r\n   local NTP services, pings, etc\r\n   ",
+        "env": []
+    },
+    {
+        "id": "4755242f02654317",
+        "type": "ui_dropdown",
+        "z": "51d227b6a549657b",
+        "name": "",
+        "label": "NWS-ID",
+        "tooltip": "",
+        "place": "KNYG",
+        "group": "d8a9766e3a8921ac",
+        "order": 2,
+        "width": 4,
+        "height": 1,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Dahlgren",
+                "value": "KNYG",
+                "type": "str"
+            },
+            {
+                "label": "Panama City Beach",
+                "value": "KECP",
+                "type": "str"
+            },
+            {
+                "label": "Shannon Airport",
+                "value": "KEZF",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "payload",
+        "topicType": "msg",
+        "className": "",
+        "x": 120,
+        "y": 60,
+        "wires": [
+            [
+                "680c280dc0037396"
+            ]
+        ]
+    },
+    {
+        "id": "680c280dc0037396",
+        "type": "change",
+        "z": "51d227b6a549657b",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "NWSID",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "post",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 60,
+        "wires": [
+            [
+                "316abd2c89118352"
+            ]
+        ]
+    },
+    {
+        "id": "316abd2c89118352",
+        "type": "http request",
+        "z": "51d227b6a549657b",
+        "name": "http req",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.weather.gov/stations/{{post}}/observations/latest",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "x": 450,
+        "y": 60,
+        "wires": [
+            [
+                "27826a7dc07d48dd",
+                "d50975080029f7c6"
+            ]
+        ]
+    },
+    {
+        "id": "27826a7dc07d48dd",
+        "type": "link out",
+        "z": "51d227b6a549657b",
+        "name": "CustomNWSDataCall",
+        "mode": "link",
+        "links": [
+            "78bc8e484a1e7440"
+        ],
+        "x": 555,
+        "y": 70,
+        "wires": []
+    },
+    {
+        "id": "d50975080029f7c6",
+        "type": "debug",
+        "z": "51d227b6a549657b",
+        "name": "raw wx",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "59f6d5e67f2e8010",
+        "type": "iiot-ntptime",
+        "z": "51d227b6a549657b",
+        "d": true,
+        "ntpserver": "time.google.com",
+        "ampm": false,
+        "tupdate": 1,
+        "timeu": "m",
+        "tout": 5000,
+        "x": 1070,
+        "y": 30,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d8a9766e3a8921ac",
+        "type": "ui_group",
+        "name": "Online",
+        "tab": "1387f3255befba2c",
+        "order": 2,
+        "disp": true,
+        "width": 10,
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "1387f3255befba2c",
+        "type": "ui_tab",
+        "name": "Weather",
+        "icon": "cloud",
+        "disabled": false,
+        "hidden": false
+    }
+]

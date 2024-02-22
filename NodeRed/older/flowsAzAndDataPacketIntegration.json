@@ -1,0 +1,693 @@
+[
+    {
+        "id": "3f5d25688dbf6fdd",
+        "type": "tab",
+        "label": "Data Packet Analysis",
+        "disabled": false,
+        "info": "FOR NOW:\r\n  - (COLLAPSE) raw packet feed\r\n  - Livestream line graph of SNR\r\n  - (COLLAPSE) Breakout of packet data\r\n\r\nFUTURE GROWTH\r\n  - Live Radar plot of data (latest OR average)\r\n  - ",
+        "env": []
+    },
+    {
+        "id": "6f857edcdee652b8",
+        "type": "debug",
+        "z": "3f5d25688dbf6fdd",
+        "name": "Az + Data packet",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.SNR",
+        "statusType": "msg",
+        "x": 930,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "edfbd7f83312f3b8",
+        "type": "join",
+        "z": "3f5d25688dbf6fdd",
+        "name": "",
+        "mode": "custom",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "0acb2dcea9e38a74"
+            ]
+        ]
+    },
+    {
+        "id": "b7a7fc954e78d9bc",
+        "type": "link in",
+        "z": "3f5d25688dbf6fdd",
+        "name": "azimuth input",
+        "links": [
+            "9387c70b4ee254bd"
+        ],
+        "x": 185,
+        "y": 430,
+        "wires": [
+            [
+                "2132b8388012754a",
+                "bdf0dca2f52596c0",
+                "4b6313023380c49f",
+                "1bd48ae047ad039a",
+                "ac2f4d3bc89b7298",
+                "b36de2ab1bd1dc82",
+                "c39f8ebc6e8637cb",
+                "2469ab391687d15a"
+            ]
+        ]
+    },
+    {
+        "id": "74dd3f5492ce2c2d",
+        "type": "link out",
+        "z": "3f5d25688dbf6fdd",
+        "name": "joined packet",
+        "mode": "link",
+        "links": [
+            "5252869d13fbfa7f",
+            "0331efed1c720501"
+        ],
+        "x": 855,
+        "y": 310,
+        "wires": []
+    },
+    {
+        "id": "2132b8388012754a",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 7,
+        "width": 4,
+        "height": 1,
+        "name": "Azimuth",
+        "label": "Azimuth",
+        "format": "{{msg.payload.Azimuth}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 620,
+        "y": 390,
+        "wires": []
+    },
+    {
+        "id": "e07eaa3a66c15aec",
+        "type": "link in",
+        "z": "3f5d25688dbf6fdd",
+        "name": "HealthPacket_Processing",
+        "links": [
+            "5eee754704ce5977"
+        ],
+        "x": 165,
+        "y": 190,
+        "wires": [
+            [
+                "d4aae714f68492d9"
+            ]
+        ]
+    },
+    {
+        "id": "5ae1351b27b6c485",
+        "type": "debug",
+        "z": "3f5d25688dbf6fdd",
+        "name": "Cleaned Data Packet",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "69531a4c39039ba4",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 6,
+        "width": 4,
+        "height": 1,
+        "name": "4300 Packet#",
+        "label": "4300 Packet#",
+        "format": "{{msg.payload[\"4300PacketNum\"]}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 640,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "8df7aa8c37389616",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 8,
+        "width": 4,
+        "height": 1,
+        "name": "DUT Rcv Noise",
+        "label": "DUT RCV Noise",
+        "format": "{{msg.payload.RcvNoise}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 640,
+        "y": 170,
+        "wires": []
+    },
+    {
+        "id": "bb82c4f4e4ca5a56",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 10,
+        "width": 4,
+        "height": 1,
+        "name": "DUT RSSI",
+        "label": "DUT RSSI",
+        "format": "{{msg.payload.RcvRSSI}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 630,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9b60fb1590831f9a",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 12,
+        "width": 4,
+        "height": 1,
+        "name": "Approx SNR",
+        "label": "Approx SNR",
+        "format": "{{msg.payload.SNR}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 630,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "80575743b7b28369",
+        "type": "link out",
+        "z": "3f5d25688dbf6fdd",
+        "name": "RcvdPacket",
+        "mode": "link",
+        "links": [
+            "90d6608cf6dde379"
+        ],
+        "x": 575,
+        "y": 50,
+        "wires": []
+    },
+    {
+        "id": "64948e23d098a006",
+        "type": "ui_valuetrail",
+        "z": "3f5d25688dbf6fdd",
+        "group": "cb3750f073b2c511",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "SNR trail graph",
+        "label": "",
+        "unit": "",
+        "blur": true,
+        "minmax": true,
+        "allowtoggle": true,
+        "showvalue": true,
+        "decimals": 0,
+        "colorLine": "#ff9900",
+        "colorFromTheme": true,
+        "stroke": 2,
+        "property": "payload.SNR",
+        "pointcount": 8,
+        "x": 640,
+        "y": 290,
+        "wires": []
+    },
+    {
+        "id": "bdf0dca2f52596c0",
+        "type": "debug",
+        "z": "3f5d25688dbf6fdd",
+        "name": "Rcvd Az MQTT Packet",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 570,
+        "wires": []
+    },
+    {
+        "id": "d4aae714f68492d9",
+        "type": "change",
+        "z": "3f5d25688dbf6fdd",
+        "name": "purge",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload.GPS",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.Loc",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.GroupID",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.UnitID",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.TempC",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.Voltage",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "topic",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "qos",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "retain",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "columns",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 190,
+        "wires": [
+            [
+                "181c7cd21e7c9bdd"
+            ]
+        ]
+    },
+    {
+        "id": "181c7cd21e7c9bdd",
+        "type": "change",
+        "z": "3f5d25688dbf6fdd",
+        "name": "add markers",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.SNR",
+                "pt": "msg",
+                "to": "msg.payload.RcvRSSI-msg.payload.RcvNoise",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.systemtime",
+                "pt": "msg",
+                "to": "",
+                "tot": "date"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 190,
+        "wires": [
+            [
+                "80575743b7b28369",
+                "5ae1351b27b6c485",
+                "64948e23d098a006",
+                "9b60fb1590831f9a",
+                "bb82c4f4e4ca5a56",
+                "8df7aa8c37389616",
+                "69531a4c39039ba4",
+                "246cb8850bce2e14",
+                "edfbd7f83312f3b8",
+                "ff3d6329284dfec5"
+            ]
+        ]
+    },
+    {
+        "id": "b36de2ab1bd1dc82",
+        "type": "change",
+        "z": "3f5d25688dbf6fdd",
+        "name": "purge",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "payload.MagnetStr",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.AzimuthWiFii",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 370,
+        "y": 370,
+        "wires": [
+            [
+                "edfbd7f83312f3b8"
+            ]
+        ]
+    },
+    {
+        "id": "ac2f4d3bc89b7298",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 3,
+        "width": 4,
+        "height": 1,
+        "name": "Azimuth Packet#",
+        "label": "Azimuth Packet#",
+        "format": "{{msg.payload.AzimuthPacketNum}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 650,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "1bd48ae047ad039a",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 5,
+        "width": 4,
+        "height": 1,
+        "name": "Azimuth WiFi",
+        "label": "Azimuth WiFi",
+        "format": "{{msg.payload.AzimuthWiFi}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 630,
+        "y": 510,
+        "wires": []
+    },
+    {
+        "id": "4b6313023380c49f",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 13,
+        "width": 4,
+        "height": 1,
+        "name": "Magnet Str",
+        "label": "Magnet Str",
+        "format": "{{msg.payload.MagnetStr}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 630,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "246cb8850bce2e14",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 2,
+        "width": 4,
+        "height": 1,
+        "name": "WEMOS Packet#",
+        "label": "WEMOS Packet#",
+        "format": "{{msg.payload.PonyExpressPacketNum}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 650,
+        "y": 110,
+        "wires": []
+    },
+    {
+        "id": "0acb2dcea9e38a74",
+        "type": "change",
+        "z": "3f5d25688dbf6fdd",
+        "name": "purge",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 730,
+        "y": 340,
+        "wires": [
+            [
+                "74dd3f5492ce2c2d",
+                "6f857edcdee652b8"
+            ]
+        ]
+    },
+    {
+        "id": "ff3d6329284dfec5",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 4,
+        "width": 4,
+        "height": 1,
+        "name": "WEMOS WiFi",
+        "label": "WEMOS WiFi",
+        "format": "{{msg.payload.PonyExpressWiFi}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 640,
+        "y": 230,
+        "wires": []
+    },
+    {
+        "id": "2469ab391687d15a",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 9,
+        "width": 4,
+        "height": 1,
+        "name": "Adj Azimuth",
+        "label": "Adj Azimuth",
+        "format": "{{msg.payload.AdjAzimuth}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 630,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c39f8ebc6e8637cb",
+        "type": "ui_text",
+        "z": "3f5d25688dbf6fdd",
+        "group": "803d201f12b3d65f",
+        "order": 11,
+        "width": 4,
+        "height": 1,
+        "name": "Az Offset Amount",
+        "label": "Az Offset Amount",
+        "format": "{{msg.payload.azimuthoffset}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 650,
+        "y": 450,
+        "wires": []
+    },
+    {
+        "id": "7a14088e3e80d4b8",
+        "type": "ui_spacer",
+        "z": "3f5d25688dbf6fdd",
+        "name": "spacer",
+        "group": "803d201f12b3d65f",
+        "order": 14,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "66750b6823f3e4df",
+        "type": "ui_spacer",
+        "z": "3f5d25688dbf6fdd",
+        "name": "spacer",
+        "group": "803d201f12b3d65f",
+        "order": 17,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "46ed0e9ca4785727",
+        "type": "ui_spacer",
+        "z": "3f5d25688dbf6fdd",
+        "name": "spacer",
+        "group": "803d201f12b3d65f",
+        "order": 18,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "e04d195bd6ac57de",
+        "type": "ui_spacer",
+        "z": "3f5d25688dbf6fdd",
+        "name": "spacer",
+        "group": "803d201f12b3d65f",
+        "order": 20,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "1d214801f571ff71",
+        "type": "ui_spacer",
+        "z": "3f5d25688dbf6fdd",
+        "name": "spacer",
+        "group": "803d201f12b3d65f",
+        "order": 22,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "84d61e9b4ffb5847",
+        "type": "ui_spacer",
+        "z": "3f5d25688dbf6fdd",
+        "name": "spacer",
+        "group": "e97da37667e4b2de",
+        "order": 4,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "803d201f12b3d65f",
+        "type": "ui_group",
+        "name": "Current Packet Data",
+        "tab": "057db9fdee971bb6",
+        "order": 1,
+        "disp": true,
+        "width": "8",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "e97da37667e4b2de",
+        "type": "ui_group",
+        "name": "Logging Control",
+        "tab": "057db9fdee971bb6",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "057db9fdee971bb6",
+        "type": "ui_tab",
+        "name": "Analytics",
+        "icon": "assessment",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]

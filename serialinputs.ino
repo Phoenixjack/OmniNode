@@ -15,23 +15,22 @@ String strGetSerialData() {     // reads incoming data from the secondary Serial
   return strSerialPacket;          //
 }
 
-void getSerialInput() {                                                          // reads raw JSON from Serial input. WARNING: NO INPUT VALIDATION!
-  String strPayload = Serial.readString();                                       //
-  StaticJsonDocument<200> objJSONdoc;                                            //
-  DeserializationError boolJSONError = deserializeJson(objJSONdoc, strPayload);  //
-  if (boolJSONError) {                                                           //
-    debugPrefix(defDebugJSON);    //
-    debugJSON("deserializeJson() failed: ");                                     //
-    debugJSON(boolJSONError.f_str());                                            //
-    debugJSON("\n");                                                             //
-    String strXmitMsg = strStandardMsg("error", "deserialization error");        // assemble short message reporting a problem. TODO: is there a way to feedback a message identifier so the server even knows which message we're talking about?
-    strXmitMsg = strJSONwrap(strXmitMsg);                                        //
-    transmitmqttmessage("node/errors", strXmitMsg, true, 1);                     // send it to the error reporting topic
-    return;                                                                      // if we have a deserialization error, then we want to abort this routine because we can't decipher what was sent
-  }                                                                              //
-  String strRcvdCmd = objJSONdoc["command"];                                     //
-  String strRcvdValue = objJSONdoc["value"];                                     // TODO: use enum and covert the mess below to a SWITCH CASE structure
-  processreceivedcommand(strRcvdCmd, strRcvdValue);                              // process what we received
+void getSerialInput() {                     // reads raw JSON from Serial input. WARNING: NO INPUT VALIDATION!
+  String strPayload = Serial.readString();  //
+  JSONVar objJSONdoc = JSON.parse(strPayload);
+  if (JSON.typeof(objJSONdoc) == "undefined") {                            //
+    debugPrefix(defDebugJSON);                                             //
+    debugJSON("deserializeJson() failed: ");                               //
+    debugJSON(boolJSONError.f_str());                                      //
+    debugJSON("\n");                                                       //
+    //String strXmitMsg = strStandardMsg("error", "deserialization error");  // assemble short message reporting a problem. TODO: is there a way to feedback a message identifier so the server even knows which message we're talking about?
+    //strXmitMsg = strJSONwrap(strXmitMsg);                                  //
+    //transmitmqttmessage("node/errors", strXmitMsg, true, 1);               // send it to the error reporting topic
+    return;                                                                // if we have a deserialization error, then we want to abort this routine because we can't decipher what was sent
+  }                                                                        //
+  String strRcvdCmd = objJSONdoc["command"];                               //
+  String strRcvdValue = objJSONdoc["value"];                               // TODO: use enum and covert the mess below to a SWITCH CASE structure
+  processreceivedcommand(strRcvdCmd, strRcvdValue);                        // process what we received
 }
 
 String strParsedGPSData() {  // returns CSV string of GPS data; NOT WRAPPED!

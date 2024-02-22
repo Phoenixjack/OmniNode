@@ -94,15 +94,23 @@ void setup_sensors() {                 // TODO: report sensor failure via MQTT a
 void cmd_getsensordata() {           // generic 'read the sensor' function. keeps the main loop and calling functions clean by containing ifdef statements here
   led.brightness(RGBLed::BLUE, 50);  // dim blue to indicate processing data
   debugPrefix(defDebugSensor);       //
-  String strConfigSubStr = "";       // for compiling sub payloads
-  String strXmitMsg = "";            // for compiling all relevant payloads
+  JSONVar objData;                   //
+  defstandardheader(objData);        //
 #if (defFuncPacketFwd)
-  if (mySerial.available()) {                                          // check if there's anything in the secondary Serial buffer
-    strConfigSubStr = strGetSerialData();                              // only then do we call the routine to retrieve the buffer data
-    strConfigSubStr = strKeyValuePair("PacketRcvd", strConfigSubStr);  //
-    strConfigSubStr = strJSONwrap(strConfigSubStr);                    //
-    strXmitMsg += strKeyValuePair("PacketData", strConfigSubStr);      //
+  if (mySerial.available()) {                            // check if there's anything in the secondary Serial buffer
+    objData["data"]["PacketData"] = strGetSerialData();  // only then do we call the routine to retrieve the buffer data
   }
+#endif
+#if (defFuncFauxFwd)
+  // H,1,8,4,20.1,3.25,-33,-113,-120,-32,0
+  // {"Loc":"H","PacketNum":73,"GroupID":8,"UnitID":4,"TempC":28.6,"Voltage":3.312,"RcvNoise":-191,"RcvRSSI":-42,"LastRSSI":-29,"LastNoise":-129,"GPS":0}
+  String strConfigSubStr = "H," + String(intMsgCnt) + ",8,4,";                                 // position, packetnum, group, unit,
+  strConfigSubStr += String(random(24, 30)) + "," + String((float)ESP.getVcc() / 1000) + ",";  // temp,vcc,
+  strConfigSubStr += String(random(-190, -180)) + ",";                                         // rcvnoise,
+  strConfigSubStr += String(random(-50, -38)) + ",";                                           // rcvrssi,
+  strConfigSubStr += String(random(-50, -38)) + ",";                                           // lastrssi,
+  strConfigSubStr += String(random(-190, -180)) + ",0";                                        // lastnoise,gps
+  objData["data"]["PacketData"] = strConfigSubStr;                                             //
 #endif
 #if (defFuncINA3221)
 
@@ -116,7 +124,7 @@ void cmd_getsensordata() {           // generic 'read the sensor' function. keep
     if (!GPS.parse(GPS.lastNMEA()))  // this also sets the newNMEAreceived() flag to false
       return;                        // we can fail to parse a sentence in which case we should just wait for another
   }
-
+  objData["data"]["GPS"] = String(c);  //
 #endif
 #if (defFuncHMC5883)
   sVector_t mag = compass.readRaw();  //
@@ -124,114 +132,87 @@ void cmd_getsensordata() {           // generic 'read the sensor' function. keep
   debugSensor("heading: ");
   debugSensor(mag.HeadingDegress);
   debugSensor("\n");
-  strConfigSubStr = strKeyValuePair("heading", String(mag.HeadingDegress, 1));  //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                               //
-  strXmitMsg += strKeyValuePair("xMC5883", strConfigSubStr);                    //
+  objData["data"]["xMC5883"]["heading"] = mag.HeadingDegress;  //
 #endif
 #if (defFuncBMP280)
-  strConfigSubStr = strKeyValuePair("temperature", String(bmp.readTemperature())) + ",";               //
-  strConfigSubStr += strKeyValuePair("pressure", String(bmp.readPressure() / 100)) + ",";              //
-  strConfigSubStr += strKeyValuePair("altitude", String(bmp.readAltitude(intSeaLevelPressPa / 100)));  //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                                      //
-  strXmitMsg += strKeyValuePair("BMP280", strConfigSubStr);                                            //
+  objData["data"]["BMP280"]["temperature"] = bmp.readTemperature();                      //
+  objData["data"]["BMP280"]["pressure"] = (bmp.readPressure() / 100);                    //
+  objData["data"]["BMP280"]["altitude"] = (bmp.readAltitude(intSeaLevelPressPa / 100));  //
 #endif
 #if (defFuncBMP680)
 
 #endif
 #if (defFuncMPU6050)
-  sensors_event_t a, g, temp;                                                       //
-  mpu.getEvent(&a, &g, &temp);                                                      //
-  strConfigSubStr = strKeyValuePair("gyroX", String(g.gyro.x, 4)) + ",";            //
-  strConfigSubStr += strKeyValuePair("gyroY", String(g.gyro.y, 4)) + ",";           //
-  strConfigSubStr += strKeyValuePair("gyroZ", String(g.gyro.z, 4)) + ",";           //
-  strConfigSubStr += strKeyValuePair("Xaccel", String(a.acceleration.x, 4)) + ",";  //
-  strConfigSubStr += strKeyValuePair("Yaccel", String(a.acceleration.y, 4)) + ",";  //
-  strConfigSubStr += strKeyValuePair("Zaccel", String(a.acceleration.z, 4)) + ",";  //
-  strConfigSubStr += strKeyValuePair("temperature", String(temp.temperature, 2));   // "m/s^2,rad/s,degC"
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                   //
-  strXmitMsg += strKeyValuePair("MPU6050", strConfigSubStr);                        //
+  sensors_event_t a, g, temp;                                                 //
+  mpu.getEvent(&a, &g, &temp);                                                //
+  objData["data"]["MPU6050"]["gyroX"] = String(g.gyro.x, 4);                  //
+  objData["data"]["MPU6050"]["gyroY"] = String(g.gyro.y, 4);                  //
+  objData["data"]["MPU6050"]["gyroZ"] = String(g.gyro.z, 4);                  //
+  objData["data"]["MPU6050"]["Xaccel"] = String(a.acceleration.x, 4);         //
+  objData["data"]["MPU6050"]["Yaccel"] = String(a.acceleration.y, 4);         //
+  objData["data"]["MPU6050"]["Zaccel"] = String(a.acceleration.z, 4);         //
+  objData["data"]["MPU6050"]["temperature"] = String(temp.temperature, 2);   // "m/s^2,rad/s,degC"
 #endif
 #if (defFuncADXL345)
-
+  objData["data"]["ADXL345"]["gyroX"] = "x";  //
+  objData["data"]["ADXL345"]["gyroY"] = "y";  //
+  objData["data"]["ADXL345"]["gyroZ"] = "z";  //
 #endif
 #if (defFuncAS6500)
-  strConfigSubStr = strKeyValuePair("azimuth", String(as5600.rawAngle() * AS5600_RAW_TO_DEGREES, 1)) + ",";  //
-  strConfigSubStr += strKeyValuePair("magnitude", String(as5600.readMagnitude()));                           //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                                            //
-  strXmitMsg += strKeyValuePair("AS6500", strConfigSubStr);                                                  //
+  objData["data"]["AS6500"]["azimuth"] = String(as5600.rawAngle() * AS5600_RAW_TO_DEGREES, 1);  //
+  objData["data"]["AS6500"]["magnitude"] = String(as5600.readMagnitude());                      //
 #endif
   led.brightness(RGBLed::BLUE, 100);                       // full brightness blue to indicate we have processed the data
-  strXmitMsg = strJSONwrap(strXmitMsg);                    // wrap the payload
-  strXmitMsg = strStandardMsg("data", strXmitMsg);         // add standard header with our assembled string as the payload
+  String strXmitMsg = JSON.stringify(objData);             //
+  debugPrintln(defDebugSensor, strXmitMsg);                //
   transmitmqttmessage("node/data", strXmitMsg, false, 0);  // send it
   delay(200);                                              // pause to allow user to see bright indicator
   led.brightness(RGBLed::WHITE, 50);                       // return to dim white to indicate normal operations in progress
 }
 
 void cmd_GetSensorConfig() {
-  String strConfigSubStr = "";  // for compiling sub payloads
-  String strXmitMsg = "";       // for compiling all relevant payloads
+  JSONVar objData;             //
+  defstandardheader(objData);  //
 #if (defFuncPacketFwd)
-  strConfigSubStr = strKeyValuePair("PacketFwding", "noconfig");   //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                  //
-  strXmitMsg += strKeyValuePair("PacketFwding", strConfigSubStr);  //
+  objData["sensorconfig"]["PacketFwd"]["setting"] = "actual serial feed";
+#endif
+#if (defFuncFauxFwd)
+  objData["sensorconfig"]["PacketFwd"]["setting"] = "simulated serial feed";
 #endif
 #if (defFuncINA3221)
-  strConfigSubStr = strKeyValuePair("Ch1Setting1", String("settinglookup")) + ",";   //
-  strConfigSubStr += strKeyValuePair("Ch1Setting2", String("settinglookup")) + ",";  //
-  strConfigSubStr += strKeyValuePair("Ch1Setting3", String("settinglookup"));        //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                    //
-  strXmitMsg += strKeyValuePair("INA3221", strConfigSubStr);                         //
+  objData["sensorconfig"]["INA3221"]["Ch1Setting1"] = "settinglookup";
+  objData["sensorconfig"]["INA3221"]["Ch1Setting2"] = "settinglookup";
+  objData["sensorconfig"]["INA3221"]["Ch1Setting3"] = "settinglookup";
 #endif
 #if (defFuncNEO6_7)
-  strConfigSubStr = strKeyValuePair("NEO6_7 GPS", "noconfig");  //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);               //
-  strXmitMsg += strKeyValuePair("NEO6_7", strConfigSubStr);     //
+  objData["sensorconfig"]["NEOGPS"]["setting"] = "noconfig");  //
 #endif
 #if (defFuncHMC5883)
-  strConfigSubStr = strKeyValuePair("range", String(compass.getRange())) + ",";                   //
-  strConfigSubStr += strKeyValuePair("measuremode", String(compass.getMeasurementMode())) + ",";  //
-  strConfigSubStr += strKeyValuePair("datarate", String(compass.getDataRate())) + ",";            //
-  strConfigSubStr += strKeyValuePair("samples", String(compass.getSamples()));                    //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                                 //
-  strXmitMsg += strKeyValuePair("xMC5883", strConfigSubStr);                                      //
+  objData["sensorconfig"]["xMC5883"]["range"] = String(compass.getRange() ? "QMC5883_RANGE_2GA" : "QMC5883_RANGE_8GA");                //
+  objData["sensorconfig"]["xMC5883"]["measuremode"] = String(compass.getMeasurementMode() ? "SINGLE" : "CONTINUOUS");                  //
+  objData["sensorconfig"]["xMC5883"]["datarate"] = String(compass.getDataRate() ? "QMC5883_DATARATE_10HZ" : "QMC5883_DATARATE_50HZ");  //
+  objData["sensorconfig"]["xMC5883"]["samples"] = String(compass.getSamples() ? "QMC5883_SAMPLES_1" : "QMC5883_SAMPLES_2");            //
 #endif
 #if (defFuncBMP280)
-  strConfigSubStr = strKeyValuePair("Setting1", String("settinglookup")) + ",";   //
-  strConfigSubStr += strKeyValuePair("Setting2", String("settinglookup")) + ",";  //
-  strConfigSubStr += strKeyValuePair("Setting3", String("settinglookup"));        //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                 //
-  strXmitMsg += strKeyValuePair("BMP280", strConfigSubStr);                       //
+  objData["sensorconfig"]["BMP280"]["Setting1"] = "settinglookup";
+  objData["sensorconfig"]["BMP280"]["Setting2"] = "settinglookup";
 #endif
 #if (defFuncBMP680)
-  strConfigSubStr = strKeyValuePair("Setting1", String("settinglookup")) + ",";   //
-  strConfigSubStr += strKeyValuePair("Setting2", String("settinglookup")) + ",";  //
-  strConfigSubStr += strKeyValuePair("Setting3", String("settinglookup"));        //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                 //
-  strXmitMsg += strKeyValuePair("BMP680", strConfigSubStr);                       //
+  objData["sensorconfig"]["BMP680"]["Setting1"] = "settinglookup";
+  objData["sensorconfig"]["BMP680"]["Setting2"] = "settinglookup";
 #endif
 #if (defFuncMPU6050)
-  strConfigSubStr = strKeyValuePair("Setting1", String("settinglookup")) + ",";   //
-  strConfigSubStr += strKeyValuePair("Setting2", String("settinglookup")) + ",";  //
-  strConfigSubStr += strKeyValuePair("Setting3", String("settinglookup"));        //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                 //
-  strXmitMsg += strKeyValuePair("MPU6050", strConfigSubStr);                      //
+  objData["sensorconfig"]["MPU6050"]["Setting1"] = "settinglookup";
+  objData["sensorconfig"]["MPU6050"]["Setting2"] = "settinglookup";
 #endif
 #if (defFuncADXL345)
-  strConfigSubStr = strKeyValuePair("Setting1", String("settinglookup")) + ",";   //
-  strConfigSubStr += strKeyValuePair("Setting2", String("settinglookup")) + ",";  //
-  strConfigSubStr += strKeyValuePair("Setting3", String("settinglookup"));        //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                 //
-  strXmitMsg += strKeyValuePair("ADXL345", strConfigSubStr);                      //
+  objData["sensorconfig"]["ADXL345"]["Setting1"] = "settinglookup";
+  objData["sensorconfig"]["ADXL345"]["Setting2"] = "settinglookup";
 #endif
 #if (defFuncAS6500)
-  strConfigSubStr = strKeyValuePair("Setting1", String("settinglookup")) + ",";   //
-  strConfigSubStr += strKeyValuePair("Setting2", String("settinglookup")) + ",";  //
-  strConfigSubStr += strKeyValuePair("Setting3", String("settinglookup"));        //
-  strConfigSubStr = strJSONwrap(strConfigSubStr);                                 //
-  strXmitMsg += strKeyValuePair("AS6500", strConfigSubStr);                       //
+  objData["sensorconfig"]["AS6500"]["Setting1"] = "settinglookup";
+  objData["sensorconfig"]["AS6500"]["Setting2"] = "settinglookup";
 #endif
-  strXmitMsg = strJSONwrap(strXmitMsg);                            // wrap ALL the config data subobjects
-  strXmitMsg = strStandardMsg("sensorconfig", strXmitMsg);         // add standard header
+  String strXmitMsg = JSON.stringify(objData);                     //
   transmitmqttmessage("node/sensorconfig", strXmitMsg, false, 0);  // send it
 }

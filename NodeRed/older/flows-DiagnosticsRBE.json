@@ -1,0 +1,228 @@
+[
+    {
+        "id": "540092a939b71f8e",
+        "type": "tab",
+        "label": "Diagnostics Panel",
+        "disabled": false,
+        "info": "ENSURE SYSTEM WILL WORK WITH THIS ENTIRE \r\nFLOW DISABLED\r\n  - For each Remote Unit: separate groups,\r\n    - individually collapsible\r\n  - For each report:\r\n    - data breakout & headers\r\n    - last report timestamp\r\n    - unit status (on/offline) derived from:\r\n      - any unacknowledged command or query\r\n      - overdue report / missed interval\r\n      - select data outside expected parameters\r\n        - ie azimuth changed x% more than RPM\r\n        - ie timestamp >x% lagged\r\n        - ie timestamp in the future\r\n    - set error status based on that\r\n      - TOTALLY offline\r\n      - Missed report interval\r\n      - Unacknowledged command/query\r\n      - No response / no report = RED\r\n      - Late / no acknowledge but reporting = YELLOW\r\n      - Data out of parameters - TBD",
+        "env": []
+    },
+    {
+        "id": "866f24afb9628248",
+        "type": "link in",
+        "z": "540092a939b71f8e",
+        "name": "azimuth input",
+        "links": [
+            "075582906d54c095"
+        ],
+        "x": 195,
+        "y": 160,
+        "wires": [
+            [
+                "573c5e6d28a2f34f",
+                "fc668ba3e57762a9",
+                "eec9bc092018f83c",
+                "a6369ca4729f91f0",
+                "ba30c5fbee496913"
+            ]
+        ]
+    },
+    {
+        "id": "90d6608cf6dde379",
+        "type": "link in",
+        "z": "540092a939b71f8e",
+        "name": "link in (synchronize)",
+        "links": [
+            "80575743b7b28369"
+        ],
+        "x": 255,
+        "y": 520,
+        "wires": [
+            [
+                "06803b5c955d04ee"
+            ]
+        ]
+    },
+    {
+        "id": "573c5e6d28a2f34f",
+        "type": "debug",
+        "z": "540092a939b71f8e",
+        "name": "Parsed Azimuth Packet",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "06803b5c955d04ee",
+        "type": "debug",
+        "z": "540092a939b71f8e",
+        "name": "Parsed Data Packet",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 410,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "bcbe387d811f52c7",
+        "type": "comment",
+        "z": "540092a939b71f8e",
+        "name": "NOT WORKING/TODO",
+        "info": "analytics of:\n  - packet num -> missed -> RBE\n  - millis -> look for out of order/reboots/excessive jumps\n  - azimuth glitches\n\nadd calculated RPM / degrees per second\n  - error checking indicator for azimuth outside expected location for given time\n\n",
+        "x": 160,
+        "y": 30,
+        "wires": []
+    },
+    {
+        "id": "fc668ba3e57762a9",
+        "type": "rbe",
+        "z": "540092a939b71f8e",
+        "name": "Packet Num Error",
+        "func": "deadbandEq",
+        "gap": "2",
+        "start": "",
+        "inout": "in",
+        "septopics": true,
+        "property": "payload.packetnum",
+        "topi": "topic",
+        "x": 370,
+        "y": 100,
+        "wires": [
+            [
+                "27cb4e1f1b823ff3"
+            ]
+        ]
+    },
+    {
+        "id": "27cb4e1f1b823ff3",
+        "type": "counter",
+        "z": "540092a939b71f8e",
+        "name": "Az Packet Error Cntr",
+        "x": 610,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eec9bc092018f83c",
+        "type": "rbe",
+        "z": "540092a939b71f8e",
+        "name": "Azimuth Error",
+        "func": "deadbandEq",
+        "gap": "1%",
+        "start": "",
+        "inout": "in",
+        "septopics": true,
+        "property": "payload.azimuth",
+        "topi": "topic",
+        "x": 360,
+        "y": 160,
+        "wires": [
+            [
+                "03de0c0fc30615e3"
+            ]
+        ]
+    },
+    {
+        "id": "03de0c0fc30615e3",
+        "type": "counter",
+        "z": "540092a939b71f8e",
+        "name": "Az Error Cntr",
+        "x": 580,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a6369ca4729f91f0",
+        "type": "rbe",
+        "z": "540092a939b71f8e",
+        "name": "MagStr Error",
+        "func": "deadbandEq",
+        "gap": "10%",
+        "start": "",
+        "inout": "in",
+        "septopics": true,
+        "property": "payload.magnetstr",
+        "topi": "topic",
+        "x": 350,
+        "y": 210,
+        "wires": [
+            [
+                "ce75a039e11b4aa8"
+            ]
+        ]
+    },
+    {
+        "id": "ce75a039e11b4aa8",
+        "type": "counter",
+        "z": "540092a939b71f8e",
+        "name": "Mag Str Error Cntr",
+        "x": 600,
+        "y": 210,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "94a57cb670484b8e",
+        "type": "counter",
+        "z": "540092a939b71f8e",
+        "name": "Az RSSI Error Cntr",
+        "x": 600,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ba30c5fbee496913",
+        "type": "rbe",
+        "z": "540092a939b71f8e",
+        "name": "Az RSSI Error",
+        "func": "deadbandEq",
+        "gap": "10%",
+        "start": "",
+        "inout": "in",
+        "septopics": true,
+        "property": "payload.wifirssi",
+        "topi": "topic",
+        "x": 360,
+        "y": 260,
+        "wires": [
+            [
+                "94a57cb670484b8e"
+            ]
+        ]
+    },
+    {
+        "id": "5252869d13fbfa7f",
+        "type": "link in",
+        "z": "540092a939b71f8e",
+        "name": "Packet Analysis",
+        "links": [
+            "74dd3f5492ce2c2d"
+        ],
+        "x": 255,
+        "y": 430,
+        "wires": [
+            []
+        ]
+    }
+]

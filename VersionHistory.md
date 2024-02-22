@@ -41,7 +41,15 @@
 ║   SEGMENT  BYTES    DESCRIPTION
 ╚══ IROM     377024   code in flash   
 
+## V0_0_7:
+[X] added udp autodiscovery
+[X] updated standard message header to include wifi rssi and message count
+[X] updated all JSON calls to use v0.2.0
+[X] updated standard message header to use JSON vs string packaging
+[X] added FauxFwd function for simulating packet data
+
 ## V0_0_6:
+[ ] need to add feature to node to periodically reinvestigate wifi connection. currently, it can't tell if wifi was dropped or just MQTT
 [X] remove infinite loop for WiFi and MQTT. Added Serial Monitor input feature
 [X] debug levels:
     + initial setup

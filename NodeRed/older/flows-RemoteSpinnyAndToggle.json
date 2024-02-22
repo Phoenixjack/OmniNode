@@ -1,0 +1,662 @@
+[
+    {
+        "id": "e5cc407d746d2556",
+        "type": "tab",
+        "label": "REMOTE Spinny",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "17a8f2b7d3152b40",
+        "type": "group",
+        "z": "e5cc407d746d2556",
+        "name": "Start/Stop Rotation",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "f5273de088ad4d22",
+            "4bf5fc5f7489c2c9",
+            "11c26415d37a2250",
+            "eda9554fc1048679",
+            "33ac2e8c18300be3"
+        ],
+        "x": 54,
+        "y": 409,
+        "w": 832,
+        "h": 142
+    },
+    {
+        "id": "4bf5fc5f7489c2c9",
+        "type": "ui_switch",
+        "z": "e5cc407d746d2556",
+        "g": "17a8f2b7d3152b40",
+        "name": "Toggle Turntable",
+        "label": "",
+        "tooltip": "Toggle Turntable",
+        "group": "805118553dfdd812",
+        "order": 4,
+        "width": 1,
+        "height": 1,
+        "passthru": false,
+        "decouple": "false",
+        "topic": "cmnd/tasmota_2DDAEA/POWER",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "ON",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "OFF",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 490,
+        "y": 510,
+        "wires": [
+            [
+                "11c26415d37a2250",
+                "f5273de088ad4d22"
+            ]
+        ]
+    },
+    {
+        "id": "11c26415d37a2250",
+        "type": "Tasmota Switch",
+        "z": "e5cc407d746d2556",
+        "g": "a761589dd070b8db",
+        "broker": "089168f1c00e84e5",
+        "device": "tasmota_2DDAEA",
+        "name": "Start/Stop Turntable",
+        "outputs": 1,
+        "uidisabler": true,
+        "fullTopic": "",
+        "cmndPrefix": "",
+        "statPrefix": "",
+        "telePrefix": "",
+        "qos": 1,
+        "retain": false,
+        "x": 500,
+        "y": 450,
+        "wires": [
+            [
+                "4bf5fc5f7489c2c9"
+            ]
+        ]
+    },
+    {
+        "id": "f5273de088ad4d22",
+        "type": "ui_button_state",
+        "z": "e5cc407d746d2556",
+        "g": "a761589dd070b8db",
+        "group": "4af9272470ada9be",
+        "name": "Turntable Indicator",
+        "order": 3,
+        "onClass": "",
+        "offClass": "",
+        "width": 5,
+        "height": 1,
+        "options": [
+            {
+                "label": "Toggle Turntable",
+                "value": "ON",
+                "onColor": "#25db00",
+                "offColor": "#ff0000"
+            }
+        ],
+        "x": 750,
+        "y": 510,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "eda9554fc1048679",
+        "type": "rpi-gpio in",
+        "z": "e5cc407d746d2556",
+        "g": "17a8f2b7d3152b40",
+        "name": "Rotate Button",
+        "pin": "25",
+        "intype": "up",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 150,
+        "y": 460,
+        "wires": [
+            [
+                "33ac2e8c18300be3"
+            ]
+        ]
+    },
+    {
+        "id": "33ac2e8c18300be3",
+        "type": "rpi-gpio out",
+        "z": "e5cc407d746d2556",
+        "d": true,
+        "g": "17a8f2b7d3152b40",
+        "name": "Rotation Indicator",
+        "pin": "13",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 270,
+        "y": 510,
+        "wires": []
+    },
+    {
+        "id": "17b0b88de8a68b46",
+        "type": "ui_gauge",
+        "z": "e5cc407d746d2556",
+        "name": "Adj Azimuth",
+        "group": "805118553dfdd812",
+        "order": 1,
+        "width": 3,
+        "height": 3,
+        "gtype": "compass",
+        "title": "Adjusted Azimuth",
+        "label": "degrees",
+        "format": "{{msg.payload.AdjAzimuth}}",
+        "min": 0,
+        "max": "360",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 750,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "9387c70b4ee254bd",
+        "type": "link out",
+        "z": "e5cc407d746d2556",
+        "name": "filtered azimuth input",
+        "mode": "link",
+        "links": [
+            "b7a7fc954e78d9bc"
+        ],
+        "x": 695,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "a5e35c813a80254c",
+        "type": "change",
+        "z": "e5cc407d746d2556",
+        "name": "set topic & purge",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "azimuth",
+                "tot": "str"
+            },
+            {
+                "t": "delete",
+                "p": "qos",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "retain",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "parts",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "_topic",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "columns",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 80,
+        "wires": [
+            [
+                "075582906d54c095",
+                "67d5012e6e0d49b0"
+            ]
+        ]
+    },
+    {
+        "id": "f6097b2448efc8ff",
+        "type": "debug",
+        "z": "e5cc407d746d2556",
+        "name": "debug 17",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 330,
+        "wires": []
+    },
+    {
+        "id": "cd28d955eae1a920",
+        "type": "rbe",
+        "z": "e5cc407d746d2556",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": false,
+        "property": "payload.Azimuth",
+        "topi": "topic",
+        "x": 570,
+        "y": 290,
+        "wires": [
+            [
+                "17b0b88de8a68b46",
+                "9387c70b4ee254bd",
+                "f6097b2448efc8ff",
+                "95808f05031ace74"
+            ]
+        ]
+    },
+    {
+        "id": "075582906d54c095",
+        "type": "link out",
+        "z": "e5cc407d746d2556",
+        "name": "Parsed Azimuth with Topic",
+        "mode": "link",
+        "links": [
+            "866f24afb9628248",
+            "0c6412f9e8a56bd1",
+            "06c4c56747936dba"
+        ],
+        "x": 645,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a777470f1afcdd08",
+        "type": "link in",
+        "z": "e5cc407d746d2556",
+        "name": "Parsed Azimuth Input",
+        "links": [
+            "d6c0b0a80b39a147"
+        ],
+        "x": 315,
+        "y": 80,
+        "wires": [
+            [
+                "a5e35c813a80254c"
+            ]
+        ]
+    },
+    {
+        "id": "c97e503314832556",
+        "type": "ui_button",
+        "z": "e5cc407d746d2556",
+        "name": "",
+        "group": "805118553dfdd812",
+        "order": 6,
+        "width": 2,
+        "height": 1,
+        "passthru": false,
+        "label": "Load Value",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "load",
+        "payloadType": "str",
+        "topic": "azimuthcorrection",
+        "topicType": "msg",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "4fba0018ba12fe3a"
+            ]
+        ]
+    },
+    {
+        "id": "7692d0ceecbf73b7",
+        "type": "ui_text_input",
+        "z": "e5cc407d746d2556",
+        "name": "",
+        "label": "Az Offset",
+        "tooltip": "",
+        "group": "805118553dfdd812",
+        "order": 5,
+        "width": 4,
+        "height": 1,
+        "passthru": false,
+        "mode": "number",
+        "delay": "0",
+        "topic": "payload",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 170,
+        "y": 180,
+        "wires": [
+            [
+                "bf982f1979db9cc1"
+            ]
+        ]
+    },
+    {
+        "id": "aa36620b1b7219ee",
+        "type": "function",
+        "z": "e5cc407d746d2556",
+        "name": "Apply offset",
+        "func": "var correctioncommand = msg.payload.manualazimuthoffset.azimuthcorrection;\nvar currentazimuth = msg.payload.azimuth.Azimuth;\nvar azimuthoffset = msg.payload.manualazimuthoffset.azimuthoffset;\nvar correctedazimuth = currentazimuth + azimuthoffset;\nif (correctedazimuth < 0) {\n    correctedazimuth += 360;\n}\nif (correctedazimuth >= 360) {\n    correctedazimuth -= 360;\n}\nmsg.payload.azimuth.AdjAzimuth = correctedazimuth;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 290,
+        "wires": [
+            [
+                "6cc806c9d04be302"
+            ]
+        ]
+    },
+    {
+        "id": "bf982f1979db9cc1",
+        "type": "function",
+        "z": "e5cc407d746d2556",
+        "name": "Check offset",
+        "func": "var azimuthoffset = flow.get('azimuthoffset') || 0;\nif (Math.abs(azimuthoffset) >= 360) {\n    azimuthoffset = 0; \n    // if offset is more than 1 full rev\n    // then just reject the offset\n}\nflow.set('azimuthoffset', azimuthoffset);\nmsg.topic = \"azimuthoffset\"\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 180,
+        "wires": [
+            [
+                "69d0b1a9bf6d955b"
+            ]
+        ]
+    },
+    {
+        "id": "6cc806c9d04be302",
+        "type": "change",
+        "z": "e5cc407d746d2556",
+        "name": "cleanup",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload.azimuth.Azimuthmillis",
+                "pt": "msg",
+                "to": "payload.Azimuthmillis",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.azimuth.AzimuthPacketNum",
+                "pt": "msg",
+                "to": "payload.AzimuthPacketNum",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.azimuth.AzimuthWiFi",
+                "pt": "msg",
+                "to": "payload.AzimuthWiFi",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.azimuth.Azimuth",
+                "pt": "msg",
+                "to": "payload.Azimuth",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.azimuth.MagnetStr",
+                "pt": "msg",
+                "to": "payload.MagnetStr",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.azimuth.AdjAzimuth",
+                "pt": "msg",
+                "to": "payload.AdjAzimuth",
+                "tot": "msg"
+            },
+            {
+                "t": "move",
+                "p": "payload.manualazimuthoffset.azimuthoffset",
+                "pt": "msg",
+                "to": "payload.azimuthoffset",
+                "tot": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.manualazimuthoffset",
+                "pt": "msg"
+            },
+            {
+                "t": "delete",
+                "p": "payload.azimuth",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 420,
+        "y": 290,
+        "wires": [
+            [
+                "cd28d955eae1a920"
+            ]
+        ]
+    },
+    {
+        "id": "67d5012e6e0d49b0",
+        "type": "join",
+        "z": "e5cc407d746d2556",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 720,
+        "y": 140,
+        "wires": [
+            [
+                "aa36620b1b7219ee"
+            ]
+        ]
+    },
+    {
+        "id": "69d0b1a9bf6d955b",
+        "type": "join",
+        "z": "e5cc407d746d2556",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 460,
+        "y": 160,
+        "wires": [
+            [
+                "85936f362aca16ef"
+            ]
+        ]
+    },
+    {
+        "id": "85936f362aca16ef",
+        "type": "change",
+        "z": "e5cc407d746d2556",
+        "name": "cleanup",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "event",
+                "pt": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "manualazimuthoffset",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 590,
+        "y": 160,
+        "wires": [
+            [
+                "67d5012e6e0d49b0"
+            ]
+        ]
+    },
+    {
+        "id": "4fba0018ba12fe3a",
+        "type": "change",
+        "z": "e5cc407d746d2556",
+        "name": "set topic",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "azimuthcorrection",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 140,
+        "wires": [
+            [
+                "69d0b1a9bf6d955b"
+            ]
+        ]
+    },
+    {
+        "id": "95808f05031ace74",
+        "type": "ui_gauge",
+        "z": "e5cc407d746d2556",
+        "name": "Azimuth",
+        "group": "805118553dfdd812",
+        "order": 2,
+        "width": 3,
+        "height": 3,
+        "gtype": "compass",
+        "title": "azimuth",
+        "label": "degrees",
+        "format": "{{msg.payload.Azimuth}}",
+        "min": 0,
+        "max": "360",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 740,
+        "y": 270,
+        "wires": []
+    },
+    {
+        "id": "5b7e64a6a26dd48f",
+        "type": "comment",
+        "z": "e5cc407d746d2556",
+        "name": "",
+        "info": "",
+        "x": 160,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "805118553dfdd812",
+        "type": "ui_group",
+        "name": "Turntable",
+        "tab": "4580f218381f0cce",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "4580f218381f0cce",
+        "type": "ui_tab",
+        "name": "Control",
+        "icon": "build",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    }
+]

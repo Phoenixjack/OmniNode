@@ -2,6 +2,10 @@
 
 [NodeRed Topic Best Practices](https://github.com/node-red/node-red/wiki/Node-msg-Conventions)
 
+## *REQUIRES TOTAL OVERHAUL*
+## Limitations of MQTT / Arduino_JSON library require a deviation from best practices.
+
+
 - msg.title : Node function (for base station: "SERVER" / for nodes, defNodeFunction value)
 - msg.description : report or command ("reportin" "ntpresync" "reportcommands", "data")
 - msg.sender : MAC ID of the sender

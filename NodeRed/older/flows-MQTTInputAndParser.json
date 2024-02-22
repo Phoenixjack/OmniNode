@@ -1,0 +1,349 @@
+[
+    {
+        "id": "f4235684f17b062e",
+        "type": "tab",
+        "label": "MQTT",
+        "disabled": false,
+        "info": "Receive MQTT packets\r\n  - listen for announce and LWT messages\r\n  - negotiate incoming data format (CSVtoJSON)\r\n  - negotiate packet reporting intervals\r\n    - initially accept board defaults\r\n    - but allow for pushing commands to update intervals\r\nProcess MQTT packets\r\n  - CSVtoJSON\r\n  - link out to individual flows for \r\n    error checking and processing\r\nBroadcast outgoing:\r\n  - commands\r\n  - queries",
+        "env": []
+    },
+    {
+        "id": "73a63439596c610c",
+        "type": "mqtt in",
+        "z": "f4235684f17b062e",
+        "name": "",
+        "topic": "node/temppress",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ad53e0e62e39b88",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 90,
+        "y": 330,
+        "wires": [
+            [
+                "6c133cd560f07a69"
+            ]
+        ]
+    },
+    {
+        "id": "6c133cd560f07a69",
+        "type": "csv",
+        "z": "f4235684f17b062e",
+        "name": "RemoteBMPParser",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "bmpmillis,bmppacketnum,bmpwifirssi,temp-C,pressure-Pa,altitude-m",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 300,
+        "y": 330,
+        "wires": [
+            [
+                "b2a793bc7f9d5899"
+            ]
+        ]
+    },
+    {
+        "id": "b2a793bc7f9d5899",
+        "type": "link out",
+        "z": "f4235684f17b062e",
+        "name": "MQTT_JSON_RemoteBMP",
+        "mode": "link",
+        "links": [
+            "a13eb6ca5ae8f84e"
+        ],
+        "x": 435,
+        "y": 330,
+        "wires": []
+    },
+    {
+        "id": "3b9903b8cf2896da",
+        "type": "mqtt in",
+        "z": "f4235684f17b062e",
+        "name": "Packet In",
+        "topic": "node/ponyexpress",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ad53e0e62e39b88",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 100,
+        "wires": [
+            [
+                "e2b82bbe2f44982a"
+            ]
+        ]
+    },
+    {
+        "id": "3a2a2c2401f51588",
+        "type": "csv",
+        "z": "f4235684f17b062e",
+        "name": "CSVtoJSON",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "PonyExpressmillis,PonyExpressPacketNum,PonyExpressWiFi,Loc,4300PacketNum,GroupID,UnitID,TempC,Voltage,RcvNoise,RcvRSSI,LastRSSI,LastNoise,GPS",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": false,
+        "include_null_values": true,
+        "x": 430,
+        "y": 40,
+        "wires": [
+            [
+                "5eee754704ce5977"
+            ]
+        ]
+    },
+    {
+        "id": "cb1194aaa8f6615b",
+        "type": "debug",
+        "z": "f4235684f17b062e",
+        "name": "Raw Packet Rcvd",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 450,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "5eee754704ce5977",
+        "type": "link out",
+        "z": "f4235684f17b062e",
+        "name": "MQTT_JSON_HealthPacket",
+        "mode": "link",
+        "links": [
+            "e07eaa3a66c15aec"
+        ],
+        "x": 655,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "6ae9b6de252e7ef9",
+        "type": "csv",
+        "z": "f4235684f17b062e",
+        "name": "AzimuthParser",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "Azimuthmillis,AzimuthPacketNum,AzimuthWiFi,Azimuth,MagnetStr",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 310,
+        "y": 210,
+        "wires": [
+            [
+                "d6c0b0a80b39a147"
+            ]
+        ]
+    },
+    {
+        "id": "849e2ccfe4f5d201",
+        "type": "mqtt in",
+        "z": "f4235684f17b062e",
+        "name": "",
+        "topic": "node/azimuth",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "9ad53e0e62e39b88",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 100,
+        "y": 240,
+        "wires": [
+            [
+                "6ae9b6de252e7ef9"
+            ]
+        ]
+    },
+    {
+        "id": "d6c0b0a80b39a147",
+        "type": "link out",
+        "z": "f4235684f17b062e",
+        "name": "MQTT_JSON_Azimuth",
+        "mode": "link",
+        "links": [
+            "a777470f1afcdd08"
+        ],
+        "x": 455,
+        "y": 210,
+        "wires": []
+    },
+    {
+        "id": "a95a0c2c3b9907f1",
+        "type": "inject",
+        "z": "f4235684f17b062e",
+        "name": "Azimuth",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "500,2049,-50,115.5,1000",
+        "payloadType": "str",
+        "x": 110,
+        "y": 180,
+        "wires": [
+            [
+                "6ae9b6de252e7ef9"
+            ]
+        ],
+        "info": "Data Payload: CSV\r\nmillis = unsigned long integer\r\nazimuth = nnn.n float\r\ndegrees per sec = nn.n float"
+    },
+    {
+        "id": "78e9256973e34c47",
+        "type": "inject",
+        "z": "f4235684f17b062e",
+        "name": "Packet V1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "800,2,-55,H,73,8,4,28.6,3.312,-191,-42,-29,-129,0",
+        "payloadType": "str",
+        "x": 110,
+        "y": 40,
+        "wires": [
+            [
+                "e2b82bbe2f44982a"
+            ]
+        ],
+        "info": "H,9,8,4,20.3,3.041,-31,-110,-118,-33,0\r\nH,73,8,4,28.6,3.312,-191,-42,-29,-129,0"
+    },
+    {
+        "id": "0a748078edb171a9",
+        "type": "inject",
+        "z": "f4235684f17b062e",
+        "name": "Azimuth",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "700,2080,-50,115.5,1000",
+        "payloadType": "str",
+        "x": 110,
+        "y": 210,
+        "wires": [
+            [
+                "6ae9b6de252e7ef9"
+            ]
+        ],
+        "info": "Data Payload: CSV\r\nmillis = unsigned long integer\r\nazimuth = nnn.n float\r\ndegrees per sec = nn.n float"
+    },
+    {
+        "id": "e2b82bbe2f44982a",
+        "type": "change",
+        "z": "f4235684f17b062e",
+        "name": "join",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 260,
+        "y": 70,
+        "wires": [
+            [
+                "cb1194aaa8f6615b",
+                "3a2a2c2401f51588"
+            ]
+        ]
+    },
+    {
+        "id": "945fa2b6309f6d16",
+        "type": "inject",
+        "z": "f4235684f17b062e",
+        "name": "Packet V1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "900,3,-58,H,74,8,4,28.7,3.350,-195,-40,-28,-130,0",
+        "payloadType": "str",
+        "x": 110,
+        "y": 70,
+        "wires": [
+            [
+                "e2b82bbe2f44982a"
+            ]
+        ],
+        "info": "H,9,8,4,20.3,3.041,-31,-110,-118,-33,0\r\nH,73,8,4,28.6,3.312,-191,-42,-29,-129,0"
+    },
+    {
+        "id": "9ad53e0e62e39b88",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

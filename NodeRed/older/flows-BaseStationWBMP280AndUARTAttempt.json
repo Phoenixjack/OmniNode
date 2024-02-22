@@ -1,0 +1,537 @@
+[
+    {
+        "id": "e4d9d11184ef3ed3",
+        "type": "tab",
+        "label": "Base Station",
+        "disabled": true,
+        "info": "Use this flow for:\r\n  - local GPIO (buttons/indicators/etc)\r\n  - serial data in/out\r\n  - I2C/SPI",
+        "env": []
+    },
+    {
+        "id": "b8d773f5444c0e81",
+        "type": "comment",
+        "z": "e4d9d11184ef3ed3",
+        "name": "TIME - NTP, GPS, local RTC",
+        "info": "",
+        "x": 170,
+        "y": 70,
+        "wires": []
+    },
+    {
+        "id": "61cbd64a406f8ce6",
+        "type": "comment",
+        "z": "e4d9d11184ef3ed3",
+        "name": "BMP/DHT Sensors",
+        "info": "",
+        "x": 140,
+        "y": 170,
+        "wires": []
+    },
+    {
+        "id": "72dc283740b88110",
+        "type": "comment",
+        "z": "e4d9d11184ef3ed3",
+        "name": "Serial Data In/Out",
+        "info": "",
+        "x": 140,
+        "y": 270,
+        "wires": []
+    },
+    {
+        "id": "4f0b4225c9054b7d",
+        "type": "comment",
+        "z": "e4d9d11184ef3ed3",
+        "name": "Physical Buttons/Switches",
+        "info": "",
+        "x": 170,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "1942da0ad8ee364e",
+        "type": "comment",
+        "z": "e4d9d11184ef3ed3",
+        "name": "Visual LED Indicators",
+        "info": "",
+        "x": 160,
+        "y": 450,
+        "wires": []
+    },
+    {
+        "id": "893cd53b52aad561",
+        "type": "link out",
+        "z": "e4d9d11184ef3ed3",
+        "name": "BaseBMPout",
+        "mode": "link",
+        "links": [],
+        "x": 815,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "e71e3af156d3e5b8",
+        "type": "Bme280",
+        "z": "e4d9d11184ef3ed3",
+        "name": "",
+        "bus": "1",
+        "address": "0x76",
+        "topic": "bmp280",
+        "extra": true,
+        "preasure": "1016.9",
+        "x": 510,
+        "y": 210,
+        "wires": [
+            [
+                "abcde0c494d471a4"
+            ]
+        ]
+    },
+    {
+        "id": "a238066aa5d261f8",
+        "type": "debug",
+        "z": "e4d9d11184ef3ed3",
+        "name": "BMP Processed",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 310,
+        "wires": []
+    },
+    {
+        "id": "4848873fc0b4b7a5",
+        "type": "inject",
+        "z": "e4d9d11184ef3ed3",
+        "name": "query bmp",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 210,
+        "wires": [
+            [
+                "8860466bbdd4c082"
+            ]
+        ]
+    },
+    {
+        "id": "1d416f5d8b990fe2",
+        "type": "ui_text",
+        "z": "e4d9d11184ef3ed3",
+        "group": "930980d18c568231",
+        "order": 1,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "C",
+        "format": "{{msg.payload.temperature_C}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 850,
+        "y": 130,
+        "wires": []
+    },
+    {
+        "id": "8860466bbdd4c082",
+        "type": "ui_button",
+        "z": "e4d9d11184ef3ed3",
+        "name": "",
+        "group": "930980d18c568231",
+        "order": 8,
+        "width": 2,
+        "height": 1,
+        "passthru": true,
+        "label": "Query BMP!",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "date",
+        "topic": "payload",
+        "topicType": "msg",
+        "x": 360,
+        "y": 210,
+        "wires": [
+            [
+                "e71e3af156d3e5b8"
+            ]
+        ]
+    },
+    {
+        "id": "0bd5be5beb96c9ec",
+        "type": "ui_text",
+        "z": "e4d9d11184ef3ed3",
+        "group": "930980d18c568231",
+        "order": 5,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "hPa",
+        "format": "{{msg.payload.pressure_hPa}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 850,
+        "y": 190,
+        "wires": []
+    },
+    {
+        "id": "a65c88ad2c53dcc9",
+        "type": "ui_text",
+        "z": "e4d9d11184ef3ed3",
+        "group": "930980d18c568231",
+        "order": 2,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "F",
+        "format": "{{msg.payload.temperature_F}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 850,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "abcde0c494d471a4",
+        "type": "change",
+        "z": "e4d9d11184ef3ed3",
+        "name": "Round",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.temperature_C",
+                "pt": "msg",
+                "to": "$round(payload.temperature_C, 1)",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.temperature_F",
+                "pt": "msg",
+                "to": "$round(payload.temperature_F, 1)",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.pressure_hPa",
+                "pt": "msg",
+                "to": "$round(payload.pressure_hPa, 2)",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.altitude_M",
+                "pt": "msg",
+                "to": "$round(payload.altitude_M, 2)",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.altitude_F",
+                "pt": "msg",
+                "to": "$round(payload.altitude_M*3.28084, 2)",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.pressure_Hg",
+                "pt": "msg",
+                "to": "$round(payload.pressure_Hg, 1)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 680,
+        "y": 210,
+        "wires": [
+            [
+                "1d416f5d8b990fe2",
+                "a65c88ad2c53dcc9",
+                "0bd5be5beb96c9ec",
+                "02d3942adc9b3537",
+                "27b89c7a444ce0e6",
+                "a238066aa5d261f8",
+                "37e14911c1f006f7",
+                "bc88acd9bfdf4102",
+                "893cd53b52aad561"
+            ]
+        ]
+    },
+    {
+        "id": "02d3942adc9b3537",
+        "type": "ui_text",
+        "z": "e4d9d11184ef3ed3",
+        "group": "930980d18c568231",
+        "order": 3,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "Est Alt (m)",
+        "format": "{{msg.payload.altitude_M}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 870,
+        "y": 250,
+        "wires": []
+    },
+    {
+        "id": "27b89c7a444ce0e6",
+        "type": "ui_text",
+        "z": "e4d9d11184ef3ed3",
+        "group": "930980d18c568231",
+        "order": 4,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "Est Alt (F)",
+        "format": "{{msg.payload.altitude_F}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 860,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "37e14911c1f006f7",
+        "type": "ui_text",
+        "z": "e4d9d11184ef3ed3",
+        "group": "930980d18c568231",
+        "order": 6,
+        "width": 3,
+        "height": 1,
+        "name": "",
+        "label": "inHg",
+        "format": "{{msg.payload.pressure_Hg}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 850,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "bc88acd9bfdf4102",
+        "type": "change",
+        "z": "e4d9d11184ef3ed3",
+        "name": "Set GlobalVar for BaseAltitude",
+        "rules": [
+            {
+                "t": "set",
+                "p": "BaseBMPAltitude",
+                "pt": "global",
+                "to": "payload.altitude_M",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 930,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4816337e579b968e",
+        "type": "inject",
+        "z": "e4d9d11184ef3ed3",
+        "name": "NTP",
+        "props": [
+            {
+                "p": "currenttime",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 280,
+        "y": 110,
+        "wires": [
+            [
+                "f89e34848d5d14ea",
+                "039ee928f3dbe0ac"
+            ]
+        ]
+    },
+    {
+        "id": "039ee928f3dbe0ac",
+        "type": "mqtt out",
+        "z": "e4d9d11184ef3ed3",
+        "name": "Broadcast Time",
+        "topic": "base/currenttime",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9ad53e0e62e39b88",
+        "x": 530,
+        "y": 130,
+        "wires": []
+    },
+    {
+        "id": "f89e34848d5d14ea",
+        "type": "debug",
+        "z": "e4d9d11184ef3ed3",
+        "name": "Time Broadcast",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 90,
+        "wires": []
+    },
+    {
+        "id": "d831b06cebb36904",
+        "type": "serial in",
+        "z": "e4d9d11184ef3ed3",
+        "name": "",
+        "serial": "a748f242a4fb49b8",
+        "x": 210,
+        "y": 330,
+        "wires": [
+            [
+                "3b82e4ba81500d8c"
+            ]
+        ]
+    },
+    {
+        "id": "3b82e4ba81500d8c",
+        "type": "debug",
+        "z": "e4d9d11184ef3ed3",
+        "name": "serial in",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 330,
+        "wires": []
+    },
+    {
+        "id": "930980d18c568231",
+        "type": "ui_group",
+        "name": "Base Station Sensor",
+        "tab": "1387f3255befba2c",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "9ad53e0e62e39b88",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a748f242a4fb49b8",
+        "type": "serial-port",
+        "serialport": "/dev/tty1",
+        "serialbaud": "57600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "1387f3255befba2c",
+        "type": "ui_tab",
+        "name": "Weather",
+        "icon": "cloud",
+        "disabled": false,
+        "hidden": false
+    }
+]

@@ -1,0 +1,783 @@
+[
+    {
+        "id": "03d990bea64df7ac",
+        "type": "subflow",
+        "name": "SLP-CheckOrFake",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 130,
+                "wires": [
+                    {
+                        "id": "a60d5a0c1965b626"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 920,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "a7b81cf1e6838f58",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "a60d5a0c1965b626",
+        "type": "switch",
+        "z": "03d990bea64df7ac",
+        "name": "Is SLP Null?",
+        "property": "payload.properties.seaLevelPressure.value",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 150,
+        "y": 130,
+        "wires": [
+            [
+                "f19695bc584fd968"
+            ],
+            [
+                "a7b81cf1e6838f58"
+            ]
+        ],
+        "outputLabels": [
+            "NULL",
+            "VALID"
+        ]
+    },
+    {
+        "id": "a7b81cf1e6838f58",
+        "type": "change",
+        "z": "03d990bea64df7ac",
+        "name": "Set Global SLPPa",
+        "rules": [
+            {
+                "t": "set",
+                "p": "SLPPa",
+                "pt": "global",
+                "to": "payload.properties.seaLevelPressure.value",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 780,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f19695bc584fd968",
+        "type": "switch",
+        "z": "03d990bea64df7ac",
+        "name": "Is BP Null?",
+        "property": "payload.properties.barometricPressure.value",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "nnull"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 310,
+        "y": 100,
+        "wires": [
+            [
+                "9cafc02ac398f682"
+            ],
+            [
+                "1394de3a6646d37d"
+            ]
+        ],
+        "outputLabels": [
+            "NULL",
+            "VALID"
+        ]
+    },
+    {
+        "id": "1394de3a6646d37d",
+        "type": "change",
+        "z": "03d990bea64df7ac",
+        "name": "Calc SLP",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.properties.seaLevelPressure.value",
+                "pt": "msg",
+                "to": "payload.properties.barometricPressure.value-150",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload.properties.seaLevelPressure.qualityControl",
+                "pt": "msg",
+                "to": "BS",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 110,
+        "wires": [
+            [
+                "a7b81cf1e6838f58"
+            ]
+        ],
+        "info": "Currently just a guesstimate.\r\nProper way would be to extrapolate from known sensor altitude of 4 meters"
+    },
+    {
+        "id": "9cafc02ac398f682",
+        "type": "change",
+        "z": "03d990bea64df7ac",
+        "name": "Calc BP",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.properties.barometricPressure.value",
+                "pt": "msg",
+                "to": "SLPPa+150",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "payload.properties.barometricPressure.qualityControl",
+                "pt": "msg",
+                "to": "BS",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 80,
+        "wires": [
+            [
+                "1394de3a6646d37d"
+            ]
+        ],
+        "info": "Currently just a guesstimate.\r\nProper way would be to extrapolate from known sensor altitude of 4 meters"
+    },
+    {
+        "id": "85e1a852ed08ced7",
+        "type": "tab",
+        "label": "Environmental Processing",
+        "disabled": false,
+        "info": "Use this for actual processing of:\r\n  - derived SLP from barometer and known altitude\r\n  - altitude calculations\r\n  - temp/humidity baselines\r\n  - etc\r\n\r\nENSURE THAT ALL LINKS IN/OUT & DASHBOARD\r\nI/O WON'T CRASH IF ENTIRE FLOW IS DISABLED",
+        "env": []
+    },
+    {
+        "id": "2f68614ff0023621",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 5,
+        "width": 5,
+        "height": 1,
+        "name": "Overview",
+        "label": "Overview",
+        "format": "{{payload.properties.textDescription}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 820,
+        "y": 190,
+        "wires": []
+    },
+    {
+        "id": "34170592853184ad",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 8,
+        "width": 5,
+        "height": 1,
+        "name": "TempC",
+        "label": "Temp in C",
+        "format": "{{payload.properties.temperature.value}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 820,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4616de987a32d8e6",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 12,
+        "width": 5,
+        "height": 1,
+        "name": "SLPhPa",
+        "label": "Sea Level Pressure hPa",
+        "format": "{{payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 820,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "70689b8f06495a1c",
+        "type": "inject",
+        "z": "85e1a852ed08ced7",
+        "name": "Inject Old Info",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"@context\":[\"https://geojson.org/geojson-ld/geojson-context.jsonld\",{\"@version\":\"1.1\",\"wx\":\"https://api.weather.gov/ontology#\",\"s\":\"https://schema.org/\",\"geo\":\"http://www.opengis.net/ont/geosparql#\",\"unit\":\"http://codes.wmo.int/common/unit/\",\"@vocab\":\"https://api.weather.gov/ontology#\",\"geometry\":{\"@id\":\"s:GeoCoordinates\",\"@type\":\"geo:wktLiteral\"},\"city\":\"s:addressLocality\",\"state\":\"s:addressRegion\",\"distance\":{\"@id\":\"s:Distance\",\"@type\":\"s:QuantitativeValue\"},\"bearing\":{\"@type\":\"s:QuantitativeValue\"},\"value\":{\"@id\":\"s:value\"},\"unitCode\":{\"@id\":\"s:unitCode\",\"@type\":\"@id\"},\"forecastOffice\":{\"@type\":\"@id\"},\"forecastGridData\":{\"@type\":\"@id\"},\"publicZone\":{\"@type\":\"@id\"},\"county\":{\"@type\":\"@id\"}}],\"id\":\"https://api.weather.gov/stations/KNYG/observations/2023-06-21T17:51:00+00:00\",\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[-77.3,38.5]},\"properties\":{\"@id\":\"https://api.weather.gov/stations/KNYG/observations/2023-06-21T17:51:00+00:00\",\"@type\":\"wx:ObservationStation\",\"elevation\":{\"unitCode\":\"wmoUnit:m\",\"value\":4},\"station\":\"https://api.weather.gov/stations/KNYG\",\"timestamp\":\"2023-06-21T17:51:00+00:00\",\"rawMessage\":\"KNYG 211751Z 04017G27KT 2 1/2SM -RA BR FEW008 BKN012 OVC024 19/17 A3011 RMK AO2 PK WND 05029/1736 SFC VIS 3 PNO $\",\"textDescription\":\"Light Rain and Fog/Mist\",\"icon\":\"https://api.weather.gov/icons/land/day/rain?size=medium\",\"presentWeather\":[{\"intensity\":\"light\",\"modifier\":null,\"weather\":\"rain\",\"rawString\":\"-RA\"},{\"intensity\":null,\"modifier\":null,\"weather\":\"fog_mist\",\"rawString\":\"BR\"}],\"temperature\":{\"unitCode\":\"wmoUnit:degC\",\"value\":19,\"qualityControl\":\"V\"},\"dewpoint\":{\"unitCode\":\"wmoUnit:degC\",\"value\":17,\"qualityControl\":\"V\"},\"windDirection\":{\"unitCode\":\"wmoUnit:degree_(angle)\",\"value\":null,\"qualityControl\":\"Z\"},\"windSpeed\":{\"unitCode\":\"wmoUnit:km_h-1\",\"value\":null,\"qualityControl\":\"Z\"},\"windGust\":{\"unitCode\":\"wmoUnit:km_h-1\",\"value\":null,\"qualityControl\":\"Z\"},\"barometricPressure\":{\"unitCode\":\"wmoUnit:Pa\",\"value\":101970,\"qualityControl\":\"V\"},\"seaLevelPressure\":{\"unitCode\":\"wmoUnit:Pa\",\"value\":null,\"qualityControl\":\"Z\"},\"visibility\":{\"unitCode\":\"wmoUnit:m\",\"value\":4020,\"qualityControl\":\"C\"},\"maxTemperatureLast24Hours\":{\"unitCode\":\"wmoUnit:degC\",\"value\":null},\"minTemperatureLast24Hours\":{\"unitCode\":\"wmoUnit:degC\",\"value\":null},\"precipitationLastHour\":{\"unitCode\":\"wmoUnit:mm\",\"value\":null,\"qualityControl\":\"Z\"},\"precipitationLast3Hours\":{\"unitCode\":\"wmoUnit:mm\",\"value\":null,\"qualityControl\":\"Z\"},\"precipitationLast6Hours\":{\"unitCode\":\"wmoUnit:mm\",\"value\":null,\"qualityControl\":\"Z\"},\"relativeHumidity\":{\"unitCode\":\"wmoUnit:percent\",\"value\":88.185541322848,\"qualityControl\":\"V\"},\"windChill\":{\"unitCode\":\"wmoUnit:degC\",\"value\":null,\"qualityControl\":\"V\"},\"heatIndex\":{\"unitCode\":\"wmoUnit:degC\",\"value\":null,\"qualityControl\":\"V\"},\"cloudLayers\":[{\"base\":{\"unitCode\":\"wmoUnit:m\",\"value\":240},\"amount\":\"FEW\"},{\"base\":{\"unitCode\":\"wmoUnit:m\",\"value\":370},\"amount\":\"BKN\"},{\"base\":{\"unitCode\":\"wmoUnit:m\",\"value\":730},\"amount\":\"OVC\"}]}}",
+        "payloadType": "json",
+        "x": 220,
+        "y": 300,
+        "wires": [
+            [
+                "8230f6bf312753b0"
+            ]
+        ],
+        "info": "Cached JSON data to avoid repeated requests to NWS API"
+    },
+    {
+        "id": "c24cea5b5681e334",
+        "type": "mqtt out",
+        "z": "85e1a852ed08ced7",
+        "name": "Broadcast SLP",
+        "topic": "base/SLP",
+        "qos": "0",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9ad53e0e62e39b88",
+        "x": 840,
+        "y": 430,
+        "wires": []
+    },
+    {
+        "id": "aa59e60858f67ecc",
+        "type": "change",
+        "z": "85e1a852ed08ced7",
+        "name": "strip down to SLP",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$round(payload.properties.seaLevelPressure.value/100, 2)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 410,
+        "wires": [
+            [
+                "c24cea5b5681e334",
+                "4616de987a32d8e6"
+            ]
+        ]
+    },
+    {
+        "id": "78bc8e484a1e7440",
+        "type": "link in",
+        "z": "85e1a852ed08ced7",
+        "name": "customNWS",
+        "links": [
+            "27826a7dc07d48dd"
+        ],
+        "x": 285,
+        "y": 220,
+        "wires": [
+            [
+                "8230f6bf312753b0"
+            ]
+        ]
+    },
+    {
+        "id": "8230f6bf312753b0",
+        "type": "subflow:03d990bea64df7ac",
+        "z": "85e1a852ed08ced7",
+        "name": "SLP: Check or Fake it",
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "aa59e60858f67ecc",
+                "34170592853184ad",
+                "2f68614ff0023621",
+                "2c61fffd0e6b1e98",
+                "20d286d21864d1a3",
+                "7506cc834f6c6dbb",
+                "b6c1880b3bd69794",
+                "2e3be4b6c14791c4",
+                "137b16246d2bea9b",
+                "3a70519ad8512099",
+                "c6143aab1506b944"
+            ]
+        ]
+    },
+    {
+        "id": "b6c1880b3bd69794",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 10,
+        "width": 5,
+        "height": 1,
+        "name": "Wind Speed",
+        "label": "Wind Speed km/h",
+        "format": "{{payload.properties.windSpeed.value}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 830,
+        "y": 250,
+        "wires": []
+    },
+    {
+        "id": "7506cc834f6c6dbb",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 11,
+        "width": 5,
+        "height": 1,
+        "name": "Wind Gust",
+        "label": "Wind Gust km/h",
+        "format": "{{payload.properties.windGust.value}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 830,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "20d286d21864d1a3",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 14,
+        "width": 5,
+        "height": 1,
+        "name": "Baro Press",
+        "label": "Baro Press hPa",
+        "format": "{{payload.properties.barometricPressure.value/100}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 830,
+        "y": 310,
+        "wires": []
+    },
+    {
+        "id": "2c61fffd0e6b1e98",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 9,
+        "width": 5,
+        "height": 1,
+        "name": "Dew Point",
+        "label": "Dew Point C",
+        "format": "{{payload.properties.dewpoint.value}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 830,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "2e3be4b6c14791c4",
+        "type": "change",
+        "z": "85e1a852ed08ced7",
+        "name": "Get NWSID",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "$substring(payload.properties.rawMessage, 0, 4)\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 160,
+        "wires": [
+            [
+                "0429dbf95d7927d3"
+            ]
+        ]
+    },
+    {
+        "id": "0429dbf95d7927d3",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 4,
+        "width": 5,
+        "height": 1,
+        "name": "NWSID",
+        "label": "Selected NWS-ID",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 820,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "27177fc1ad467276",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 7,
+        "width": 5,
+        "height": 1,
+        "name": "timestamp",
+        "label": "Time",
+        "format": "{{mytimes}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 830,
+        "y": 130,
+        "wires": []
+    },
+    {
+        "id": "fcb64c38bb676b96",
+        "type": "simpletime",
+        "z": "85e1a852ed08ced7",
+        "name": "time",
+        "mydate": false,
+        "myymd": true,
+        "myyear": false,
+        "mymonth": false,
+        "mymonthn": false,
+        "mydom": false,
+        "mydoy": false,
+        "myday": false,
+        "myhourpm": false,
+        "myhour": false,
+        "mytime": false,
+        "mytimes": true,
+        "myminute": false,
+        "myminutes": false,
+        "mysecond": false,
+        "mymillis": false,
+        "myepoch": false,
+        "myrawdate": false,
+        "mypm": false,
+        "x": 680,
+        "y": 110,
+        "wires": [
+            [
+                "deb66dd6998d13c6",
+                "27177fc1ad467276"
+            ]
+        ]
+    },
+    {
+        "id": "137b16246d2bea9b",
+        "type": "change",
+        "z": "85e1a852ed08ced7",
+        "name": "just time",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.properties.timestamp",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 110,
+        "wires": [
+            [
+                "fcb64c38bb676b96",
+                "5aec9d9c72dad65d"
+            ]
+        ]
+    },
+    {
+        "id": "deb66dd6998d13c6",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 6,
+        "width": 5,
+        "height": 1,
+        "name": "datestamp",
+        "label": "Last Update",
+        "format": "{{myymd}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 830,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "3a70519ad8512099",
+        "type": "debug",
+        "z": "85e1a852ed08ced7",
+        "name": "raw wx",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 70,
+        "wires": []
+    },
+    {
+        "id": "a3c274c7aef34f8e",
+        "type": "ui_text_input",
+        "z": "85e1a852ed08ced7",
+        "name": "",
+        "label": "Manual SLP",
+        "tooltip": "",
+        "group": "930980d18c568231",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "number",
+        "delay": "0",
+        "topic": "payload.properties.seaLevelPressure.value",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 90,
+        "y": 260,
+        "wires": [
+            [
+                "267d1a548fbd499c"
+            ]
+        ]
+    },
+    {
+        "id": "267d1a548fbd499c",
+        "type": "change",
+        "z": "85e1a852ed08ced7",
+        "name": "SLP_QC",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.properties.seaLevelPressure.qualityControl",
+                "pt": "msg",
+                "to": "Manual",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 240,
+        "y": 260,
+        "wires": [
+            [
+                "8230f6bf312753b0"
+            ]
+        ]
+    },
+    {
+        "id": "c6143aab1506b944",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 13,
+        "width": 5,
+        "height": 1,
+        "name": "SLP Source",
+        "label": "SLP Source",
+        "format": "{{payload.properties.seaLevelPressure.qualityControl}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 830,
+        "y": 370,
+        "wires": []
+    },
+    {
+        "id": "5aec9d9c72dad65d",
+        "type": "ui_text",
+        "z": "85e1a852ed08ced7",
+        "group": "d8a9766e3a8921ac",
+        "order": 6,
+        "width": 5,
+        "height": 1,
+        "name": "DT Stamp",
+        "label": "DT Stamp",
+        "format": "{{payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 850,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "d8a9766e3a8921ac",
+        "type": "ui_group",
+        "name": "Online",
+        "tab": "1387f3255befba2c",
+        "order": 2,
+        "disp": true,
+        "width": 10,
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "9ad53e0e62e39b88",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "930980d18c568231",
+        "type": "ui_group",
+        "name": "Base Station Sensor",
+        "tab": "1387f3255befba2c",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "1387f3255befba2c",
+        "type": "ui_tab",
+        "name": "Weather",
+        "icon": "cloud",
+        "disabled": false,
+        "hidden": false
+    }
+]

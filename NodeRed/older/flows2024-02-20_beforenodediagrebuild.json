@@ -1,0 +1,505 @@
+[
+    {
+        "id": "278117c520153245",
+        "type": "tab",
+        "label": "Node Tracker",
+        "disabled": false,
+        "info": "{\r\n  \"557c87\": {\r\n    \"ip\": \"192.168.1.2\",\r\n    \"function\": 8,\r\n    \"totalmsgcnt\": 2048,\r\n    \"datamsgcnt\": 1800,\r\n    \"lastmsgrcvd\": 1708352501,\r\n    \"lastdatamsgrcvd\": 11345533765,\r\n    \"wifilast\": -42,\r\n    \"wifiavg\": -49\r\n  },\r\n  \"557c88\": {\r\n    \"ip\": \"192.168.1.8\",\r\n    \"function\": 0,\r\n    \"totalmsgcnt\": 127,\r\n    \"datamsgcnt\": 120,\r\n    \"lastmsgrcvd\": 1708352300,\r\n    \"lastdatamsgrcvd\": 1708352300,\r\n    \"wifilast\": -47,\r\n    \"wifiavg\": -45\r\n  },\r\n  \"557c89\": {\r\n    \"ip\": \"192.168.1.9\",\r\n    \"function\": 1,\r\n    \"totalmsgcnt\": 12,\r\n    \"datamsgcnt\": 11,\r\n    \"lastmsgrcvd\": 1708322004,\r\n    \"lastdatamsgrcvd\": 1708322004,\r\n    \"wifilast\": -42,\r\n    \"diag\": {\r\n      \"wifiavg\": -48,\r\n      \"cnt_missed_data_report\": 0,\r\n      \"missed_data_report\": [\r\n        1708322004,\r\n        1708322500\r\n      ]\r\n    },\r\n    \"physlayout\": {\r\n      \"title\": \"pallet spinner\",\r\n      \"movement\": \"stationary\",\r\n      \"orientation\": \"vertical\"\r\n    },\r\n    \"commands\": {\r\n      \"reboot\": {\r\n        \"format\": \"boolean\",\r\n        \"default\": false\r\n      },\r\n      \"setmqtt\": {\r\n        \"format\": \"string\",\r\n        \"default\": \"192.168.1.6\",\r\n        \"currval\": \"192.168.1.6\"\r\n      },\r\n      \"setSLP\": {\r\n        \"format\": \"integer\",\r\n        \"default\": 101325,\r\n        \"unit\": \"Pa\",\r\n        \"currval\": 101340,\r\n        \"min\": 30000,\r\n        \"max\": 120000\r\n      },\r\n      \"setreportint\": {\r\n        \"format\": \"integer\",\r\n        \"default\": 2000,\r\n        \"unit\": \"msec\",\r\n        \"currval\": 1500,\r\n        \"min\": 500,\r\n        \"max\": 7200000\r\n      }\r\n    }\r\n  }\r\n}",
+        "env": []
+    },
+    {
+        "id": "b8b650e3fb14b918",
+        "type": "debug",
+        "z": "278117c520153245",
+        "name": "base/announce",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "msg",
+        "x": 420,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "2d4bf5dd18ff4c52",
+        "type": "mqtt in",
+        "z": "278117c520153245",
+        "name": "",
+        "topic": "base/announce",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "2fce7cb011bd49b7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 200,
+        "wires": [
+            [
+                "b8b650e3fb14b918",
+                "d5c625fc48b37761"
+            ]
+        ]
+    },
+    {
+        "id": "a1e8ee5f514a8326",
+        "type": "function",
+        "z": "278117c520153245",
+        "name": "Force NTP Resync?",
+        "func": "var nodetime = msg.payload.time;\nvar currtime = global.get(\"g_currenttime\")/1000;\ncurrtime = Math.floor(currtime);\nvar timediff = currtime-nodetime;\nvar sender = msg.payload.sender;\nvar assembledpayload;\nvar maxtimelag = 30;\nif (timediff < -5 || timediff > maxtimelag) {\n  var topic = \"node/\" + sender;\n  msg.topic = topic;\n  assembledpayload = '{\"command\":\"ntpresync\",\"value\":\"true\",\"sender\":\"';\n  assembledpayload+= 'nodered\",\"time\":\"' + currtime + '\"}';\n  msg.payload = assembledpayload;\n  node.status({fill:\"red\",text:timediff});\n  return msg;\n} else {\n  assembledpayload = sender + \" no more than \" + maxtimelag+\"secs behind\";\n  node.status({fill:\"green\",text:assembledpayload});\n  // and don't return a message so nothing gets transmitted\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 80,
+        "wires": [
+            [
+                "9fa65145602f3ad0"
+            ]
+        ]
+    },
+    {
+        "id": "9fa65145602f3ad0",
+        "type": "trigger",
+        "z": "278117c520153245",
+        "name": "5sec lockout",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "nul",
+        "duration": "5",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 950,
+        "y": 80,
+        "wires": [
+            [
+                "d70bd917600564b7",
+                "80592c8191b969b0"
+            ]
+        ]
+    },
+    {
+        "id": "80592c8191b969b0",
+        "type": "debug",
+        "z": "278117c520153245",
+        "name": "NTP Resync Output",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "msg",
+        "x": 1220,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d70bd917600564b7",
+        "type": "mqtt out",
+        "z": "278117c520153245",
+        "name": "557c87",
+        "topic": "node/557c87",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2fce7cb011bd49b7",
+        "x": 1180,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "d5c625fc48b37761",
+        "type": "function",
+        "z": "278117c520153245",
+        "name": "lookup index",
+        "func": "var sender = msg.payload;\nvar nodearray = flow.get(\"nodearray\");\nvar iterator = nodearray.keys();\nvar position = -1;\nfor (var key of iterator) {\n  if (nodearray[key].ID == sender) {\n      position = key;\n  }\n}\nif (position == -1) {\n    var newnode = {\n      ID: sender,\n      CurrWiFi: 0,\n      AvgWiFi: 0,\n      MsgCount: 0,\n      LastMsg: 0\n    };\n    nodearray.push(newnode);\n    position = nodearray.length - 1;\n    node.status({fill:\"yellow\",text:\"ADDING: \"+position});\n} else {\n    node.status({fill:\"green\",text:position});\n}\nmsg.payload = position;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar nodearray = new Array();\nflow.set(\"nodearray\",nodearray);",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 200,
+        "wires": [
+            [
+                "0bcc8f0b3c01da52"
+            ]
+        ]
+    },
+    {
+        "id": "0bcc8f0b3c01da52",
+        "type": "debug",
+        "z": "278117c520153245",
+        "name": "lookup",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "msg",
+        "x": 610,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6cf059a672f02aa7",
+        "type": "link in",
+        "z": "278117c520153245",
+        "name": "V_0_0_6 Header",
+        "links": [
+            "1d63afa563028eef"
+        ],
+        "x": 185,
+        "y": 360,
+        "wires": [
+            [
+                "14b3f67f8207bca8",
+                "9f267b9797d7ec72"
+            ]
+        ]
+    },
+    {
+        "id": "480d1f7131edbeb4",
+        "type": "function",
+        "z": "278117c520153245",
+        "name": "lookup index",
+        "func": "var sender = msg.payload.sender;\nvar nodearray = flow.get(\"nodearray\");\nvar iterator = nodearray.keys();\nvar position = -1;\nfor (var key of iterator) {\n  if (nodearray[key].ID == sender) {\n      position = key;\n  }\n}\nif (position == -1) {\n    var newnode = {\n      ID: sender,\n      CurrWiFi: Number(msg.payload.WiFiStr),\n      AvgWiFi: Number(msg.payload.WiFiStr),\n      MsgCount: Number(msg.payload.MsgCount),\n      LastMsg: Number(msg.payload.time)\n    };\n    nodearray.push(newnode);\n    position = nodearray.length - 1;\n    node.status({fill:\"yellow\",text:\"ADDING: \"+position});\n} else {\n    node.status({fill:\"green\",text:position});\n    nodearray[position].CurrWiFi = Number(msg.payload.WiFiStr);\n    nodearray[position].MsgCount = Number(msg.payload.MsgCount);\n    nodearray[position].LastMsg = Number(msg.payload.time);\n    var wifiavg = nodearray[position].AvgWiFi || 0;\n    wifiavg*= (nodearray[position].MsgCount-1);\n    wifiavg += nodearray[position].CurrWiFi;\n    wifiavg = Math.floor(wifiavg/nodearray[position].MsgCount);\n    nodearray[position].AvgWiFi = wifiavg;\n}\nmsg.payload.position = position;\nmsg.payload.sender = sender;\nmsg.payload.CurrWiFi = nodearray[position].CurrWiFi;\nmsg.payload.MsgCount = nodearray[position].MsgCount;\nmsg.payload.AvgWiFi = nodearray[position].AvgWiFi;\nmsg.payload.LastMsg = nodearray[position].LastMsg;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 360,
+        "wires": [
+            [
+                "27aa030caa55d935"
+            ]
+        ]
+    },
+    {
+        "id": "14b3f67f8207bca8",
+        "type": "debug",
+        "z": "278117c520153245",
+        "name": "lookup",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "msg",
+        "x": 590,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "27aa030caa55d935",
+        "type": "change",
+        "z": "278117c520153245",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "nodearray",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 360,
+        "wires": [
+            [
+                "d031b56c6b918297",
+                "c5b68c72ff21009a"
+            ]
+        ]
+    },
+    {
+        "id": "d031b56c6b918297",
+        "type": "debug",
+        "z": "278117c520153245",
+        "name": "lookup",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "msg",
+        "x": 1030,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "c5b68c72ff21009a",
+        "type": "template",
+        "z": "278117c520153245",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<table id=\"NODE STATS\" border=\"1\">\n     <tr>\n        <th>MAC ID</th> \n        <th>Curr WiFi</th>\n        <th>Avg WiFi</th>\n        <th>MsgCount</th>\n </tr>\n <tbody>\n <tr ng-repeat=\"row in msg.payload\">\n   <td ng-repeat=\"item in row\" >{{item}}</td>\n </tr>\n </tbody>\n</table>",
+        "output": "str",
+        "x": 1040,
+        "y": 360,
+        "wires": [
+            [
+                "4f6483c8d8339d4b",
+                "409469fabbe21d8f"
+            ]
+        ]
+    },
+    {
+        "id": "4f6483c8d8339d4b",
+        "type": "debug",
+        "z": "278117c520153245",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1250,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "409469fabbe21d8f",
+        "type": "ui_text",
+        "z": "278117c520153245",
+        "group": "c1aa088084a08438",
+        "order": 1,
+        "width": 6,
+        "height": 5,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1230,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "ef3fd2308e1d20ba",
+        "type": "ui_switch",
+        "z": "278117c520153245",
+        "name": "",
+        "label": "Node Stats",
+        "tooltip": "Controls processing of node stats. Increases CPU usage",
+        "group": "c1aa088084a08438",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "nodestat",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "ON",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "OFF",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 230,
+        "y": 420,
+        "wires": [
+            [
+                "9f267b9797d7ec72"
+            ]
+        ]
+    },
+    {
+        "id": "9f267b9797d7ec72",
+        "type": "q-gate",
+        "z": "278117c520153245",
+        "name": "data gate",
+        "controlTopic": "nodestat",
+        "defaultState": "closed",
+        "openCmd": "ON",
+        "closeCmd": "OFF",
+        "toggleCmd": "toggle",
+        "queueCmd": "queue",
+        "defaultCmd": "default",
+        "triggerCmd": "trigger",
+        "flushCmd": "flush",
+        "resetCmd": "reset",
+        "peekCmd": "peek",
+        "dropCmd": "drop",
+        "statusCmd": "status",
+        "maxQueueLength": "1",
+        "keepNewest": false,
+        "qToggle": false,
+        "persist": false,
+        "storeName": "memory",
+        "x": 400,
+        "y": 360,
+        "wires": [
+            [
+                "480d1f7131edbeb4"
+            ]
+        ]
+    },
+    {
+        "id": "8e78dbfb930b87f5",
+        "type": "ui_spacer",
+        "z": "278117c520153245",
+        "name": "spacer",
+        "group": "11e3eb0c2dee2914",
+        "order": 3,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "8234992f9bdfbbe9",
+        "type": "ui_spacer",
+        "z": "278117c520153245",
+        "name": "spacer",
+        "group": "11e3eb0c2dee2914",
+        "order": 6,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "d2b04da00ffa6cd7",
+        "type": "ui_spacer",
+        "z": "278117c520153245",
+        "name": "spacer",
+        "group": "4788da44ae885d26",
+        "order": 8,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "cdcd499fa4116d94",
+        "type": "ui_spacer",
+        "z": "278117c520153245",
+        "name": "spacer",
+        "group": "dc3b3657261041d5",
+        "order": 4,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "2fce7cb011bd49b7",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c1aa088084a08438",
+        "type": "ui_group",
+        "name": "Node Stats",
+        "tab": "0b0ef72495ea76b7",
+        "order": 8,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "11e3eb0c2dee2914",
+        "type": "ui_group",
+        "name": "MASTER DISPLAY",
+        "tab": "0b0ef72495ea76b7",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4788da44ae885d26",
+        "type": "ui_group",
+        "name": "Compass Control",
+        "tab": "0b0ef72495ea76b7",
+        "order": 4,
+        "disp": true,
+        "width": 6,
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "dc3b3657261041d5",
+        "type": "ui_group",
+        "name": "HIDE ME",
+        "tab": "0b0ef72495ea76b7",
+        "order": 9,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "0b0ef72495ea76b7",
+        "type": "ui_tab",
+        "name": "Sensors",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

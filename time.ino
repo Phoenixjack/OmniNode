@@ -3,12 +3,8 @@ date and time functions
 TODO: add our own Epoch to DTG conversion function
 */
 
-unsigned long CurrentEpochTime() {        // return either the current NTP or a fake epoch time
-  if (boolMQTTEmulated) {                 //
-    return 1698339326 + millis();         // 2023-10-26 + uptime
-  } else {                                //
-    return instNTPClient.getEpochTime();  //
-  }                                       //
+unsigned long CurrentEpochTime() {      // return either the current NTP or a fake epoch time
+  return instNTPClient.getEpochTime();  //
 }
 /*
 String CurrentUTCTime() {                           // function to return human readable UTC time as YYYY-MM-DD HH-MM-SS

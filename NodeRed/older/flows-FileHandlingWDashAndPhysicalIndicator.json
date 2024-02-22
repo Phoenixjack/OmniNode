@@ -1,0 +1,867 @@
+[
+    {
+        "id": "eb3a314b2c7daba2",
+        "type": "tab",
+        "label": "File Handling",
+        "disabled": false,
+        "info": "Accept inputs for:\r\n  - logging level (raw, refined, both)\r\n  - selection of available fields\r\n  - user defined path/filename(s)\r\n\r\nOutput:\r\n  - disable messages for select user interfaces\r\n  - LED indicator of logging status\r\n  - dashboard indicator of logging status\r\n  - data to indicated path/filename(s)\r\n  ",
+        "env": []
+    },
+    {
+        "id": "40e04fa3e9fab5e3",
+        "type": "file",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "filename": "filename",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1050,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ba7e28a13afef3b6",
+        "type": "function",
+        "z": "eb3a314b2c7daba2",
+        "name": "Disable Controls",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0331efed1c720501",
+        "type": "link in",
+        "z": "eb3a314b2c7daba2",
+        "name": "Data To Write",
+        "links": [
+            "74dd3f5492ce2c2d"
+        ],
+        "x": 195,
+        "y": 290,
+        "wires": [
+            [
+                "0d5d496c726a33b7",
+                "d0d28184d70621e1"
+            ]
+        ]
+    },
+    {
+        "id": "0d5d496c726a33b7",
+        "type": "gate",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "controlTopic": "control",
+        "defaultState": "closed",
+        "openCmd": "open",
+        "closeCmd": "close",
+        "toggleCmd": "toggle",
+        "defaultCmd": "default",
+        "statusCmd": "status",
+        "persist": true,
+        "storeName": "memory",
+        "x": 300,
+        "y": 290,
+        "wires": [
+            [
+                "c1b16ff92d6cb4e5"
+            ]
+        ]
+    },
+    {
+        "id": "e350da8a7a10b688",
+        "type": "ui_switch",
+        "z": "eb3a314b2c7daba2",
+        "name": "Logging Control",
+        "label": "Logging",
+        "tooltip": "",
+        "group": "e97da37667e4b2de",
+        "order": 2,
+        "width": 5,
+        "height": 1,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "control",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "open",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "close",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": true,
+        "className": "",
+        "x": 120,
+        "y": 430,
+        "wires": [
+            [
+                "0d5d496c726a33b7",
+                "c89e24b94c481374",
+                "377eef114afabb74",
+                "f28b7847e4c4aa4d"
+            ]
+        ]
+    },
+    {
+        "id": "377eef114afabb74",
+        "type": "switch",
+        "z": "eb3a314b2c7daba2",
+        "name": "Control En/Disable",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "close",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "open",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 380,
+        "y": 360,
+        "wires": [
+            [
+                "f8fa99daf1861c21"
+            ],
+            [
+                "ba7e28a13afef3b6"
+            ]
+        ],
+        "outputLabels": [
+            "off",
+            "on"
+        ]
+    },
+    {
+        "id": "f8fa99daf1861c21",
+        "type": "function",
+        "z": "eb3a314b2c7daba2",
+        "name": "Enable Controls",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5f0561ac54a5ad13",
+        "type": "ui_text_input",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "label": "File Save As",
+        "tooltip": "",
+        "group": "e97da37667e4b2de",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "filename",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 510,
+        "y": 110,
+        "wires": [
+            [
+                "dc41f180a23902f6"
+            ]
+        ]
+    },
+    {
+        "id": "c89e24b94c481374",
+        "type": "trigger",
+        "z": "eb3a314b2c7daba2",
+        "name": "timing",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "num",
+        "op2type": "str",
+        "duration": "-0.75",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "close",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 360,
+        "y": 460,
+        "wires": [
+            [
+                "a55adefa8e702874"
+            ]
+        ]
+    },
+    {
+        "id": "a55adefa8e702874",
+        "type": "trigger",
+        "z": "eb3a314b2c7daba2",
+        "name": "on/off",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "num",
+        "op2type": "num",
+        "duration": "1",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "close",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 490,
+        "y": 460,
+        "wires": [
+            [
+                "0390baa17333de1b",
+                "f08042d0d695bb07"
+            ]
+        ]
+    },
+    {
+        "id": "0390baa17333de1b",
+        "type": "rpi-gpio out",
+        "z": "eb3a314b2c7daba2",
+        "name": "Logging Indicator ON",
+        "pin": "26",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 670,
+        "y": 430,
+        "wires": []
+    },
+    {
+        "id": "299ef232cae62857",
+        "type": "debug",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "filename",
+        "targetType": "msg",
+        "statusVal": "filename",
+        "statusType": "auto",
+        "x": 990,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "4582cc4ab7676937",
+        "type": "fs-file-lister",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "start": "/",
+        "pattern": "*.*",
+        "folders": "*",
+        "hidden": true,
+        "lstype": "files",
+        "path": true,
+        "single": false,
+        "depth": 0,
+        "stat": false,
+        "showWarnings": true,
+        "x": 110,
+        "y": 690,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dc41f180a23902f6",
+        "type": "change",
+        "z": "eb3a314b2c7daba2",
+        "name": "Set FN",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 110,
+        "wires": [
+            [
+                "c7492555e2b70985"
+            ]
+        ]
+    },
+    {
+        "id": "2ece1cdb4b2d72dd",
+        "type": "ui_toast",
+        "z": "eb3a314b2c7daba2",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 100,
+        "y": 830,
+        "wires": []
+    },
+    {
+        "id": "f1a5e8869bcc7789",
+        "type": "change",
+        "z": "eb3a314b2c7daba2",
+        "name": "Set default FN",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "\"log_\" & myymd & \".txt\"",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 150,
+        "wires": [
+            [
+                "c7492555e2b70985"
+            ]
+        ]
+    },
+    {
+        "id": "3f9591de5b19b2b8",
+        "type": "moment",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "topic": "",
+        "input": "",
+        "inputType": "msg",
+        "inTz": "America/New_York",
+        "adjAmount": 0,
+        "adjType": "days",
+        "adjDir": "add",
+        "format": "",
+        "locale": "en-GB",
+        "output": "payload",
+        "outputType": "msg",
+        "outTz": "America/New_York",
+        "x": 300,
+        "y": 150,
+        "wires": [
+            [
+                "3bacb49cd21aefb9"
+            ]
+        ]
+    },
+    {
+        "id": "3bacb49cd21aefb9",
+        "type": "simpletime",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "mydate": false,
+        "myymd": true,
+        "myyear": false,
+        "mymonth": false,
+        "mymonthn": false,
+        "mydom": false,
+        "mydoy": false,
+        "myday": false,
+        "myhourpm": false,
+        "myhour": false,
+        "mytime": false,
+        "mytimes": false,
+        "myminute": false,
+        "myminutes": false,
+        "mysecond": false,
+        "mymillis": false,
+        "myepoch": false,
+        "myrawdate": false,
+        "mypm": false,
+        "x": 490,
+        "y": 150,
+        "wires": [
+            [
+                "f1a5e8869bcc7789"
+            ]
+        ]
+    },
+    {
+        "id": "c7492555e2b70985",
+        "type": "change",
+        "z": "eb3a314b2c7daba2",
+        "name": "Prefix dir",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "\"data_logs/\" & filename",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "filename",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "filename",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 830,
+        "y": 130,
+        "wires": [
+            [
+                "299ef232cae62857",
+                "c1b16ff92d6cb4e5"
+            ]
+        ]
+    },
+    {
+        "id": "f08042d0d695bb07",
+        "type": "switch",
+        "z": "eb3a314b2c7daba2",
+        "name": "Blink Light",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 640,
+        "y": 490,
+        "wires": [
+            [
+                "fd40915e3f617b05"
+            ],
+            [
+                "87d7dda790f51eb2"
+            ]
+        ],
+        "outputLabels": [
+            "on",
+            "off"
+        ]
+    },
+    {
+        "id": "fd40915e3f617b05",
+        "type": "change",
+        "z": "eb3a314b2c7daba2",
+        "name": "On color",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "#FF0000",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 810,
+        "y": 470,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "87d7dda790f51eb2",
+        "type": "change",
+        "z": "eb3a314b2c7daba2",
+        "name": "Off color",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "#F9E006",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 810,
+        "y": 510,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0743469abf7ee4b6",
+        "type": "change",
+        "z": "eb3a314b2c7daba2",
+        "name": "Disabled color",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "#C0C0C0",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 590,
+        "wires": [
+            [
+                "1ddbb535ba49ddd4"
+            ]
+        ]
+    },
+    {
+        "id": "c0398d6e8647aeca",
+        "type": "inject",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 450,
+        "y": 620,
+        "wires": [
+            [
+                "0743469abf7ee4b6"
+            ]
+        ]
+    },
+    {
+        "id": "f28b7847e4c4aa4d",
+        "type": "switch",
+        "z": "eb3a314b2c7daba2",
+        "name": "Turn off dash indicator",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "close",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 410,
+        "y": 560,
+        "wires": [
+            [
+                "0743469abf7ee4b6"
+            ]
+        ],
+        "outputLabels": [
+            "off"
+        ]
+    },
+    {
+        "id": "1ddbb535ba49ddd4",
+        "type": "delay",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 810,
+        "y": 590,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0c5fc574b0e973f9",
+        "type": "debug",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 230,
+        "wires": []
+    },
+    {
+        "id": "73ba3910bfc397c2",
+        "type": "csv",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "once",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "systemtime,PonyExpressmillis,PonyExpressPacketNum,4300PacketNum,RcvNoise,RcvRSSI,Azimuthmillis,AzimuthPacketNum,Azimuth,AdjAzimuth",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": false,
+        "include_null_values": false,
+        "x": 890,
+        "y": 260,
+        "wires": [
+            [
+                "0c5fc574b0e973f9",
+                "40e04fa3e9fab5e3",
+                "ef4eb218083a7366",
+                "ea66701f4906b41f"
+            ]
+        ]
+    },
+    {
+        "id": "c1b16ff92d6cb4e5",
+        "type": "join",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 520,
+        "y": 260,
+        "wires": [
+            [
+                "760ffb1e855d8976",
+                "a7a0648db423c80b"
+            ]
+        ]
+    },
+    {
+        "id": "760ffb1e855d8976",
+        "type": "change",
+        "z": "eb3a314b2c7daba2",
+        "name": "Format for logging",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "payload.filename",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 720,
+        "y": 260,
+        "wires": [
+            [
+                "73ba3910bfc397c2"
+            ]
+        ]
+    },
+    {
+        "id": "a7a0648db423c80b",
+        "type": "debug",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 230,
+        "wires": []
+    },
+    {
+        "id": "ef4eb218083a7366",
+        "type": "ui_text",
+        "z": "eb3a314b2c7daba2",
+        "group": "e97da37667e4b2de",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Path/filename",
+        "format": "{{msg.filename}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1070,
+        "y": 290,
+        "wires": []
+    },
+    {
+        "id": "ea66701f4906b41f",
+        "type": "ui_text",
+        "z": "eb3a314b2c7daba2",
+        "group": "e97da37667e4b2de",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Payload",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1050,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "d0d28184d70621e1",
+        "type": "debug",
+        "z": "eb3a314b2c7daba2",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e97da37667e4b2de",
+        "type": "ui_group",
+        "name": "Logging Control",
+        "tab": "057db9fdee971bb6",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "057db9fdee971bb6",
+        "type": "ui_tab",
+        "name": "Analytics",
+        "icon": "assessment",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
